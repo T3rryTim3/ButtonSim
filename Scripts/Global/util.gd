@@ -23,6 +23,7 @@ class BigNum:
 	func _init(start_num:float, start_exp:int=0) -> void:
 		self.num = start_num
 		self.exp = start_exp
+		_normalize()
 
 	#region Operators
 	## Normalizes the number to scientific notation (1 ≤ |num| < 10).
@@ -118,10 +119,36 @@ class BigNum:
 			return to_scientific_notation()
 	#endregion
 
+
+## A value used for managing player data. Can be converted to and from json.
+class DataVal:
+	var obj:BigNum
+	var multipliers:Dictionary[String, BigNum]
+	var id:String
+
+	func _init(data_id:String, multiply:Dictionary[String, BigNum] = {}, data_object:BigNum=null) -> void:
+
+		id = data_id
+		multipliers = multiply
+
+		if data_object:
+			obj = data_object
+		else:
+			obj = BigNum.new(0)
+
+	## Exports the DataVal to a json format.
+	func to_json() -> Dictionary:
+		return {
+			"id": id,
+			"multipliers": multipliers,
+			"obj": obj # TODO: Make object also convert into json.
+		}
+
+	## Imports the DataVal from a json format.
+	func from_json(dict:Dictionary) -> void:
+		id = dict["id"]
+		multipliers = dict["multipliers"]
+		obj = dict["obj"]
+
 func _ready() -> void:
-	var test1 = BigNum.new(5.976987,2078963)
-	var test2 = BigNum.new(5,5)
-	#test1.multiply(test2)
-	#print(test1.num)
-	#print(test1.exp)
-	print(test1.to_suffix_notation())
+	pass

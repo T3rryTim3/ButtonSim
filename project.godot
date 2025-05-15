@@ -18,3 +18,4 @@ config/icon="res://Assets/Textures/icon.svg"
 [autoload]
 
 Util="*res://Scripts/Global/util.gd"
+Data="*res://Scripts/Global/data.gd"
