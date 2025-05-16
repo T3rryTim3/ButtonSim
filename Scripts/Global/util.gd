@@ -15,140 +15,144 @@ var base_suffixes = [
 
 var BASE_ROUND_DIGITS:int = 2
 
-## A number consisted of a float value and exponent (equal to num * 10^exp). Used for big numbers.
 class BigNum:
-	var num:float
-	var exp:int
+	var num: float
+	var exp: int
 
-	func _init(start_num:float, start_exp:int=0) -> void:
-		self.num = start_num
-		self.exp = start_exp
+	func _init(start_num: float = 0, start_exp: int = 0) -> void:
+		num = start_num
+		exp = start_exp
 		_normalize()
 
-	#region Operators
-	## Normalizes the number to scientific notation (1 ≤ |num| < 10).
-	func _normalize():
-		while abs(self.num) >= 10.0:
-			self.num /= 10.0
-			self.exp += 1
-		while abs(self.num) < 1.0 and self.num != 0.0:
-			self.num *= 10.0
-			self.exp -= 1
+	func _normalize() -> void:
+		while abs(num) >= 10.0:
+			num /= 10.0
+			exp += 1
+		while abs(num) < 1.0 and num != 0.0:
+			num *= 10.0
+			exp -= 1
 
-	## Adds another BigNum to this one.
-	func add(other: BigNum):
-		var exp_dif = other.exp - self.exp
-		self.exp = max(other.exp, self.exp)
+	func _clone() -> BigNum:
+		return BigNum.new(num, exp)
+
+	#region Arithmetic Operations
+	func add(other: BigNum) -> BigNum:
+		var new_num = num
+		var new_exp = exp
+		var exp_dif = other.exp - exp
+		new_exp = max(exp, other.exp)
+
 		if exp_dif > 0:
-			self.num = other.num + (self.num / pow(10, exp_dif))
+			new_num = other.num + (num / pow(10, exp_dif))
 		elif exp_dif == 0:
-			self.num = other.num + self.num
-		elif exp_dif < 0:
-			self.num = self.num + (other.num / pow(10, -exp_dif))
-		_normalize()
+			new_num = num + other.num
+		else:
+			new_num = num + (other.num / pow(10, -exp_dif))
 
-	## Subtracts another BigNum from this one.
-	func subtract(other: BigNum):
-		var exp_dif = other.exp - self.exp
-		self.exp = max(other.exp, self.exp)
+		var result = BigNum.new(new_num, new_exp)
+		result._normalize()
+		return result
+
+	func subtract(other: BigNum) -> BigNum:
+		var new_num = num
+		var new_exp = exp
+		var exp_dif = other.exp - exp
+		new_exp = max(exp, other.exp)
+
 		if exp_dif > 0:
-			self.num = (self.num / pow(10, exp_dif)) - other.num
+			new_num = (num / pow(10, exp_dif)) - other.num
 		elif exp_dif == 0:
-			self.num = self.num - other.num
-		elif exp_dif < 0:
-			self.num = self.num - (other.num / pow(10, -exp_dif))
-		_normalize()
+			new_num = num - other.num
+		else:
+			new_num = num - (other.num / pow(10, -exp_dif))
 
-	## Multiplies this BigNum by another.
-	func multiply(other: BigNum):
-		self.num *= other.num
-		self.exp += other.exp
-		_normalize()
+		var result = BigNum.new(new_num, new_exp)
+		result._normalize()
+		return result
 
-	## Divides this BigNum by another.
-	func divide(other: BigNum):
-		self.num /= other.num
-		self.exp -= other.exp
-		_normalize()
+	func multiply(other: BigNum) -> BigNum:
+		var result = BigNum.new(num * other.num, exp + other.exp)
+		result._normalize()
+		return result
 
+	func divide(other: BigNum) -> BigNum:
+		var result = BigNum.new(num / other.num, exp - other.exp)
+		result._normalize()
+		return result
 	#endregion
-	
+
 	#region Comparison
-	## Returns true if this BigNum is greater than or equal to another.
 	func exceeds(other: BigNum) -> bool:
-		if self.exp > other.exp:
+		if exp > other.exp:
 			return true
-		elif self.exp < other.exp:
+		elif exp < other.exp:
 			return false
 		else:
-			return self.num >= other.num
+			return num >= other.num
 
-	## Returns true if this BigNum is less than another.
 	func less_than(other: BigNum) -> bool:
-		if self.exp < other.exp:
+		if exp < other.exp:
 			return true
-		elif self.exp > other.exp:
+		elif exp > other.exp:
 			return false
 		else:
-			return self.num < other.num
+			return num < other.num
 
-	## Returns true if this BigNum is greater than another.
 	func greater_than(other: BigNum) -> bool:
-		if self.exp > other.exp:
+		if exp > other.exp:
 			return true
-		elif self.exp < other.exp:
+		elif exp < other.exp:
 			return false
 		else:
-			return self.num > other.num
+			return num > other.num
 	#endregion
 
 	#region Display
-	func to_scientific_notation() -> String:
-		var rounded_num = round(self.num * pow(10, Util.BASE_ROUND_DIGITS)) / pow(10, Util.BASE_ROUND_DIGITS) 
+	func to_scientific_notation(round_digits:int=1) -> String:
+
+		if exp <= 5:
+			return str(round(num*pow(10, exp) * pow(10, round_digits)) / pow(10, round_digits))
+
+		var rounded_num = round(num * pow(10, Util.BASE_ROUND_DIGITS)) / pow(10, Util.BASE_ROUND_DIGITS)
 		var formatted_num = str(rounded_num)
-		if self.exp != 0:
-			formatted_num += "e" + str(self.exp)
+		if exp != 0:
+			formatted_num += "e" + str(exp)
 		return formatted_num
 
-	## Returns the BigNum as a string in typical suffix notation (k, M, B, etc.).
 	func to_suffix_notation() -> String:
-		var rounded_num = round(self.num * pow(10, Util.BASE_ROUND_DIGITS)) / pow(10, Util.BASE_ROUND_DIGITS) 
-		if self.exp / 3 < len(Util.base_suffixes):
-			return str(rounded_num) + " " + str(Util.base_suffixes[self.exp / 3])
+		var rounded_num = round(num * pow(10, Util.BASE_ROUND_DIGITS)) / pow(10, Util.BASE_ROUND_DIGITS)
+		if exp / 3 < len(Util.base_suffixes):
+			return str(rounded_num) + " " + str(Util.base_suffixes[exp / 3])
 		else:
 			return to_scientific_notation()
 	#endregion
 
 
-## A value used for managing player data. Can be converted to and from json.
-class DataVal:
-	var obj:BigNum
-	var multipliers:Dictionary[String, BigNum]
+## A value used for managing a player currency. Can be converted to and from json.
+class Currency:
+	var val:BigNum
 	var id:String
 
-	func _init(data_id:String, multiply:Dictionary[String, BigNum] = {}, data_object:BigNum=null) -> void:
+	func _init(currency_id:String, currency_val:BigNum=null) -> void:
 
-		id = data_id
-		multipliers = multiply
+		id = currency_id
 
-		if data_object:
-			obj = data_object
+		if currency_val:
+			val = currency_val
 		else:
-			obj = BigNum.new(0)
+			val = BigNum.new(0)
 
 	## Exports the DataVal to a json format.
 	func to_json() -> Dictionary:
 		return {
 			"id": id,
-			"multipliers": multipliers,
-			"obj": obj # TODO: Make object also convert into json.
+			"obj": val # TODO: Make object also convert into json.
 		}
 
 	## Imports the DataVal from a json format.
 	func from_json(dict:Dictionary) -> void:
 		id = dict["id"]
-		multipliers = dict["multipliers"]
-		obj = dict["obj"]
+		val = dict["obj"]
 
 func _ready() -> void:
 	pass

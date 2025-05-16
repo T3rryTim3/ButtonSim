@@ -1,3 +1,93 @@
-[gd_scene format=3 uid="uid://bkp35abfhaedd"]
+[gd_scene load_steps=6 format=3 uid="uid://bkp35abfhaedd"]
+
+[ext_resource type="FontFile" uid="uid://c1mjhk6ik1fv7" path="res://Assets/Fonts/PixelFont7-G02A.ttf" id="1_bo1nx"]
+[ext_resource type="Script" uid="uid://dfcks4t8dx0th" path="res://Scenes/testscene.gd" id="1_jjgbg"]
+
+[sub_resource type="Theme" id="Theme_jjgbg"]
+default_font = ExtResource("1_bo1nx")
+default_font_size = 20
+Button/fonts/font = ExtResource("1_bo1nx")
+Label/fonts/font = ExtResource("1_bo1nx")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jjgbg"]
+bg_color = Color(0.017261, 6.61798e-07, 0.169626, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bo1nx"]
+bg_color = Color(0.92, 0.2484, 0.897613, 0.223529)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.718466, 0.114004, 0.725543, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
 
 [node name="Main" type="Node"]
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_jjgbg")
+script = ExtResource("1_jjgbg")
+
+[node name="PanelContainer" type="PanelContainer" parent="Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_jjgbg")
+
+[node name="HSplitContainer" type="HSplitContainer" parent="Control/PanelContainer"]
+layout_mode = 2
+split_offset = 200
+
+[node name="MarginContainer2" type="MarginContainer" parent="Control/PanelContainer/HSplitContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="PanelContainer" type="PanelContainer" parent="Control/PanelContainer/HSplitContainer/MarginContainer2"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_bo1nx")
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/PanelContainer/HSplitContainer/MarginContainer2/PanelContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Labels" type="VBoxContainer" parent="Control/PanelContainer/HSplitContainer/MarginContainer2/PanelContainer/MarginContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Cash" type="Label" parent="Control/PanelContainer/HSplitContainer/MarginContainer2/PanelContainer/MarginContainer/Labels"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Cash: 10"
+
+[node name="MarginContainer" type="MarginContainer" parent="Control/PanelContainer/HSplitContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Control/PanelContainer/HSplitContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="ResetLayers" type="HBoxContainer" parent="Control/PanelContainer/HSplitContainer/MarginContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 16

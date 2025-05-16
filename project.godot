@@ -19,3 +19,5 @@ config/icon="res://Assets/Textures/icon.svg"
 
 Util="*res://Scripts/Global/util.gd"
 Data="*res://Scripts/Global/data.gd"
+Game="*res://Scripts/Global/game.gd"
+Config="*res://Scripts/Global/Config.gd"

@@ -1,10 +1,10 @@
 extends Node
 
 var data = {
-	"Stats": [
-		Util.DataVal.new("cash", {}),
-		Util.DataVal.new("rebirths", {"cash": Util.BigNum.new(2)})
-	],
+	"Stats": {
+		"Currencies": [
+		]
+	},
 	"Achievements": {
 		
 	},
@@ -15,7 +15,7 @@ var data = {
 
 ## Exports data to a json format.
 func to_json(data:Dictionary) -> String:
-	return ""
+	return ""	
 
 ## Inverse of to_json; Converts a json string into a dictionary of data.
 func from_json(json:String) -> Dictionary:
@@ -28,25 +28,26 @@ func stat_present(stat:String, arr:Array) -> bool:
 	var idx:int = 0
 
 	for k in arr:
-		if k is Util.DataVal and k.id == stat:
+		if k is Util.Currency and k.id == stat:
 			return idx
 		idx += 1
 
 	return -1
 
 ## Returns the dataval of a stat, or creates it (set to 0e0) if not already there.
-func get_stat(stat:String, create_if_missing:bool=false) -> Util.DataVal:
+func get_currency(stat:String) -> Util.Currency:
 
-	var idx = stat_present(stat, data["Stats"])
-
+	var idx = stat_present(stat, data["Stats"]["Currencies"])
 	if idx >= 0: # If the stat was found
-		return data["Stats"][idx]
-
-	if create_if_missing:
-		data["Stats"][stat] = Util.DataVal.new(stat)
-		return data["Stats"][stat]
-
+		return data["Stats"]["Currencies"][idx]
 	return null
+
+## Gets the bignum of a currency. Returns 1 if not present.
+func get_currency_val(stat:String) -> Util.BigNum:
+	var curr = get_currency(stat)
+	if curr:
+		return curr.val
+	return Util.BigNum.new(1)
 
 ## Gets the value that would be added to a stat
 func get_add_val(stat:String, val:Util.BigNum) -> Util.BigNum:
@@ -58,6 +59,6 @@ func get_add_val(stat:String, val:Util.BigNum) -> Util.BigNum:
 
 #endregion
 
-
-func _ready() -> void:
-	print(get_stat("cash").to_scientific_notation())
+#
+#func _ready() -> void:
+	#print(get_currency("cash").to_scientific_notation())
