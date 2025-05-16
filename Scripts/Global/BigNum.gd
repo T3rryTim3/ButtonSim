@@ -112,4 +112,7 @@ func to_suffix_notation() -> String:
 		return str(rounded_num * pow(10, exp % 3)) + "" + str(Util.base_suffixes[exp / 3])
 	else:
 		return to_scientific_notation()
+
+func _to_string() -> String:
+	return to_suffix_notation()
 #endregion
