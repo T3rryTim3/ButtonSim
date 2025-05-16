@@ -12,7 +12,8 @@ const RESET_LAYERS = {
 		"cost": {
 			"currency": "cash",
 			"init": 10,
-			"scale": 7.5
+			"scale": 3,
+			"exp_growth": .2
 		},
 		"init_val": 1,
 		"scale_val": 2.1
@@ -32,7 +33,7 @@ const RESET_LAYERS = {
 			"currency": "multiplier",
 			"init": 500,
 			"scale": 3.2,
-			"exp_growth": 1.3
+			"exp_growth": .15
 		},
 		"init_val": 1,
 		"scale_val": 1.6
@@ -48,7 +49,8 @@ const RESET_LAYERS = {
 		"multiplies": {
 			"cash": 0.05,
 			"multiplier": 0.2,
-			"rebirths": 1
+			"rebirths": 1,
+			"exp_growth": .1
 		},
 		"cost": {
 			"currency": "rebirths",

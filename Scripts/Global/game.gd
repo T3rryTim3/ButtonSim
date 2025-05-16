@@ -2,6 +2,9 @@ extends Node
 
 var player = {}
 
+var NUM_0 = B.new(0)
+var NUM_1 = B.new(1)
+
 func get_player_data():
 	var s = {
 		"time": 0,
@@ -38,6 +41,12 @@ func get_stat_increase(key:String, val:B):
 ## Increase a stat accounting for multipliers. The stat is assumed to be a direct key of player
 func increase_stat(key:String, val:B):
 
+	if key == "multiplier":
+		print("--")
+		print(val)
+		print(player[key])
+		#print(get_stat_increase(key, val))
+
 	if key not in Game.player:
 		print_debug("Warning: Key not found for increase.")
 
@@ -53,7 +62,7 @@ func set_stat(stat:String, val:B) -> void:
 
 ## Sets a stat to zero.
 func zero_stat(stat:String) -> void:
-	player[stat] = B.new(0)
+	player[stat] = Game.NUM_0
 
 func _ready() -> void:
 	player = get_player_data()

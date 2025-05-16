@@ -10,13 +10,17 @@ var key:String
 var currency:String
 
 func _get_button_cost(button_index:int):
-	var cost = B.new(Config.RESET_LAYERS[key]["cost"]["init"]).multiply(B.new(Config.RESET_LAYERS[key]["cost"]["scale"]).to_pow(button_index))
+	var cost = B.new(Config.RESET_LAYERS[key]["cost"]["init"])
+	cost = cost.multiply(B.new(pow(Config.RESET_LAYERS[key]["cost"]["scale"], button_index)))
+	#if "exp_growth" in Config.RESET_LAYERS[key]["cost"]:
+		#cost = cost.to_pow(Config.RESET_LAYERS[key]["cost"]["exp_growth"] * button_index)
 	return cost
 
 func _get_button_gain(button_index:int):
-	var gain = B.new(Config.RESET_LAYERS[key]["init_val"]).multiply(B.new(Config.RESET_LAYERS[key]["scale_val"]).to_pow(button_index))
-	if "exp_growth" in Config.RESET_LAYERS[key]["cost"]:
-		gain = gain.to_pow(Config.RESET_LAYERS[key]["cost"]["exp_growth"] * button_index)
+	var gain = B.new(Config.RESET_LAYERS[key]["init_val"])
+	gain = gain.multiply(B.new(pow(Config.RESET_LAYERS[key]["scale_val"], button_index)))
+	#if "exp_growth" in Config.RESET_LAYERS[key]["cost"]:
+		#gain = gain.to_pow(Config.RESET_LAYERS[key]["cost"]["exp_growth"] * button_index)
 	gain = Game.get_stat_increase(key, gain)
 	return gain
 

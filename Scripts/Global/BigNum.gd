@@ -66,11 +66,8 @@ func divide(other: B) -> B:
 	return result
 
 func to_pow(power: float) -> B:
-	var new_num = pow(num, power)
+	var new_num = pow(num, power) + num*pow(10, fmod(power,1))
 	var new_exp = int(exp * power)
-	
-	print("POW CALLED")
-	print(power)
 
 	# Account for the fractional exponent potentially affecting magnitude
 	var result = B.new(new_num, new_exp)
