@@ -64,6 +64,19 @@ func divide(other: B) -> B:
 	var result = B.new(num / other.num, exp - other.exp)
 	result._normalize()
 	return result
+
+func to_pow(power: float) -> B:
+	var new_num = pow(num, power)
+	var new_exp = int(exp * power)
+	
+	print("POW CALLED")
+	print(power)
+
+	# Account for the fractional exponent potentially affecting magnitude
+	var result = B.new(new_num, new_exp)
+	result._normalize()
+	return result
+
 #endregion
 
 #region Comparison

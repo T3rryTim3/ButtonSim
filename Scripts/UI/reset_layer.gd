@@ -9,12 +9,23 @@ var key:String
 ## The type of currency needed to buy this layer
 var currency:String
 
+func _get_button_cost(button_index:int):
+	var cost = B.new(Config.RESET_LAYERS[key]["cost"]["init"]).multiply(B.new(Config.RESET_LAYERS[key]["cost"]["scale"]).to_pow(button_index))
+	return cost
+
+func _get_button_gain(button_index:int):
+	var gain = B.new(Config.RESET_LAYERS[key]["init_val"]).multiply(B.new(Config.RESET_LAYERS[key]["scale_val"]).to_pow(button_index))
+	if "exp_growth" in Config.RESET_LAYERS[key]["cost"]:
+		gain = gain.to_pow(Config.RESET_LAYERS[key]["cost"]["exp_growth"] * button_index)
+	gain = Game.get_stat_increase(key, gain)
+	return gain
+
 ## Update a button's data
 func _update_button(button:Button):
 	var button_index = button.get_meta("idx", 0)
 
-	var cost = B.new(Config.RESET_LAYERS[key]["cost"]["init"] * pow(Config.RESET_LAYERS[key]["cost"]["scale"], button_index))
-	var gain = B.new(Config.RESET_LAYERS[key]["init_val"] * pow(Config.RESET_LAYERS[key]["scale_val"], button_index))
+	var cost = _get_button_cost(button_index)
+	var gain = _get_button_gain(button_index)
 	gain = Game.get_stat_increase(key, gain)
 
 	button.text = "Buy " + str(gain) + " " + key + " - " + str(cost) + " " + currency
@@ -24,10 +35,9 @@ func _update_button(button:Button):
 ## When a button is pressed to purchase the reset layer.
 func _button_pressed(button:Button):
 	var button_index = button.get_meta("idx", 0)
-
-	var cost = B.new(Config.RESET_LAYERS[key]["cost"]["init"] * pow(Config.RESET_LAYERS[key]["cost"]["scale"], button_index))
-	var gain = B.new(Config.RESET_LAYERS[key]["init_val"] * pow(Config.RESET_LAYERS[key]["scale_val"], button_index))
-	gain = Game.get_stat_increase(key, gain)
+	
+	var cost = _get_button_cost(button_index)
+	var gain = _get_button_gain(button_index)
 
 	if not Game.get_stat(currency).exceeds(cost):
 		return

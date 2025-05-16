@@ -8,7 +8,8 @@ func get_player_data():
 
 		"cash": B.new(),
 		"multiplier": B.new(),
-		"rebirths": B.new()
+		"rebirths": B.new(),
+		"super rebirths":B.new()
 	}
 
 	return s
