@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://bmjbvuxfcnarp"]
+
+[ext_resource type="Script" uid="uid://dy6mhufvng0st" path="res://Scripts/UI/reset_button.gd" id="1_uolxe"]
+
+[node name="ResetButton" type="Button"]
+script = ExtResource("1_uolxe")
+
+[node name="VisibleOnScreenEnabler2D" type="VisibleOnScreenEnabler2D" parent="."]
+
+[connection signal="pressed" from="." to="." method="_button_pressed"]

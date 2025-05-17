@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://1o003qvutk0x"]
+[gd_scene load_steps=5 format=3 uid="uid://1o003qvutk0x"]
 
 [ext_resource type="Script" uid="uid://cp0pe4fft5er5" path="res://Scripts/UI/reset_layer.gd" id="1_xk82d"]
 
@@ -12,6 +12,8 @@ corner_radius_top_left = 10
 corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xk82d"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xk82d"]
 bg_color = Color(0.6, 0.6, 0.6, 0)
@@ -28,6 +30,8 @@ corner_radius_bottom_left = 10
 [node name="ResetLayer" type="PanelContainer"]
 modulate = Color(1, 0, 0, 1)
 custom_minimum_size = Vector2(300, 0)
+size_flags_horizontal = 3
+size_flags_vertical = 3
 theme_override_styles/panel = SubResource("StyleBoxFlat_osnbp")
 script = ExtResource("1_xk82d")
 
@@ -49,6 +53,12 @@ theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
 theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 20
 text = "Multiplier"
+
+[node name="Button" type="Button" parent="ScrollContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_xk82d")
+toggle_mode = true
+text = "Hover to buy - Disabled"
 
 [node name="Buttons" type="VBoxContainer" parent="ScrollContainer/VBoxContainer"]
 layout_mode = 2

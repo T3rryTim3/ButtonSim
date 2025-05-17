@@ -8,9 +8,8 @@ var reset_layer = preload("res://Scenes/UI/reset_layer.tscn")
 var update_prog:float = 0
 
 func _process(delta: float) -> void:
-	
-	var cash_multi = B.new(10)
 
+	var cash_multi = B.new(5)
 	Game.increase_stat("cash", cash_multi.multiply(B.new(delta)))
 
 	#$PanelContainer/MarginContainer/VBoxContainer/Label.text = Game.player.cash.to_scientific_notation()
@@ -33,3 +32,5 @@ func _ready() -> void:
 		l.key = k
 
 		%ResetLayers.add_child(l)
+
+	%OpenPrestigeMenu.pressed.connect(%PrestigeMenu.open)

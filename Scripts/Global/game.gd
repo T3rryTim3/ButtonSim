@@ -7,12 +7,18 @@ var NUM_1 = B.new(1)
 
 func get_player_data():
 	var s = {
-		"time": 0,
+		"time": 0.0,
 
-		"cash": B.new(),
-		"multiplier": B.new(),
-		"rebirths": B.new(),
-		"super rebirths":B.new()
+		"cash": B.new(0),
+		"multiplier": B.new(0),
+		"rebirths": B.new(0),
+		"super":B.new(0),
+		"ultra":B.new(0),
+		"mega":B.new(0),
+		"prestige_points":B.new(0),
+
+		"upgrades": {}
+
 	}
 
 	return s
@@ -25,7 +31,7 @@ func _get_reset_multi(key:String) -> B:
 		if key not in Config.RESET_LAYERS[k]["multiplies"]:
 			continue
 		var val = Game.player[k].multiply(B.new(Config.RESET_LAYERS[k]["multiplies"][key]))
-		mul = mul.multiply(B.new(1).add(val))
+		mul = mul.multiply(val.plus(B.new(1)))
 
 	return mul
 
@@ -41,16 +47,10 @@ func get_stat_increase(key:String, val:B):
 ## Increase a stat accounting for multipliers. The stat is assumed to be a direct key of player
 func increase_stat(key:String, val:B):
 
-	if key == "multiplier":
-		print("--")
-		print(val)
-		print(player[key])
-		#print(get_stat_increase(key, val))
-
 	if key not in Game.player:
 		print_debug("Warning: Key not found for increase.")
 
-	player[key] = player[key].add(get_stat_increase(key, val))
+	player[key] = player[key].plus(get_stat_increase(key, val))
 
 ## Gets a stat from the player
 func get_stat(stat:String) -> B:

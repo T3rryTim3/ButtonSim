@@ -1,12 +1,16 @@
-[gd_scene load_steps=6 format=3 uid="uid://bkp35abfhaedd"]
+[gd_scene load_steps=12 format=3 uid="uid://bkp35abfhaedd"]
 
 [ext_resource type="FontFile" uid="uid://c1mjhk6ik1fv7" path="res://Assets/Fonts/PixelFont7-G02A.ttf" id="1_bo1nx"]
 [ext_resource type="Script" uid="uid://dfcks4t8dx0th" path="res://Scenes/testscene.gd" id="1_jjgbg"]
+[ext_resource type="Script" uid="uid://daw6cp120mdg4" path="res://Scripts/UI/prestige_menu.gd" id="3_8gbba"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jjvhh"]
 
 [sub_resource type="Theme" id="Theme_jjgbg"]
 default_font = ExtResource("1_bo1nx")
 default_font_size = 20
 Button/fonts/font = ExtResource("1_bo1nx")
+Button/styles/focus = SubResource("StyleBoxEmpty_jjvhh")
 Label/fonts/font = ExtResource("1_bo1nx")
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jjgbg"]
@@ -24,9 +28,40 @@ corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bo1nx"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8gbba"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8gbba"]
+content_margin_left = 16.0
+content_margin_top = 16.0
+content_margin_right = 16.0
+content_margin_bottom = 16.0
+bg_color = Color(0.162927, 0.000308422, 0.295543, 1)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.819116, 0.494426, 0.99577, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jjvhh"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.0273285, 5.29438e-07, 0.228622, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
 [node name="Main" type="Node"]
 
-[node name="Control" type="Control" parent="."]
+[node name="Game" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -36,7 +71,7 @@ grow_vertical = 2
 theme = SubResource("Theme_jjgbg")
 script = ExtResource("1_jjgbg")
 
-[node name="PanelContainer" type="PanelContainer" parent="Control"]
+[node name="PanelContainer" type="PanelContainer" parent="Game"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -45,52 +80,314 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_jjgbg")
 
-[node name="HSplitContainer" type="HSplitContainer" parent="Control/PanelContainer"]
+[node name="HSplitContainer" type="HSplitContainer" parent="Game/PanelContainer"]
 layout_mode = 2
 split_offset = 200
 
-[node name="MarginContainer2" type="MarginContainer" parent="Control/PanelContainer/HSplitContainer"]
+[node name="SidePanel" type="MarginContainer" parent="Game/PanelContainer/HSplitContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="PanelContainer" type="PanelContainer" parent="Control/PanelContainer/HSplitContainer/MarginContainer2"]
+[node name="PanelContainer" type="PanelContainer" parent="Game/PanelContainer/HSplitContainer/SidePanel"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_bo1nx")
 
-[node name="MarginContainer" type="MarginContainer" parent="Control/PanelContainer/HSplitContainer/MarginContainer2/PanelContainer"]
+[node name="MarginContainer" type="MarginContainer" parent="Game/PanelContainer/HSplitContainer/SidePanel/PanelContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="Labels" type="VBoxContainer" parent="Control/PanelContainer/HSplitContainer/MarginContainer2/PanelContainer/MarginContainer"]
-unique_name_in_owner = true
+[node name="VBoxContainer" type="VBoxContainer" parent="Game/PanelContainer/HSplitContainer/SidePanel/PanelContainer/MarginContainer"]
 layout_mode = 2
 
-[node name="Cash" type="Label" parent="Control/PanelContainer/HSplitContainer/MarginContainer2/PanelContainer/MarginContainer/Labels"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Game/PanelContainer/HSplitContainer/SidePanel/PanelContainer/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxEmpty_bo1nx")
+theme_override_styles/focus = SubResource("StyleBoxEmpty_8gbba")
+
+[node name="Labels" type="VBoxContainer" parent="Game/PanelContainer/HSplitContainer/SidePanel/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 6
+
+[node name="Cash" type="Label" parent="Game/PanelContainer/HSplitContainer/SidePanel/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/Labels"]
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Cash: 10"
 
-[node name="MarginContainer" type="MarginContainer" parent="Control/PanelContainer/HSplitContainer"]
+[node name="OpenPrestigeMenu" type="Button" parent="Game/PanelContainer/HSplitContainer/SidePanel/PanelContainer/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Prestige"
+flat = true
+
+[node name="Resets" type="MarginContainer" parent="Game/PanelContainer/HSplitContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
 theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
-[node name="ScrollContainer" type="ScrollContainer" parent="Control/PanelContainer/HSplitContainer/MarginContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Game/PanelContainer/HSplitContainer/Resets"]
 layout_mode = 2
 mouse_filter = 0
 vertical_scroll_mode = 0
 
-[node name="ResetLayers" type="HBoxContainer" parent="Control/PanelContainer/HSplitContainer/MarginContainer/ScrollContainer"]
+[node name="ResetLayers" type="HBoxContainer" parent="Game/PanelContainer/HSplitContainer/Resets/ScrollContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme_override_constants/separation = 16
+
+[node name="PrestigeMenu" type="CenterContainer" parent="Game"]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("3_8gbba")
+
+[node name="Prestige" type="PanelContainer" parent="Game/PrestigeMenu"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_8gbba")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Game/PrestigeMenu/Prestige"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Label" type="Label" parent="Game/PrestigeMenu/Prestige/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "Presitge"
+horizontal_alignment = 1
+
+[node name="Label2" type="Label" parent="Game/PrestigeMenu/Prestige/VBoxContainer"]
+layout_mode = 2
+text = "Reset all of your cash, rebirths, etc. to gain Prestige Points (PP)"
+horizontal_alignment = 1
+
+[node name="Label3" type="Label" parent="Game/PrestigeMenu/Prestige/VBoxContainer"]
+layout_mode = 2
+text = "If you prestiged now, you would gain __ PP."
+horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="Game/PrestigeMenu/Prestige/VBoxContainer"]
+layout_mode = 2
+text = "Prestige!"
+
+[node name="Exit" type="Button" parent="Game/PrestigeMenu/Prestige"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "Exit"
+flat = true
+
+[node name="Prestige2" type="PanelContainer" parent="Game/PrestigeMenu"]
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_8gbba")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Game/PrestigeMenu/Prestige2"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Label" type="Label" parent="Game/PrestigeMenu/Prestige2/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "Presitge Upgrades"
+horizontal_alignment = 1
+
+[node name="Label2" type="Label" parent="Game/PrestigeMenu/Prestige2/VBoxContainer"]
+layout_mode = 2
+text = "The following upgrades can be purchased with PP."
+horizontal_alignment = 1
+
+[node name="Label3" type="Label" parent="Game/PrestigeMenu/Prestige2/VBoxContainer"]
+layout_mode = 2
+text = "Your current PP:"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Game/PrestigeMenu/Prestige2/VBoxContainer"]
+custom_minimum_size = Vector2(100, 200)
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 3
+vertical_scroll_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Game/PrestigeMenu/Prestige2/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Upgrade" type="PanelContainer" parent="Game/PrestigeMenu/Prestige2/VBoxContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_jjvhh")
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Game/PrestigeMenu/Prestige2/VBoxContainer/ScrollContainer/VBoxContainer/Upgrade"]
+layout_mode = 2
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Game/PrestigeMenu/Prestige2/VBoxContainer/ScrollContainer/VBoxContainer/Upgrade/VBoxContainer2"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Game/PrestigeMenu/Prestige2/VBoxContainer/ScrollContainer/VBoxContainer/Upgrade/VBoxContainer2/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.832859, 0.155363, 1, 1)
+text = "Upgrade Name"
+horizontal_alignment = 1
+
+[node name="Control" type="Control" parent="Game/PrestigeMenu/Prestige2/VBoxContainer/ScrollContainer/VBoxContainer/Upgrade/VBoxContainer2/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Cost" type="Label" parent="Game/PrestigeMenu/Prestige2/VBoxContainer/ScrollContainer/VBoxContainer/Upgrade/VBoxContainer2/HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.832859, 0.155363, 1, 1)
+text = "0/10"
+
+[node name="Desc" type="Label" parent="Game/PrestigeMenu/Prestige2/VBoxContainer/ScrollContainer/VBoxContainer/Upgrade/VBoxContainer2"]
+layout_mode = 2
+text = "Unlocks a thingy which does thing stuff which boosts your things"
+autowrap_mode = 2
+
+[node name="Button" type="Button" parent="Game/PrestigeMenu/Prestige2/VBoxContainer/ScrollContainer/VBoxContainer/Upgrade/VBoxContainer2"]
+modulate = Color(1, 0, 0, 1)
+layout_mode = 2
+text = "Purchase - 100PP"
+flat = true
+
+[node name="Upgrade2" type="PanelContainer" parent="Game/PrestigeMenu/Prestige2/VBoxContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_jjvhh")
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Game/PrestigeMenu/Prestige2/VBoxContainer/ScrollContainer/VBoxContainer/Upgrade2"]
+layout_mode = 2
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Game/PrestigeMenu/Prestige2/VBoxContainer/ScrollContainer/VBoxContainer/Upgrade2/VBoxContainer2"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Game/PrestigeMenu/Prestige2/VBoxContainer/ScrollContainer/VBoxContainer/Upgrade2/VBoxContainer2/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.832859, 0.155363, 1, 1)
+text = "Upgrade Name"
+horizontal_alignment = 1
+
+[node name="Control" type="Control" parent="Game/PrestigeMenu/Prestige2/VBoxContainer/ScrollContainer/VBoxContainer/Upgrade2/VBoxContainer2/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Cost" type="Label" parent="Game/PrestigeMenu/Prestige2/VBoxContainer/ScrollContainer/VBoxContainer/Upgrade2/VBoxContainer2/HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.832859, 0.155363, 1, 1)
+text = "0/10"
+
+[node name="Desc" type="Label" parent="Game/PrestigeMenu/Prestige2/VBoxContainer/ScrollContainer/VBoxContainer/Upgrade2/VBoxContainer2"]
+layout_mode = 2
+text = "Unlocks a thingy which does thing stuff which boosts your things"
+autowrap_mode = 2
+
+[node name="Button" type="Button" parent="Game/PrestigeMenu/Prestige2/VBoxContainer/ScrollContainer/VBoxContainer/Upgrade2/VBoxContainer2"]
+modulate = Color(1, 0, 0, 1)
+layout_mode = 2
+text = "Purchase - 100PP"
+flat = true
+
+[node name="Upgrade3" type="PanelContainer" parent="Game/PrestigeMenu/Prestige2/VBoxContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_jjvhh")
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Game/PrestigeMenu/Prestige2/VBoxContainer/ScrollContainer/VBoxContainer/Upgrade3"]
+layout_mode = 2
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Game/PrestigeMenu/Prestige2/VBoxContainer/ScrollContainer/VBoxContainer/Upgrade3/VBoxContainer2"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Game/PrestigeMenu/Prestige2/VBoxContainer/ScrollContainer/VBoxContainer/Upgrade3/VBoxContainer2/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.832859, 0.155363, 1, 1)
+text = "Upgrade Name"
+horizontal_alignment = 1
+
+[node name="Control" type="Control" parent="Game/PrestigeMenu/Prestige2/VBoxContainer/ScrollContainer/VBoxContainer/Upgrade3/VBoxContainer2/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Cost" type="Label" parent="Game/PrestigeMenu/Prestige2/VBoxContainer/ScrollContainer/VBoxContainer/Upgrade3/VBoxContainer2/HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.832859, 0.155363, 1, 1)
+text = "0/10"
+
+[node name="Desc" type="Label" parent="Game/PrestigeMenu/Prestige2/VBoxContainer/ScrollContainer/VBoxContainer/Upgrade3/VBoxContainer2"]
+layout_mode = 2
+text = "Unlocks a thingy which does thing stuff which boosts your things"
+autowrap_mode = 2
+
+[node name="Button" type="Button" parent="Game/PrestigeMenu/Prestige2/VBoxContainer/ScrollContainer/VBoxContainer/Upgrade3/VBoxContainer2"]
+modulate = Color(1, 0, 0, 1)
+layout_mode = 2
+text = "Purchase - 100PP"
+flat = true
+
+[node name="Upgrade4" type="PanelContainer" parent="Game/PrestigeMenu/Prestige2/VBoxContainer/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_jjvhh")
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Game/PrestigeMenu/Prestige2/VBoxContainer/ScrollContainer/VBoxContainer/Upgrade4"]
+layout_mode = 2
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Game/PrestigeMenu/Prestige2/VBoxContainer/ScrollContainer/VBoxContainer/Upgrade4/VBoxContainer2"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="Game/PrestigeMenu/Prestige2/VBoxContainer/ScrollContainer/VBoxContainer/Upgrade4/VBoxContainer2/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.832859, 0.155363, 1, 1)
+text = "Upgrade Name"
+horizontal_alignment = 1
+
+[node name="Control" type="Control" parent="Game/PrestigeMenu/Prestige2/VBoxContainer/ScrollContainer/VBoxContainer/Upgrade4/VBoxContainer2/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Cost" type="Label" parent="Game/PrestigeMenu/Prestige2/VBoxContainer/ScrollContainer/VBoxContainer/Upgrade4/VBoxContainer2/HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.832859, 0.155363, 1, 1)
+text = "0/10"
+
+[node name="Desc" type="Label" parent="Game/PrestigeMenu/Prestige2/VBoxContainer/ScrollContainer/VBoxContainer/Upgrade4/VBoxContainer2"]
+layout_mode = 2
+text = "Unlocks a thingy which does thing stuff which boosts your things"
+autowrap_mode = 2
+
+[node name="Button" type="Button" parent="Game/PrestigeMenu/Prestige2/VBoxContainer/ScrollContainer/VBoxContainer/Upgrade4/VBoxContainer2"]
+modulate = Color(1, 0, 0, 1)
+layout_mode = 2
+text = "Purchase - 100PP"
+flat = true
+
+[node name="Exit" type="Button" parent="Game/PrestigeMenu/Prestige2/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+text = "Back"
+flat = true

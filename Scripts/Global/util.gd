@@ -120,6 +120,7 @@ class BigNum:
 		return formatted_num
 
 	func to_suffix_notation() -> String:
+		@warning_ignore("integer_division")
 		var rounded_num = round(num * pow(10, Util.BASE_ROUND_DIGITS)) / pow(10, Util.BASE_ROUND_DIGITS)
 		if exp / 3 < len(Util.base_suffixes):
 			return str(rounded_num) + " " + str(Util.base_suffixes[exp / 3])
