@@ -9,8 +9,9 @@ var update_prog:float = 0
 
 func _process(delta: float) -> void:
 
-	var cash_multi = B.new(5)
-	Game.increase_stat("cash", cash_multi.multiply(B.new(delta)))
+	Game.increase_stat("cash", 5*delta)
+
+	#player.score
 
 	#$PanelContainer/MarginContainer/VBoxContainer/Label.text = Game.player.cash.to_scientific_notation()
 	%Labels/Cash.text = "Cash: " + str(Game.player.cash)

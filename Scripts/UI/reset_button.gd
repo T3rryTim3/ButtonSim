@@ -11,13 +11,22 @@ var cost:B
 var update_cooldown:float = 2
 var current_update_cooldown:float = 0
 
+var init_cost:float
+var init_gain:float
+var button_cost:B ## Cost of the button after multiplying by index
+var button_gain:B ## Gain of the button after muiltiplying by index
+
+var buying:bool = false
+var bought:int = 0 ## Amount of times bought
+var buy_time:float = 0.0 ## Current time spent buying. Used to calculate buy amounts
+
 ## Returns the hold-buy speed
 func _get_buy_speed() -> float:
 	return 1
 
 func _get_button_cost(button_index:int):
 
-	var c = B.new(Config.RESET_LAYERS[key]["cost"]["init"])
+	var c = B.new(init_cost)
 	c = c.multiply(B.new(Config.RESET_LAYERS[key]["cost"]["scale"]).power(button_index))
 
 	if "exp_growth" in Config.RESET_LAYERS[key]["cost"]:
@@ -27,34 +36,38 @@ func _get_button_cost(button_index:int):
 
 func _get_button_gain(button_index:int):
 
-	var g = B.new(Config.RESET_LAYERS[key]["init_val"])
+	var g = B.new(init_gain)
 	g.multiplyEquals(B.new(Config.RESET_LAYERS[key]["scale_val"]).power(button_index))
 
-	if "exp_growth" in Config.RESET_LAYERS[key]["cost"]:
-		g = g.power(Config.RESET_LAYERS[key]["cost"]["exp_growth"] * button_index+1)
-
-	g = Game.get_stat_increase(key, g)
+	if "exp_growth" in Config.RESET_LAYERS[key]:
+		g = g.power(Config.RESET_LAYERS[key]["exp_growth"] * button_index+1)
 
 	return g
 
-## When a button is pressed to purchase the reset layer.
-func _button_pressed():
-	
-	var cost = _get_button_cost(button_idx)
-	var gain = _get_button_gain(button_idx)
+## When a button is pressed to purchase the reset layer. Bulk determines the number of times bought
+func _button_pressed(bulk:int=1):
 
-	if not Game.get_stat(currency).exceeds(cost):
+	if bulk <= 0:
 		return
 
-	Game.set_stat(currency, Game.player[currency].minus(cost))
-	for reset in Config.RESET_LAYERS[key]["reset"]:
-		Game.zero_stat(reset)
+	update_stats()
 
-	Game.increase_stat(key, gain)
+	for i in range(bulk):
+		if not Game.get_stat(currency).exceeds(cost):
+			return
+
+		Game.set_stat(currency, Game.player[currency].minus(cost))
+		for reset in Config.RESET_LAYERS[key]["reset"]:
+			Game.zero_stat(reset)
+
+		Game.increase_stat(key, gain)
+		bought += 1
 
 func update_stats() -> void: # Updates internal cost and gain values
-	cost = _get_button_cost(button_idx)
-	gain = _get_button_gain(button_idx)
+	button_cost = _get_button_cost(button_idx)
+	button_gain = _get_button_gain(button_idx)
+	cost = button_cost
+	gain = button_gain
 
 ## Update a button's data
 func update():
@@ -64,8 +77,29 @@ func update():
 	disabled = not Game.get_stat(currency).exceeds(cost)
 
 func _process(delta: float) -> void:
-	update_stats()
+	#current_update_cooldown += delta
+	#if current_update_cooldown > update_cooldown:
+		#current_update_cooldown = 0
+	gain = Game.get_stat_increase(key, button_gain)
+
+	## Hold-to-buy
+	if buying:
+		if not disabled:
+			var to_buy = buy_time / Game.get_stat("buy_speed")
+			buy_time += delta
+			_button_pressed(max(0, to_buy - bought))
+
+		if (!button_pressed) and not disabled:
+			print("E")
+			buying = false
+
 	update()
 
 func _ready():
 	currency = Config.RESET_LAYERS[key]["cost"]["currency"]
+	init_cost = Config.RESET_LAYERS[key]["cost"]["init"]
+	init_gain = Config.RESET_LAYERS[key]["init_val"]
+
+	button_down.connect(func(): buy_time = 0; buying = true; bought = 0)
+
+	update_stats()

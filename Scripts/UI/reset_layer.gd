@@ -17,7 +17,7 @@ func _reload() -> void:
 	for child in desc_vbox.get_children():
 		if child.has_meta("mult"):
 			var mult = child.get_meta("mult")
-			child.text = mult.capitalize() + ": x" + str((Game.get_stat(key).multiply(B.new(Config.RESET_LAYERS[key]["multiplies"][mult]))).plus(B.new(1)))
+			child.text = mult.capitalize() + ": x" + str((Game.get_stat(key).multiply(Config.RESET_LAYERS[key]["multiplies"][mult])))
 
 func _process(delta: float) -> void:
 	_reload()

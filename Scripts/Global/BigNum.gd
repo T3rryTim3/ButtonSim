@@ -254,7 +254,6 @@ static func add(x, y) -> B:
 	B.normalize(result)
 	return result
 
-
 ## Subtracts two numbers and returns the B number result
 static func subtract(x, y) -> B:
 	x = B._typeCheck(x)
@@ -455,6 +454,15 @@ func plusEquals(n) -> B:
 	exponent = new_value.exponent
 	return self
 
+## Adds the float/int n to the current bignum.
+func quickPlusEquals(n:Variant) -> B:
+	if (n is not float) and float(n is not int):
+		printerr("quickPlus only takes integers or floats.")
+		return self
+	mantissa += n
+	B.normalize(self)
+	return self
+
 
 ## Equivalent of [code]B - n[/code]
 func minus(n) -> B:
@@ -468,11 +476,9 @@ func minusEquals(n) -> B:
 	exponent = new_value.exponent
 	return self
 
-
 ## Equivalent of [code]B * n[/code]
 func multiply(n) -> B:
 	return B.times(self, n)
-
 
 ## Equivalent of [code]B *= n[/code]
 func multiplyEquals(n) -> B:
