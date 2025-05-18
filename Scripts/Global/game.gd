@@ -1,5 +1,7 @@
 extends Node
 
+var scn_upgrade = preload("res://Scenes/UI/upgrade.tscn")
+
 var player = {}
 
 var NUM_0 = B.new(0)
@@ -27,14 +29,20 @@ func get_player_data():
 			},
 		},
 
-		"buy_speed": 0.1, ## Time it takes for each button buy
+		"buy_speed": Config.BASE_BUY_SPEED, ## Time it takes for each button buy
 
 		"upgrades": {}
 
 	}
 
+	for upgrade in Config.upgrades:
+		s["upgrades"][upgrade] = {
+			"purchased": 0
+		}
+
 	return s
 
+#region Stat Management
 ## Get the multiplier of a stat from all of the reset data.
 func _get_reset_multi(mul:B, key:String) -> B:
 
@@ -79,11 +87,6 @@ func increase_stat(key:String, val:Variant):
 func get_stat(stat:String) -> Variant:
 	return player[stat]
 
-## Gets a reset data dict from the player
-func get_reset(stat:String) -> Variant:
-	return player["resets"][stat]
-
-
 ## Sets a player's stat
 func set_stat(stat:String, val:B) -> void:
 	player[stat] = val
@@ -91,9 +94,49 @@ func set_stat(stat:String, val:B) -> void:
 ## Sets a stat to zero.
 func zero_stat(stat:String) -> void:
 	player[stat] = Game.NUM_0
+#endregion
 
+#region Resets
+## Gets a reset data dict from the player
+func get_reset(stat:String) -> Variant:
+	return player["resets"][stat]
+
+func spend_reset_points(stat:String, amt:Variant) -> void:
+	player["resets"][stat].points.minusEquals(amt)
+#endregion
+
+#region Upgrades
+func get_upgrades_by_tag(tag:String) -> Dictionary:
+	var upgrades = {}
+
+	for k in Config.upgrades:
+		if tag in Config.upgrades[k]["tags"]:
+			upgrades[k] = Config.upgrades[k]
+
+	return upgrades
+
+## Gets the amount of times an upgrade has been bought
+func get_upgrade_count(upgrade:String) -> int:
+	return player["upgrades"][upgrade]["purchased"]
+
+## Increases the amount of times an upgrade has been bought
+func increase_upgrade_count(upgrade:String, amt:int=1) -> void:
+	player["upgrades"][upgrade]["purchased"] += amt
+
+## Reset an upgrade's buy count to zero.
+func reset_upgrade_count(upgrade:String, amt:int=1) -> void:
+	player["upgrades"][upgrade]["purchased"] = 0
+#endregion
+
+#region Base functions
 func _process(delta: float) -> void:
-	_cached_stat_increases = {}
+	_cached_stat_increases = {} # Reset cache every frame
+
+	# Update buy speed
+	var buy_speed = Config.BASE_BUY_SPEED
+	buy_speed *= pow(0.8, get_upgrade_count("PP Buy speed"))
+	player.buy_speed = buy_speed
 
 func _ready() -> void:
 	player = get_player_data()
+#endregion

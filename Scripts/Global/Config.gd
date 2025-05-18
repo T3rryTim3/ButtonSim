@@ -2,6 +2,10 @@ extends Node
 
 const UPDATE_RATE:float = 0.5
 
+var MIN_PRESTIGE_SCORE:float = 5
+
+var BASE_BUY_SPEED:float = 0.1
+
 const RESET_LAYERS = {
 	"multiplier": {
 		"color": Color(1,.3,.3),
@@ -118,13 +122,38 @@ const RESET_LAYERS = {
 }
 
 var upgrades = {
-	"hover_buy": {
-		"name": "Hover to Buy",
-		"reset_tags": ["prestige"],
-		"cost_currency": "prestige_points",
+	"Auto Buy": {
+		"name": "Auto Buy",
+		"tags": ["prestige"],
+		"currency": "prestige_points",
+		"currency_name": "PP",
+		"get_player_currency": func(): return Game.get_reset("prestige").points,
+		"spend_currency": func(amt:Variant): Game.spend_reset_points("prestige", amt),
 		"get_max": func(): return len(RESET_LAYERS.keys()),
-		"get_desc": func(next:int): return "Unlock hover-to-buy for " + str(RESET_LAYERS.keys()[next]),
-		"get_cost": func(next:int): return pow(10,(next+1))
+		"get_desc": func(next:int): return "Unlock auto-buy for " + str(RESET_LAYERS.keys()[next]),
+		"get_cost": func(next:int): return B.new(10).multiply(B.new(10).power(next))
+	},
+	"PP Boost": {
+		"name": "PP Boost",
+		"tags": ["prestige"],
+		"currency": "prestige_points",
+		"currency_name": "PP",
+		"get_player_currency": func(): return Game.get_reset("prestige").points,
+		"spend_currency": func(amt:Variant): Game.spend_reset_points("prestige", amt),
+		"get_max": func(): return len(RESET_LAYERS.keys()),
+		"get_desc": func(next:int): return "Your PP now multiplies " + str((["cash"] + RESET_LAYERS.keys())[next]),
+		"get_cost": func(next:int): return B.new(5).multiply(B.new(10).power(next))
+	},
+	"PP Buy speed": {
+		"name": "Buy speed",
+		"tags": ["prestige"],
+		"currency": "prestige_points",
+		"currency_name": "PP",
+		"get_player_currency": func(): return Game.get_reset("prestige").points,
+		"spend_currency": func(amt:Variant): Game.spend_reset_points("prestige", amt),
+		"get_max": func(): return len(RESET_LAYERS.keys()),
+		"get_desc": func(next:int): return "Your buy speed is 20% faster.",
+		"get_cost": func(next:int): return B.new(5).multiply(B.new(10).power(next))
 	}
 }
 

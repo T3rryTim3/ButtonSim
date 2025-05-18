@@ -90,7 +90,6 @@ func _process(delta: float) -> void:
 			_button_pressed(max(0, to_buy - bought))
 
 		if (!button_pressed) and not disabled:
-			print("E")
 			buying = false
 
 	update()

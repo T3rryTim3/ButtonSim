@@ -1,0 +1,53 @@
+[gd_scene load_steps=3 format=3 uid="uid://bv06a6gqu5gm4"]
+
+[ext_resource type="Script" uid="uid://ce1r82jjsxbj5" path="res://Scripts/UI/upgrade.gd" id="1_fkjs2"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jjvhh"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.0273285, 5.29438e-07, 0.228622, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[node name="Upgrade" type="PanelContainer"]
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_jjvhh")
+script = ExtResource("1_fkjs2")
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="."]
+layout_mode = 2
+alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer2"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="VBoxContainer2/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0.832859, 0.155363, 1, 1)
+text = "Upgrade Name"
+horizontal_alignment = 1
+
+[node name="Control" type="Control" parent="VBoxContainer2/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Cost" type="Label" parent="VBoxContainer2/HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.832859, 0.155363, 1, 1)
+text = "0/10"
+
+[node name="Desc" type="Label" parent="VBoxContainer2"]
+layout_mode = 2
+text = "Unlocks a thingy which does thing stuff which boosts your things"
+autowrap_mode = 2
+
+[node name="Button" type="Button" parent="VBoxContainer2"]
+modulate = Color(1, 0, 0, 1)
+layout_mode = 2
+text = "Purchase - 100PP"
+flat = true
