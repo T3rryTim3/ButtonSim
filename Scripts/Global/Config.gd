@@ -37,7 +37,7 @@ const RESET_LAYERS = {
 			"exp_growth": .05
 		},
 		"init_val": 1,
-		"scale_val": 1.6,
+		"scale_val": 1.9,
 		"exp_growth": .025
 	},
 
@@ -60,7 +60,7 @@ const RESET_LAYERS = {
 			"exp_growth": .025
 		},
 		"init_val": 1,
-		"scale_val": 3,
+		"scale_val": 1.5,
 		"exp_growth": .025
 	},
 

@@ -11,7 +11,13 @@ func _process(delta: float) -> void:
 
 	Game.increase_stat("cash", 5*delta)
 
-	#player.score
+	var score = B.new(1)
+	for k in Config.RESET_LAYERS:
+		if Game.get_stat(k).isLessThanOrEqualTo(0):
+			continue
+		score.plusEquals(Game.get_stat(k).absLog10()+1)
+	Game.set_stat("score", score)
+	%Labels/Score.text = "Score: " + str(score)
 
 	#$PanelContainer/MarginContainer/VBoxContainer/Label.text = Game.player.cash.to_scientific_notation()
 	%Labels/Cash.text = "Cash: " + str(Game.player.cash)
@@ -20,7 +26,10 @@ func _process(delta: float) -> void:
 		%Labels.get_node(k).text = k.capitalize() + ": " + str(Game.get_stat(k))
 
 func _ready() -> void:
-	
+
+	if not Game.ready:
+		await Game.ready
+
 	for k in Config.RESET_LAYERS:
 		# Create label
 		var label = Label.new()

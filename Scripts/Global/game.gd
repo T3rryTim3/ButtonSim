@@ -11,21 +11,23 @@ func get_player_data():
 	var s = {
 		"time": 0.0,
 
+		"score": B.new(0),
+
 		"cash": B.new(0),
 		"multiplier": B.new(0),
-		"rebirths": B.new(0),
+		"rebirths": B.new(200),
 		"super":B.new(0),
 		"ultra":B.new(0),
 		"mega":B.new(0),
-		"prestige_points":B.new(0),
 
 		"resets": {
 			"prestige": {
-				"count" : 0
+				"count" : B.new(0),
+				"points":B.new(0)
 			},
 		},
 
-		"buy_speed": 0.01, ## Time it takes for each button buy
+		"buy_speed": 0.1, ## Time it takes for each button buy
 
 		"upgrades": {}
 
@@ -76,6 +78,11 @@ func increase_stat(key:String, val:Variant):
 ## Gets a stat from the player
 func get_stat(stat:String) -> Variant:
 	return player[stat]
+
+## Gets a reset data dict from the player
+func get_reset(stat:String) -> Variant:
+	return player["resets"][stat]
+
 
 ## Sets a player's stat
 func set_stat(stat:String, val:B) -> void:
