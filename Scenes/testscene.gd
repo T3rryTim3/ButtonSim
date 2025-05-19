@@ -31,10 +31,37 @@ func _process(delta: float) -> void:
 	for k in Config.RESET_LAYERS:
 		%Labels.get_node(k).text = k.capitalize() + ": " + str(Game.get_stat(k))
 
-func _ready() -> void:
+func _update_reset_layers() -> void:
+	var idx = 0
 
-	if not Game.ready:
-		await Game.ready
+	for k in Config.RESET_LAYERS:
+
+		var l
+		if %ResetLayers.has_node(k):
+			l = %ResetLayers.get_node(k)
+		print(k)
+		print(l)
+
+		if l and l.reset_idx > Game.get_upgrade_count("PP Layers")+2:
+			print("This shouldn't happen.")
+			l.queue_free()
+			continue
+		elif l:
+			l.update_button_count(l._get_button_count())
+		elif not l and idx <= Game.get_upgrade_count("PP Layers")+2:
+			l = reset_layer.instantiate()
+			l.name = k
+			l.key = k
+			l.reset_idx = idx
+			%ResetLayers.add_child(l)
+
+		idx += 1
+
+func _reload_reset_layers() -> void:
+	var idx = 0
+
+	for child in %ResetLayers.get_children():
+		child.queue_free()
 
 	for k in Config.RESET_LAYERS:
 		# Create label
@@ -45,8 +72,20 @@ func _ready() -> void:
 
 		# Create purchase panel
 		var l = reset_layer.instantiate()
+		l.name = k
 		l.key = k
+		l.reset_idx = idx
 
 		%ResetLayers.add_child(l)
+		idx += 1
+
+func _ready() -> void:
+
+	if not Game.ready:
+		await Game.ready
+
+	_reload_reset_layers()
+
+	SignalBus.PrestigeUpgradeBought.connect(_update_reset_layers)
 
 	%OpenPrestigeMenu.pressed.connect(%PrestigeMenu.open)

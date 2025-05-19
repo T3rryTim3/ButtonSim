@@ -7,4 +7,4 @@ script = ExtResource("1_uolxe")
 
 [node name="VisibleOnScreenEnabler2D" type="VisibleOnScreenEnabler2D" parent="."]
 
-[connection signal="pressed" from="." to="." method="_button_pressed"]
+[connection signal="pressed" from="." to="." method="buy"]

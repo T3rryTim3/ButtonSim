@@ -15,6 +15,8 @@ func _update_upgrade_count() -> void:
 	upgrade_count = Game.get_upgrade_count(upgrade_id)
 
 func _can_buy() -> bool:
+	if upgrade_count >= upgrade_data["get_max"].call():
+		return false
 	return !upgrade_data["get_player_currency"].call().isLessThan(cost)
 
 func _load_data() -> void:
@@ -23,8 +25,11 @@ func _load_data() -> void:
 	_update_cost()
 
 	$VBoxContainer2/HBoxContainer/Title.text = upgrade_data.name
-	$VBoxContainer2/HBoxContainer/Cost.text = str(cost) + " " + upgrade_data["currency_name"]
-	$VBoxContainer2/Desc.text = upgrade_data["get_desc"].call(upgrade_count)
+	$VBoxContainer2/HBoxContainer/Purchased.text = str(Game.get_upgrade_count(upgrade_id)) + "/" + str(upgrade_data["get_max"].call())
+	if upgrade_count < upgrade_data["get_max"].call():
+		$VBoxContainer2/Desc.text = upgrade_data["get_desc"].call(upgrade_count)
+	else:
+		$VBoxContainer2/Desc.text = "Max purchases reached."
 	button.text = "Purchase - " + str(cost) + " " + upgrade_data["currency_name"]
 
 func _update() -> void:
@@ -47,6 +52,9 @@ func purchase() -> void:
 
 	upgrade_data["spend_currency"].call(cost)
 	Game.increase_upgrade_count(upgrade_id)
+
+	if "prestige" in upgrade_data["tags"]:
+		SignalBus.PrestigeUpgradeBought.emit()
 
 	_load_data()
 

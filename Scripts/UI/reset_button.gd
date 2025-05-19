@@ -24,6 +24,10 @@ var buy_time:float = 0.0 ## Current time spent buying. Used to calculate buy amo
 func _get_buy_speed() -> float:
 	return 1
 
+func can_buy() -> bool:
+	update_stats()
+	return Game.get_stat(currency).exceeds(cost)
+
 func _get_button_cost(button_index:int):
 
 	var c = B.new(init_cost)
@@ -45,20 +49,19 @@ func _get_button_gain(button_index:int):
 	return g
 
 ## When a button is pressed to purchase the reset layer. Bulk determines the number of times bought
-func _button_pressed(bulk:int=1):
+func buy(bulk:int=1):
 
 	if bulk <= 0:
 		return
 
-	update_stats()
-
 	for i in range(bulk):
-		if not Game.get_stat(currency).exceeds(cost):
+		if not can_buy():
 			return
 
-		Game.set_stat(currency, Game.player[currency].minus(cost))
-		for reset in Config.RESET_LAYERS[key]["reset"]:
-			Game.zero_stat(reset)
+		if Game.get_upgrade_count("PP Free Cost") <= Game.get_reset_idx(key):
+			Game.set_stat(currency, Game.player[currency].minus(cost))
+			for reset in Config.RESET_LAYERS[key]["reset"]:
+				Game.zero_stat(reset)
 
 		Game.increase_stat(key, gain)
 		bought += 1
@@ -87,7 +90,7 @@ func _process(delta: float) -> void:
 		if not disabled:
 			var to_buy = buy_time / Game.get_stat("buy_speed")
 			buy_time += delta
-			_button_pressed(max(0, to_buy - bought))
+			buy(max(0, to_buy - bought))
 
 		if (!button_pressed) and not disabled:
 			buying = false

@@ -54,24 +54,27 @@ theme_override_constants/outline_size = 2
 theme_override_font_sizes/font_size = 20
 text = "Multiplier"
 
-[node name="Button" type="Button" parent="ScrollContainer/VBoxContainer"]
+[node name="Autobuy" type="Button" parent="ScrollContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxEmpty_xk82d")
 toggle_mode = true
-text = "Hover to buy - Disabled"
+text = "Autobuy - Disabled"
 
 [node name="Buttons" type="VBoxContainer" parent="ScrollContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_constants/separation = 8
-
-[node name="Label2" type="Label" parent="ScrollContainer/VBoxContainer"]
-layout_mode = 2
-text = "Total Bonuses:"
-horizontal_alignment = 1
 
 [node name="Desc" type="PanelContainer" parent="ScrollContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_xk82d")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer/VBoxContainer/Desc"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="ScrollContainer/VBoxContainer/Desc/VBoxContainer"]
+layout_mode = 2
+text = "Total Bonuses:"
+horizontal_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer/VBoxContainer/Desc/VBoxContainer"]
 layout_mode = 2

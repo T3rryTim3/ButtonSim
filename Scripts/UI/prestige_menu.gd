@@ -34,6 +34,7 @@ func _prestige() -> void:
 func _get_pp_gain() -> B:
 	var num = B.new(0)
 	num.plusEquals(Game.get_stat("score"))
+	num.multiplyEquals(Game.get_upgrade_count("PP PP Multi") + 1)
 	return num
 
 func _prestige_button_pressed():
@@ -53,6 +54,24 @@ func _process(delta: float) -> void:
 	else:
 		%PrestigeButton.disabled = true
 		%PrestigeButton.text = "Minimum " + str(Config.MIN_PRESTIGE_SCORE) + " score to prestige."
+
+	var bonus_display_str = ""
+	var bonuses = Game.get_prestige_bonuses()
+	var i:int = 0
+	for k in bonuses:
+		bonus_display_str += k.capitalize() + ": x" + str(Game.get_prestige_bonuses()[k])
+
+		# Only add commas before the end
+		if i < len(bonuses) - 1:
+			bonus_display_str += ", "
+
+		i += 1
+
+	if bonus_display_str:
+		%PPBonusesDisplay.text = bonus_display_str
+		$Prestige/VBoxContainer/Bonuses.visible = true
+	else:
+		$Prestige/VBoxContainer/Bonuses.visible = false
 
 func _ready() -> void:
 	$Prestige/Exit.pressed.connect(close)

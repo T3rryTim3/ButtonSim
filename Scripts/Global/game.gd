@@ -21,15 +21,17 @@ func get_player_data():
 		"super":B.new(0),
 		"ultra":B.new(0),
 		"mega":B.new(0),
+		"hyper":B.new(0),
 
 		"resets": {
 			"prestige": {
 				"count" : B.new(0),
-				"points":B.new(0)
+				"points":B.new(10000)
 			},
 		},
 
 		"buy_speed": Config.BASE_BUY_SPEED, ## Time it takes for each button buy
+		"autobuy_speed": Config.BASE_BUY_SPEED/2, ## Time it takes for each auto button buy
 
 		"upgrades": {}
 
@@ -49,6 +51,10 @@ func _get_reset_multi(mul:B, key:String) -> B:
 	if key in Config.reset_stat_multis:
 		for k in Config.reset_stat_multis[key]:
 			mul.multiplyEquals(player[k[0]].multiply(k[1]).quickPlusEquals(1.0))
+
+	var prestige_mutlis = get_prestige_bonuses()
+	if key in prestige_mutlis:
+		mul.multiplyEquals(prestige_mutlis[key])
 
 	return mul
 
@@ -96,10 +102,34 @@ func zero_stat(stat:String) -> void:
 	player[stat] = Game.NUM_0
 #endregion
 
+#region Prestige Bonuses
+func get_prestige_bonuses() -> Dictionary:
+	var bonuses = {}
+	var pp = get_reset("prestige").points
+
+	for k in range(get_upgrade_count("PP Boost")):
+		bonuses[(["cash"]+Config.RESET_LAYERS.keys())[k]] = B.new(Config.PP_BONUS_BASE).divide(pow(Config.PP_BONUS_DIV_SCALE, k)).multiply(pp).plus(1)
+
+	return bonuses
+#endregion
+
 #region Resets
 ## Gets a reset data dict from the player
 func get_reset(stat:String) -> Variant:
 	return player["resets"][stat]
+
+## Gets the dict index of a reset
+func get_reset_idx(stat:String) -> int:
+
+	var idx = -1
+
+	for k in Config.RESET_LAYERS:
+		print(k)
+		idx += 1
+		if k == stat:
+			break
+
+	return idx
 
 func spend_reset_points(stat:String, amt:Variant) -> void:
 	player["resets"][stat].points.minusEquals(amt)
@@ -136,6 +166,7 @@ func _process(delta: float) -> void:
 	var buy_speed = Config.BASE_BUY_SPEED
 	buy_speed *= pow(0.8, get_upgrade_count("PP Buy speed"))
 	player.buy_speed = buy_speed
+	player.autobuy_speed = buy_speed*4
 
 func _ready() -> void:
 	player = get_player_data()
