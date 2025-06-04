@@ -1,0 +1,39 @@
+[gd_scene load_steps=3 format=3 uid="uid://6hf0rhvyycfc"]
+
+[ext_resource type="Script" uid="uid://0bfd861rx2h8" path="res://Scenes/UI/crate.gd" id="1_b4ehu"]
+[ext_resource type="Texture2D" uid="uid://dxxodv8cucnv1" path="res://Assets/Textures/Crates/crate.png" id="2_ucrmb"]
+
+[node name="Crate" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+size_flags_vertical = 3
+script = ExtResource("1_b4ehu")
+
+[node name="Crate" type="TextureButton" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+texture_normal = ExtResource("2_ucrmb")
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -255.0
+offset_top = -22.0
+offset_right = 255.0
+offset_bottom = 29.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 40
+text = "Crate - Click to Open!"
+horizontal_alignment = 1

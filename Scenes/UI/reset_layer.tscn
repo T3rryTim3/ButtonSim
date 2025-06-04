@@ -1,0 +1,77 @@
+[gd_scene load_steps=6 format=3 uid="uid://1o003qvutk0x"]
+
+[ext_resource type="StyleBox" uid="uid://q0ofwer7ixj7" path="res://Resources/UI/Panels/reset_layer.tres" id="1_kr2so"]
+[ext_resource type="Script" uid="uid://cp0pe4fft5er5" path="res://Scripts/UI/reset_layer.gd" id="1_xk82d"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_kr2so"]
+content_margin_left = 3.0
+content_margin_top = 3.0
+content_margin_right = 3.0
+content_margin_bottom = 3.0
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xk82d"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xk82d"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.851769, 0.851769, 0.851769, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+
+[node name="ResetLayer" type="PanelContainer"]
+modulate = Color(1, 0, 0, 1)
+custom_minimum_size = Vector2(300, 0)
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/panel = ExtResource("1_kr2so")
+script = ExtResource("1_xk82d")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+layout_mode = 2
+mouse_filter = 0
+mouse_force_pass_scroll_events = false
+theme_override_styles/panel = SubResource("StyleBoxEmpty_kr2so")
+horizontal_scroll_mode = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 12
+
+[node name="Label" type="Label" parent="ScrollContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 20
+text = "Multiplier"
+
+[node name="Autobuy" type="Button" parent="ScrollContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxEmpty_xk82d")
+toggle_mode = true
+text = "Autobuy - Disabled"
+
+[node name="Buttons" type="VBoxContainer" parent="ScrollContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Desc" type="PanelContainer" parent="ScrollContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_xk82d")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer/VBoxContainer/Desc"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="ScrollContainer/VBoxContainer/Desc/VBoxContainer"]
+layout_mode = 2
+text = "Total Bonuses:"
+horizontal_alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer/VBoxContainer/Desc/VBoxContainer"]
+layout_mode = 2

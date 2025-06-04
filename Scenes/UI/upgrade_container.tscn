@@ -1,0 +1,33 @@
+[gd_scene load_steps=3 format=3 uid="uid://bryjk0joq3w1p"]
+
+[ext_resource type="Script" uid="uid://o4xivu5w17c5" path="res://Scenes/UI/upgrade_container.gd" id="1_dwcnn"]
+[ext_resource type="PackedScene" uid="uid://bv06a6gqu5gm4" path="res://Scenes/UI/upgrade.tscn" id="2_y445p"]
+
+[node name="UpgradeContainer" type="ScrollContainer"]
+custom_minimum_size = Vector2(100, 200)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 3
+vertical_scroll_mode = 2
+script = ExtResource("1_dwcnn")
+
+[node name="Upgrades" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Upgrade" parent="Upgrades" instance=ExtResource("2_y445p")]
+layout_mode = 2
+script = null
+
+[node name="Upgrade2" parent="Upgrades" instance=ExtResource("2_y445p")]
+layout_mode = 2
+script = null
+
+[node name="Upgrade3" parent="Upgrades" instance=ExtResource("2_y445p")]
+layout_mode = 2
+script = null

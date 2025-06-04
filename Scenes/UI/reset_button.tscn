@@ -1,0 +1,38 @@
+[gd_scene load_steps=3 format=3 uid="uid://bmjbvuxfcnarp"]
+
+[ext_resource type="Script" uid="uid://dy6mhufvng0st" path="res://Scripts/UI/reset_button.gd" id="1_uolxe"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_uolxe"]
+bg_color = Color(0.9, 0.9, 0.9, 0)
+border_width_left = 4
+border_width_top = 4
+border_width_right = 4
+border_width_bottom = 4
+border_color = Color(0.89, 0.89, 0.89, 1)
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
+
+[node name="ResetButton" type="Button"]
+script = ExtResource("1_uolxe")
+
+[node name="VisibleOnScreenEnabler2D" type="VisibleOnScreenEnabler2D" parent="."]
+
+[node name="TokenOutline" type="Panel" parent="."]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_uolxe")
+
+[connection signal="pressed" from="." to="." method="buy"]
+[connection signal="screen_exited" from="VisibleOnScreenEnabler2D" to="." method="_on_visible_on_screen_enabler_2d_screen_exited"]
