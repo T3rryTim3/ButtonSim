@@ -7,6 +7,7 @@ signal clicked
 var crate_data:Dictionary = {}
 var show_data:bool = true
 
+
 func load_crate(crate:Dictionary = {}):
 	crate_data = crate
 	if "name" in crate:
@@ -16,11 +17,13 @@ func load_crate(crate:Dictionary = {}):
 	if "desc" in crate:
 		data_container.get_node("Desc").text = crate["desc"]
 
+
 func _process(delta: float) -> void:
 	if show_data and data_container.visible == false:
 		data_container.visible = true
 	if !show_data and data_container.visible == true:
 		data_container.visible = false
+
 
 func _ready() -> void:
 	$Button.pressed.connect(clicked.emit)

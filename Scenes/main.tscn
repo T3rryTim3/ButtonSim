@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://bkp35abfhaedd"]
+[gd_scene load_steps=31 format=3 uid="uid://bkp35abfhaedd"]
 
 [ext_resource type="FontFile" uid="uid://c1mjhk6ik1fv7" path="res://Assets/Fonts/PixelFont7-G02A.ttf" id="1_bo1nx"]
 [ext_resource type="Script" uid="uid://dfcks4t8dx0th" path="res://Scripts/UI/testscene.gd" id="1_jjgbg"]
@@ -13,6 +13,7 @@
 [ext_resource type="Texture2D" uid="uid://dxxodv8cucnv1" path="res://Assets/Textures/Crates/crate.png" id="10_hptm8"]
 [ext_resource type="Script" uid="uid://0bfd861rx2h8" path="res://Scenes/UI/crate.gd" id="11_d1ilt"]
 [ext_resource type="PackedScene" uid="uid://iaaahkovbb77" path="res://Scenes/UI/crate_select_option.tscn" id="11_jkdf5"]
+[ext_resource type="Script" uid="uid://b12pkbwg513aw" path="res://Scripts/UI/crate_stat_index.gd" id="14_jkdf5"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jjvhh"]
 
@@ -500,7 +501,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
-[node name="Button" type="Button" parent="Game/TabContainer/Crates/CrateMenu/HSplitContainer/ScrollContainer/VBoxContainer"]
+[node name="ShowStatIndex" type="Button" parent="Game/TabContainer/Crates/CrateMenu/HSplitContainer/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 text = "View Stat Index"
 flat = true
@@ -602,55 +603,31 @@ theme_override_font_sizes/font_size = 40
 text = "Crate - Click to Open!"
 flat = true
 
-[node name="CrateStatIndex" type="CenterContainer" parent="Game/TabContainer/Crates/CrateMenu"]
+[node name="CrateStatIndex" type="Control" parent="Game/TabContainer/Crates/CrateMenu"]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
+script = ExtResource("14_jkdf5")
 
 [node name="PanelContainer" type="PanelContainer" parent="Game/TabContainer/Crates/CrateMenu/CrateStatIndex"]
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_wsu2k")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Game/TabContainer/Crates/CrateMenu/CrateStatIndex/PanelContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="Game/TabContainer/Crates/CrateMenu/CrateStatIndex/PanelContainer/VBoxContainer"]
-layout_mode = 2
-text = "Crate Stats"
-horizontal_alignment = 1
-
-[node name="TabContainer" type="TabContainer" parent="Game/TabContainer/Crates/CrateMenu/CrateStatIndex/PanelContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-current_tab = 0
-clip_tabs = false
-
-[node name="All Crates" type="TabBar" parent="Game/TabContainer/Crates/CrateMenu/CrateStatIndex/PanelContainer/VBoxContainer/TabContainer"]
-layout_mode = 2
-metadata/_tab_index = 0
-
-[node name="PanelContainer" type="PanelContainer" parent="Game/TabContainer/Crates/CrateMenu/CrateStatIndex/PanelContainer/VBoxContainer/TabContainer/All Crates"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_wsu2k")
 
-[node name="Tree" type="Tree" parent="Game/TabContainer/Crates/CrateMenu/CrateStatIndex/PanelContainer/VBoxContainer/TabContainer/All Crates/PanelContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Game/TabContainer/Crates/CrateMenu/CrateStatIndex/PanelContainer"]
 layout_mode = 2
 
-[node name="Owned" type="TabBar" parent="Game/TabContainer/Crates/CrateMenu/CrateStatIndex/PanelContainer/VBoxContainer/TabContainer"]
-visible = false
+[node name="ExitButton" type="Button" parent="Game/TabContainer/Crates/CrateMenu/CrateStatIndex/PanelContainer/VBoxContainer"]
 layout_mode = 2
-metadata/_tab_index = 1
+text = "Exit"
 
-[node name="Tree" type="Tree" parent="Game/TabContainer/Crates/CrateMenu/CrateStatIndex/PanelContainer/VBoxContainer/TabContainer/Owned"]
+[node name="AllCratesTree" type="Tree" parent="Game/TabContainer/Crates/CrateMenu/CrateStatIndex/PanelContainer/VBoxContainer"]
 layout_mode = 2
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = 28.0
-offset_bottom = 5.0
+size_flags_vertical = 3
+column_titles_visible = true
 
 [node name="TabBar" type="TabBar" parent="Game/TabContainer"]
 visible = false

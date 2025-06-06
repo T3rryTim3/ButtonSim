@@ -33,3 +33,4 @@ func _process(delta: float) -> void:
 
 func _ready() -> void:
 	_load_crate_selections()
+	$HSplitContainer/ScrollContainer/VBoxContainer/ShowStatIndex.pressed.connect($CrateStatIndex.open)
