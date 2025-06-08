@@ -1,44 +1,76 @@
 extends PanelContainer
 class_name Upgrade
+## An upgrade object which uses the Config.Upgrades data to alter the player's stats.
+## Crated automatically from the upgrade_container.tscn node.
+##
+## This node should generally not be created manually. Use UpgradeContainer for this.
+
 
 @onready var button:Button = $VBoxContainer2/Button
 
 enum DisplayTypes {
 	PRESTIGE,
-	TOKEN
+	TOKEN,
+	CRATE
 }
 
+#region Properties
 var display:DisplayTypes
-
 var upgrade_id:String
 var upgrade_data:Dictionary
 var upgrade_count:int
 var cost:B
+#endregion
 
+## Update the cost of the upgrade based on the upgrade data.
 func _update_cost() -> void:
 	cost = upgrade_data.get_cost.call(upgrade_count)
 
+
+## Upgrade the internal amount bought value.
 func _update_upgrade_count() -> void:
 	upgrade_count = Game.get_upgrade_count(upgrade_id)
 
+
+## Check if the player's purchase count exceeds the maximum.
+func _exceeds_max() -> bool:
+	var max = upgrade_data["get_max"].call()
+	return upgrade_count >= max and max != -1
+
+
+## Returns true if the player has enough currency to buy the upgrade.
 func _can_buy() -> bool:
-	if upgrade_count >= upgrade_data["get_max"].call():
+	var max = upgrade_data["get_max"].call()
+	if _exceeds_max(): # Max is -1 if unlimited
 		return false
 	return !upgrade_data["get_player_currency"].call().isLessThan(cost)
 
+
+## Load the upgrade data into the display for the upgrade.
 func _load_data() -> void:
 
 	_update_upgrade_count()
 	_update_cost()
 
+	var max = upgrade_data["get_max"].call()
+	var max_text := str(max)
+	if max == -1:
+		max_text = 'inf'
+	
+	var count_display = str(Game.get_upgrade_count(upgrade_id)) + "/" + max_text
+
 	$VBoxContainer2/HBoxContainer/Title.text = upgrade_data.name
-	$VBoxContainer2/HBoxContainer/Purchased.text = str(Game.get_upgrade_count(upgrade_id)) + "/" + str(upgrade_data["get_max"].call())
-	if upgrade_count < upgrade_data["get_max"].call():
+	$VBoxContainer2/HBoxContainer/Purchased.text = count_display
+	
+	if not _exceeds_max():
 		$VBoxContainer2/Desc.text = upgrade_data["get_desc"].call(upgrade_count)
 	else:
 		$VBoxContainer2/Desc.text = "Max purchases reached."
+	
 	button.text = "Purchase - " + str(cost) + " " + upgrade_data["currency_name"]
 
+
+## Update the purchase display depending on whether or not the upgrade can be bought.
 func _update() -> void:
 	if _can_buy():
 		button.modulate = Color(0, 1, 0)
@@ -47,9 +79,8 @@ func _update() -> void:
 		button.modulate = Color(1, 0, 0)
 		button.disabled = true
 
-func _process(delta: float) -> void:
-	_update()
 
+## Purchase the upgrade and update where neccessary. Checks for affordability within the function.
 func purchase() -> void:
 	_update_upgrade_count()
 	_update_cost()
@@ -65,6 +96,12 @@ func purchase() -> void:
 
 	_load_data()
 
+
+#region Base functions
+func _process(delta: float) -> void:
+	_update()
+
+
 func _ready() -> void:
 	button.pressed.connect(purchase)
 	_load_data()
@@ -77,3 +114,8 @@ func _ready() -> void:
 			self_modulate = Color("fffb10")
 			$VBoxContainer2/HBoxContainer/Title.add_theme_color_override("font_color", Color("fffb29"))
 			$VBoxContainer2/HBoxContainer/Purchased.add_theme_color_override("font_color", Color("fffb29"))
+		DisplayTypes.CRATE:
+			self_modulate = Color("ffbd24")
+			$VBoxContainer2/HBoxContainer/Title.add_theme_color_override("font_color", Color("2c1d02"))
+			$VBoxContainer2/HBoxContainer/Purchased.add_theme_color_override("font_color", Color("2c1d02"))
+#endregion

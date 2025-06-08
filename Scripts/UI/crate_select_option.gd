@@ -7,15 +7,26 @@ signal clicked
 var crate_data:Dictionary = {}
 var show_data:bool = true
 
+func update_crate_display() -> void:
+	var count = Game.get_crate_count(crate_data["id"])
+	if count <= 0:
+		hide()
+	if "name" in crate_data:
+		data_container.get_node("Title").text = crate_data["name"] + " x" + str(Game.get_crate_count(crate_data["id"]))
 
 func load_crate(crate:Dictionary = {}):
 	crate_data = crate
-	if "name" in crate:
-		data_container.get_node("Title").text = crate["name"] + " x" + str(Game.get_crate_count(crate_data["id"]))
-	if "cost" in crate:
-		data_container.get_node("Cost").text = str(crate["cost"]["get_cost"].call()) + " " + crate["cost"]["currency_name"]
-	if "desc" in crate:
-		data_container.get_node("Desc").text = crate["desc"]
+
+	update_crate_display()
+
+	# Cost display removed in favor of crates being bought elsewhere.
+	# Kept in code just in case needed later.
+	data_container.get_node("Cost").hide()
+	#if "cost" in crate_data:
+		#data_container.get_node("Cost").text = str(crate_data["cost"]["get_cost"].call()) + " " + crate_data["cost"]["currency_name"]
+	
+	if "desc" in crate_data:
+		data_container.get_node("Desc").text = crate_data["desc"]
 
 
 func _process(delta: float) -> void:

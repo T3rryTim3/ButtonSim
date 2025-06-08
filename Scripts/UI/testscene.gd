@@ -96,3 +96,4 @@ func _ready() -> void:
 
 	%OpenPrestigeMenu.pressed.connect(%PrestigeMenu.open)
 	%OpenTokenMenu.pressed.connect(%TokenMenu.open)
+	%OpenBuyCrateMenu.pressed.connect(%BuyCrateMenu.open)

@@ -234,6 +234,7 @@ var upgrades = {
 		"get_cost": func(next:int): return B.new(2).multiply(B.new(3).power(next))
 	},
 	#endregion
+
 	#region Tokens
 	"Token Cash multi": {
 		"name": "Cash multiplier",
@@ -262,7 +263,7 @@ var upgrades = {
 	"Token PP Multi": {
 		"name": "PP Multiplier",
 		"tags": ["token"],
-		"currency": "tokens",
+		"currency": "prestige_points",
 		"currency_name": "Tokens",
 		"get_effect": func(val:int): return 1+(val)/2.0,
 		"get_player_currency": func(): return Game.get_stat("tokens"),
@@ -270,6 +271,22 @@ var upgrades = {
 		"get_max": func(): return 10,
 		"get_desc": func(next:int): return str(Game.get_upgrade_effect("Token PP Multi", next+1)) + "x PP Gain",
 		"get_cost": func(next:int): return B.new(3).multiply(next+1)
+	},
+	#endregion
+
+	#region Crates
+	"Crate Buy Stat Crate": {
+		"name": "Stat Crate",
+		"tags": ["crate"],
+		"currency": "PP",
+		"currency_name": "PP",
+		"allow_refund": false,
+		"get_effect": func(val:int): return 1,
+		"get_player_currency": func(): return Game.get_stat("tokens"),
+		"spend_currency": func(amt:Variant): Game.minus_stat("tokens", amt),
+		"get_max": func(): return -1, # Unlimited
+		"get_desc": func(next:int): return str(Game.get_upgrade_effect("Token PP Multi", next+1)) + "x PP Gain",
+		"get_cost": func(next:int): return B.new(min(100*next, 1000))
 	}
 	#endregion
 }
