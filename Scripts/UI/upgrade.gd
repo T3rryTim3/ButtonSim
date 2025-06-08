@@ -84,16 +84,19 @@ func _update() -> void:
 func purchase() -> void:
 	_update_upgrade_count()
 	_update_cost()
-
+	
 	if not _can_buy():
 		return
-
+	
 	upgrade_data["spend_currency"].call(cost)
 	Game.increase_upgrade_count(upgrade_id)
-
+	
 	if "prestige" in upgrade_data["tags"]:
 		SignalBus.PrestigeUpgradeBought.emit()
-
+	
+	if "on_buy" in upgrade_data:
+		upgrade_data.on_buy.call(Game.get_upgrade_count(upgrade_id))
+	
 	_load_data()
 
 

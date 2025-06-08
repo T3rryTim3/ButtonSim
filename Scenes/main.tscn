@@ -29,11 +29,11 @@ Label/fonts/font = ExtResource("1_bo1nx")
 bg_color = Color(0, 0, 0, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hptm8"]
-content_margin_left = 7.0
+content_margin_left = 9.0
 content_margin_top = 2.0
-content_margin_right = 7.0
+content_margin_right = 9.0
 content_margin_bottom = 2.0
-bg_color = Color(0.11, 0.0733333, 0, 1)
+bg_color = Color(0.11, 0.0733333, 0, 0)
 border_width_left = 6
 border_width_right = 6
 border_color = Color(0.8, 0.8, 0.8, 0)
@@ -171,9 +171,16 @@ current_tab = 0
 
 [node name="Buttons" type="TabBar" parent="Game/TabContainer"]
 layout_mode = 2
-current_tab = 0
-tab_count = 1
 metadata/_tab_index = 0
+
+[node name="ColorRect" type="ColorRect" parent="Game/TabContainer/Buttons"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0188478, 0.0935561, 0.198039, 1)
 
 [node name="PanelContainer" type="PanelContainer" parent="Game/TabContainer/Buttons"]
 layout_mode = 1

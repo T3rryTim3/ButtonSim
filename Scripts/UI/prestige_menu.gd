@@ -38,6 +38,9 @@ func _get_pp_gain() -> B:
 	num.minusEquals(100)
 	num.multiplyEquals(Game.get_upgrade_count("PP PP Multi") + 1)
 	num.multiplyEquals(Game.get_upgrade_effect("Token PP Multi"))
+	
+	num = Game._get_crate_reward_multi(num, "prestige_points")
+	
 	return num
 
 func _prestige_button_pressed():

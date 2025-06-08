@@ -62,7 +62,7 @@ func _open() -> void:
 
 	# Select rewards
 	var rewards = {}
-	for x in range(buy_count * open_count * 10):
+	for x in range(buy_count * open_count):
 
 		var reward = weighted_random_select(current_crate["rewards"])
 
@@ -92,7 +92,7 @@ func _open() -> void:
 		#reward_disp.self_modulate = rewards[k].dict.color
 		#$VBoxContainer.add_child(reward_disp)
 		#reward_disp.show()
-		var theta = (2*PI)/len(rewards)*i + PI/2
+		var theta = (2*PI)/len(rewards)*i - PI/2
 		var dir = Vector2(cos(theta), sin(theta))
 		Game.currency_popup(str(rewards[k].amt) + " " + k, rewards[k].dict.color, null, 3, dir, 1)
 		i += 1

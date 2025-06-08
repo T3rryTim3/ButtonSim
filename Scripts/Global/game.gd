@@ -51,7 +51,7 @@ func get_player_data():
 		}
 
 	for crate in Config.crates:
-		s["crates"][crate] = 2
+		s["crates"][crate] = 20
 		for reward in Config.crates[crate]["rewards"]:
 			s["crate_rewards"][reward["name"]] = 0
 
@@ -64,29 +64,45 @@ func increase_crate_rewards(reward_dict:Dictionary):
 		player.crate_rewards[k] += reward_dict[k]["amt"]
 	_update_crate_reward_multis()
 
+
 ## Updates the internal crate multi dict; called on crate opening
 func _update_crate_reward_multis() -> void:
+	var new_multis = {}
 	for crate in Config.crates:
 		for reward in Config.crates[crate]["rewards"]:
 			for multi in reward["multi"]:
-				if not multi in crate_reward_multis:
-					crate_reward_multis[multi] = B.new(1)
-				crate_reward_multis[multi].multiplyEquals(player.crate_rewards[reward["name"]]*reward["multi"][multi]+1)
+				if not multi in new_multis:
+					new_multis[multi] = B.new(1)
+				new_multis[multi].multiplyEquals(player.crate_rewards[reward["name"]]*reward["multi"][multi]+1)
+	crate_reward_multis = new_multis
 
 ## Get the multiplier of a given stat 
 func _get_crate_reward_multi(mul:B, key:String) -> B:
 	if key in crate_reward_multis:
 		mul.multiplyEquals(crate_reward_multis[key])
 	return mul
-		
+
+
+## Returns a dictionary of crate reward names to their respective multipliers.
 func get_crate_rewards() -> Dictionary:
 	return player.crate_rewards
 
+
+## Returns the current amount of a given crate.
 func get_crate_count(crate:String) -> int:
 	return player.crates[crate]
 
+
+## Decrease `crate` count by `amt`
 func decrease_crate_count(crate:String, amt:int = 1) -> void:
 	player.crates[crate] -= amt
+
+
+## Increase `crate` count by `amt`
+func increase_crate_count(crate:String, amt:int = 1) -> void:
+	player.crates[crate] += amt
+	if amt > 0:
+		SignalBus.CrateGained.emit()
 
 #endregion
 
@@ -104,6 +120,8 @@ func _get_reset_multi(mul:B, key:String) -> B:
 
 	return mul
 
+
+## Get a stats upgrade multipler based on upgrade data.
 func _get_upgrade_multi(mul:B, key:String) -> B:
 
 	match key:
@@ -111,6 +129,7 @@ func _get_upgrade_multi(mul:B, key:String) -> B:
 			mul.multiplyEquals(get_upgrade_effect("Token Cash multi"))
 
 	return mul
+
 
 ## Get the amount that a stat would be increased by accounting for multipliers.
 func get_stat_increase(key:String, val:B):
@@ -131,6 +150,7 @@ func get_stat_increase(key:String, val:B):
 
 	return val.multiply(mul)
 
+
 ## Increase a stat accounting for multipliers. The stat is assumed to be a direct key of player
 func increase_stat(key:String, val:Variant):
 
@@ -145,17 +165,21 @@ func increase_stat(key:String, val:Variant):
 
 	player[key] = player[key].plus(get_stat_increase(key, val))
 
+
 ## Gets a stat from the player
 func get_stat(stat:String) -> Variant:
 	return player[stat]
+
 
 ## Sets a player's stat
 func set_stat(stat:String, val:B) -> void:
 	player[stat] = val
 
+
 ## Subtracts a player's stat by val
 func minus_stat(stat:String, val:Variant) -> void:
 	player[stat].minusEquals(val)
+
 
 ## Sets a stat to zero.
 func zero_stat(stat:String) -> void:
@@ -178,6 +202,7 @@ func get_prestige_bonuses() -> Dictionary:
 func get_reset(stat:String) -> Variant:
 	return player["resets"][stat]
 
+
 ## Gets the dict index of a reset
 func get_reset_idx(stat:String) -> int:
 
@@ -189,6 +214,7 @@ func get_reset_idx(stat:String) -> int:
 			break
 
 	return idx
+
 
 func spend_reset_points(stat:String, amt:Variant) -> void:
 	player["resets"][stat].points.minusEquals(amt)
@@ -204,9 +230,11 @@ func get_upgrades_by_tag(tag:String) -> Dictionary:
 
 	return upgrades
 
+
 ## Gets the amount of times an upgrade has been bought
 func get_upgrade_count(upgrade:String) -> int:
 	return player["upgrades"][upgrade]["purchased"]
+
 
 ## Gets the effect of an upgrade
 func get_upgrade_effect(upgrade:String, amt:int=-1) -> Variant:
@@ -214,9 +242,11 @@ func get_upgrade_effect(upgrade:String, amt:int=-1) -> Variant:
 		amt = get_upgrade_count(upgrade)
 	return Config.upgrades[upgrade]["get_effect"].call(amt)
 
+
 ## Increases the amount of times an upgrade has been bought
 func increase_upgrade_count(upgrade:String, amt:int=1) -> void:
 	player["upgrades"][upgrade]["purchased"] += amt
+
 
 ## Reset an upgrade's buy count to zero.
 func reset_upgrade_count(upgrade:String, amt:int=1) -> void:
@@ -252,6 +282,7 @@ func _process(delta: float) -> void:
 	buy_speed *= get_upgrade_effect("Token Buy speed")
 	player.buy_speed = buy_speed
 	player.autobuy_speed = buy_speed*4
+
 
 func _ready() -> void:
 	if not Game.ready:

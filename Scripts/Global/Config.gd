@@ -285,8 +285,9 @@ var upgrades = {
 		"get_player_currency": func(): return Game.get_stat("tokens"),
 		"spend_currency": func(amt:Variant): Game.minus_stat("tokens", amt),
 		"get_max": func(): return -1, # Unlimited
-		"get_desc": func(next:int): return str(Game.get_upgrade_effect("Token PP Multi", next+1)) + "x PP Gain",
-		"get_cost": func(next:int): return B.new(min(100*next, 1000))
+		"get_desc": func(next:int): return "Buy 1 stat crate. Cost caps at 1000.",
+		"get_cost": func(next:int): return B.new(min(100*(next+1), 1000)),
+		"on_buy": func(next:int): Game.increase_crate_count("basic", 1)
 	}
 	#endregion
 }
@@ -296,7 +297,7 @@ var crates = {
 		"id": "basic", # Must be the same as the key
 		"health": 10,
 		"name": "Stat crate",
-		"desc": "A basic crate. This is a long description. Even longer now.",
+		"desc": "A basic crate. Affects various early multipliers.",
 		"cost": {
 			"currency_name": "PP",
 			"get_player_currency": func(): return Game.get_reset("prestige").points,
@@ -311,6 +312,23 @@ var crates = {
 			{"name": "Legendary", "color":Color(1,1,0), "weight": 0.5,"multi": {"ultra": 0.1}},
 			{"name": "Mythical", "color":Color(0,1,1), "weight": 0.25,"multi": {"cash": 0.5,"multiplier": 0.5,"rebirths": 0.5}},
 			{"name": "Insane", "color":Color(0.3,0,0.3), "weight": 0.1,"multi": {"cash": 5, "multiplier": 5}},
+		]
+	},
+	"token": {
+		"id": "token", # Must be the same as the key
+		"health": 10,
+		"name": "Token crate",
+		"desc": "Low bonuses, but affects a bunch of stats. Even PP!",
+		"cost": {
+			"currency_name": "Tokens",
+			"get_player_currency": func(): return Game.get_reset("tokens").points,
+			"spend_currency": func(amt:Variant): Game.spend_reset_points("tokens", amt),
+			"get_cost": func(): return B.new(100)
+		},
+		"rewards": [
+			{"name": "Dull", "color":Color(0.6,0.6,0.6), "weight": 10.0,"multi": {"cash": 0.1, "multiplier": 0.1, "rebirths": 0.1}},
+			{"name": "Decent", "color":Color(0.6,0.6,0.8), "weight": 6.0,"multi": {"cash": 0.2, "multiplier": 0.2, "rebirths": 0.1, "ultra": 0.05}},
+			{"name": "Shiny", "color":Color(0.6,0.6,0.8), "weight": 2.0,"multi": {"prestige_points": 0.2}},
 		]
 	}
 }

@@ -97,3 +97,7 @@ func _ready() -> void:
 	%OpenPrestigeMenu.pressed.connect(%PrestigeMenu.open)
 	%OpenTokenMenu.pressed.connect(%TokenMenu.open)
 	%OpenBuyCrateMenu.pressed.connect(%BuyCrateMenu.open)
+
+
+func _on_crates_tab_selected(tab: int) -> void:
+	pass # Replace with function body.
