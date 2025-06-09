@@ -52,7 +52,7 @@ func _load_data() -> void:
 	_update_cost()
 
 	var max_purchase = upgrade_data["get_max"].call()
-	var max_text := str(max)
+	var max_text := str(max_purchase)
 	if max_purchase == -1:
 		max_text = 'inf'
 	

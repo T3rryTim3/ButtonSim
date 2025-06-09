@@ -11,6 +11,8 @@ func update_crate_display() -> void:
 	var count = Game.get_crate_count(crate_data["id"])
 	if count <= 0:
 		hide()
+	else:
+		show()
 	if "name" in crate_data:
 		data_container.get_node("Title").text = crate_data["name"] + " x" + str(Game.get_crate_count(crate_data["id"]))
 

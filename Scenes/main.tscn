@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=3 uid="uid://bkp35abfhaedd"]
+[gd_scene load_steps=35 format=3 uid="uid://bkp35abfhaedd"]
 
 [ext_resource type="FontFile" uid="uid://c1mjhk6ik1fv7" path="res://Assets/Fonts/PixelFont7-G02A.ttf" id="1_bo1nx"]
 [ext_resource type="Script" uid="uid://dfcks4t8dx0th" path="res://Scripts/UI/testscene.gd" id="1_jjgbg"]
@@ -138,6 +138,13 @@ content_margin_right = 8.0
 content_margin_bottom = 8.0
 bg_color = Color(0, 0, 0, 1)
 
+[sub_resource type="Gradient" id="Gradient_wsu2k"]
+colors = PackedColorArray(1, 0.18, 0.18, 0.266667, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_k12tt"]
+gradient = SubResource("Gradient_wsu2k")
+fill_from = Vector2(0, 1)
+
 [node name="Main" type="Node"]
 
 [node name="Game" type="Control" parent="."]
@@ -167,9 +174,10 @@ theme_override_styles/panel = ExtResource("3_21xkr")
 theme_override_styles/tab_selected = SubResource("StyleBoxFlat_hptm8")
 theme_override_styles/tab_hovered = SubResource("StyleBoxFlat_hptm8")
 theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_hptm8")
-current_tab = 0
+current_tab = 2
 
 [node name="Buttons" type="Control" parent="Game/TabContainer"]
+visible = false
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -699,7 +707,142 @@ layout_mode = 2
 size_flags_vertical = 3
 column_titles_visible = true
 
-[node name="Pets" type="Control" parent="Game/TabContainer"]
-visible = false
+[node name="Rank" type="Control" parent="Game/TabContainer"]
 layout_mode = 2
 metadata/_tab_index = 2
+
+[node name="ColorRect" type="ColorRect" parent="Game/TabContainer/Rank"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.26, 0.104, 0.104, 1)
+
+[node name="TextureRect" type="TextureRect" parent="Game/TabContainer/Rank"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture2D_k12tt")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Game/TabContainer/Rank"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="Label" type="Label" parent="Game/TabContainer/Rank/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_font_sizes/font_size = 60
+text = "Rank Up"
+
+[node name="Label2" type="Label" parent="Game/TabContainer/Rank/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+text = "Reset all of your progress to increase your rank.
+This unlocks new features and gives permaneant bonuses."
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Game/TabContainer/Rank/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Game/TabContainer/Rank/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Game/TabContainer/Rank/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_font_sizes/font_size = 30
+text = "You will keep:"
+horizontal_alignment = 1
+
+[node name="Label2" type="Label" parent="Game/TabContainer/Rank/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_font_sizes/font_size = 20
+text = "- Most crate rewards
+- Rank bonuses
+"
+
+[node name="Label" type="Label" parent="Game/TabContainer/Rank/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_font_sizes/font_size = 30
+text = "|
+|
+    |    
+|
+|
+|
+|"
+horizontal_alignment = 1
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="Game/TabContainer/Rank/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Game/TabContainer/Rank/VBoxContainer/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_font_sizes/font_size = 30
+text = "You will lose:"
+horizontal_alignment = 1
+
+[node name="Label2" type="Label" parent="Game/TabContainer/Rank/VBoxContainer/HBoxContainer/VBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_font_sizes/font_size = 20
+text = "- Prestige upgrades
+- Token upgrades
+- Cash, multiplier, etc.
+- Prestige crate rewards
+"
+
+[node name="Label3" type="Label" parent="Game/TabContainer/Rank/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+text = "Next rank will unlock _____"
+horizontal_alignment = 1
+
+[node name="RankUpButton" type="Button" parent="Game/TabContainer/Rank/VBoxContainer"]
+self_modulate = Color(1, 0, 0, 1)
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "Rank up!"
+flat = true
+
+[node name="Label3" type="Label" parent="Game/TabContainer/Rank/VBoxContainer/RankUpButton"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -59.0
+offset_top = -6.0
+offset_right = 59.0
+offset_bottom = 14.0
+grow_horizontal = 2
+grow_vertical = 0
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+text = "Req. ______"
+horizontal_alignment = 1
