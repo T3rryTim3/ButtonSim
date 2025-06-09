@@ -379,4 +379,9 @@ func _ready() -> void:
 	tree_exiting.connect(save_game) 
 	# TODO Auto save every n minutes
 	# TODO Save slots + menu to select them
+	# TODO Create settings menu
+	#          - Visual effect options
+	#          - Audio sliders
+	#          - Different button display layouts
+	#          - Tabbar position
 #endregion
