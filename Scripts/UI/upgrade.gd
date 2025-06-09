@@ -34,13 +34,12 @@ func _update_upgrade_count() -> void:
 
 ## Check if the player's purchase count exceeds the maximum.
 func _exceeds_max() -> bool:
-	var max = upgrade_data["get_max"].call()
-	return upgrade_count >= max and max != -1
+	var max_purchase = upgrade_data["get_max"].call()
+	return upgrade_count >= max_purchase and max_purchase != -1
 
 
 ## Returns true if the player has enough currency to buy the upgrade.
 func _can_buy() -> bool:
-	var max = upgrade_data["get_max"].call()
 	if _exceeds_max(): # Max is -1 if unlimited
 		return false
 	return !upgrade_data["get_player_currency"].call().isLessThan(cost)
@@ -52,9 +51,9 @@ func _load_data() -> void:
 	_update_upgrade_count()
 	_update_cost()
 
-	var max = upgrade_data["get_max"].call()
+	var max_purchase = upgrade_data["get_max"].call()
 	var max_text := str(max)
-	if max == -1:
+	if max_purchase == -1:
 		max_text = 'inf'
 	
 	var count_display = str(Game.get_upgrade_count(upgrade_id)) + "/" + max_text
@@ -103,7 +102,7 @@ func purchase() -> void:
 
 
 #region Base functions
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	_update()
 
 

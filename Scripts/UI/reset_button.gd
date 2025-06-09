@@ -63,12 +63,17 @@ func buy(bulk:int=1, auto:bool=false):
 	if not auto:
 		Game.currency_popup("+" + str(gain) + " " + key.capitalize(), Config.RESET_LAYERS[key]["color"])
 		if token_ready:
+			
+			var gain_amt = randi_range(Config.TOKEN_GAIN_INTERVAL[0],Config.TOKEN_GAIN_INTERVAL[1])
+			
 			token_ready = false
 			_reset_token_time()
 			$TokenOutline.visible = false
-			Game.currency_popup("+1 Token", Color.YELLOW)
-			Game.increase_stat("tokens", 1)
+			
+			Game.currency_popup("+" + str(gain_amt) + " Token", Color.YELLOW)
+			Game.increase_stat("tokens", gain_amt)
 			SoundManager.play_audio("res://Assets/Sound/UI SFX/Token2.wav", "SFX")
+			
 		else: # Avoid both sounds playing at once (It sounds weird)
 			SoundManager.play_audio("res://Assets/Sound/UI SFX/StatBuy2.wav", "SFX", randf_range(0.4,1.1))
 
@@ -113,7 +118,7 @@ func _process(delta: float) -> void:
 		if (!button_pressed) and not disabled:
 			buying = false
 
-	if disabled:
+	if disabled or not token_ready:
 		$TokenOutline.visible = false
 	elif not disabled and token_ready:
 		$TokenOutline.visible = true
@@ -121,6 +126,11 @@ func _process(delta: float) -> void:
 	token_time_remaining = max(0, token_time_remaining - delta)
 	if token_time_remaining <= 0 and not token_ready:
 		token_ready = true
+		# Set different time for the token to expire
+		token_time_remaining = randf_range(Config.TOKEN_EXPIRE_INTERVAL[0],Config.TOKEN_EXPIRE_INTERVAL[1])
+	elif token_time_remaining <= 0 and token_ready:
+		token_ready = false
+		_reset_token_time()
 
 	update()
 

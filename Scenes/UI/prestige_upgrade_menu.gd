@@ -8,7 +8,7 @@ func open():
 func close():
 	visible = false
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if !visible:
 		return
 	$VBoxContainer/Current.text = "You currently have " + str(Game.get_reset("prestige")["points"]) + " PP."

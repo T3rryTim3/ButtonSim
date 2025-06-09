@@ -109,13 +109,11 @@ func save_game() -> void:
 		]
 	}
 	
-	var json = JSON.new()
-	
 	var new_save = to_json(player)
 
 	savedata.slots[0]["data"] = new_save
 
-	save_file.store_line(json.stringify(savedata))
+	save_file.store_line(JSON.stringify(savedata))
 	save_file.close()
 
 	print("Game successfully saved.")
@@ -334,7 +332,7 @@ func increase_upgrade_count(upgrade:String, amt:int=1) -> void:
 
 
 ## Reset an upgrade's buy count to zero.
-func reset_upgrade_count(upgrade:String, amt:int=1) -> void:
+func reset_upgrade_count(upgrade:String, _amt:int=1) -> void:
 	player["upgrades"][upgrade]["purchased"] = 0
 #endregion
 
@@ -358,7 +356,7 @@ func currency_popup(label_text:String, label_color:Color=Color.WHITE, pos=null, 
 #endregion
 
 #region Base functions
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	_cached_stat_increases = {} # Reset cache every frame
 
 	# Update buy speed

@@ -74,8 +74,6 @@ func _process(delta: float) -> void:
 
 func update_button_count(count:int=10) -> void:
 
-	var children = button_container.get_children()
-
 	for button in button_container.get_children():
 		button.queue_free()
 

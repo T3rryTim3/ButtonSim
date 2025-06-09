@@ -12,8 +12,8 @@ var PP_BONUS_DIV_SCALE:float = 10
 ## Delay between tokens on each button
 ## They arent technically constants because they are arrays.
 var TOKEN_DELAY_INTERVAL:Array[float] = [60,90]
-var TOKEN_EXPIRE_INTERVAL:Array[float] = [5,10] # TODO
-var TOKEN_GAIN_INTERVAL:Array[float] = [1,3] # TODO
+var TOKEN_EXPIRE_INTERVAL:Array[float] = [5,15]
+var TOKEN_GAIN_INTERVAL:Array[int] = [1,3]
 
 const RESET_LAYERS = {
 	"multiplier": {
@@ -222,7 +222,7 @@ var upgrades = {
 		"get_player_currency": func(): return Game.get_reset("prestige").points,
 		"spend_currency": func(amt:Variant): Game.spend_reset_points("prestige", amt),
 		"get_max": func(): return 20,
-		"get_desc": func(next:int): return "Your buy speed is 20% faster.",
+		"get_desc": func(_next:int): return "Your buy speed is 20% faster.",
 		"get_cost": func(next:int): return B.new(25).multiply(B.new(15).power(next))
 	},
 	"PP PP Multi": {
@@ -233,7 +233,7 @@ var upgrades = {
 		"get_player_currency": func(): return Game.get_reset("prestige").points,
 		"spend_currency": func(amt:Variant): Game.spend_reset_points("prestige", amt),
 		"get_max": func(): return 100,
-		"get_desc": func(next:int): return "Your PP is multiplied by " + str(Game.get_upgrade_count("PP PP Multi") + 2),
+		"get_desc": func(_next:int): return "Your PP is multiplied by " + str(Game.get_upgrade_count("PP PP Multi") + 2),
 		"get_cost": func(next:int): return B.new(2).multiply(B.new(3).power(next))
 	},
 	#endregion
@@ -249,7 +249,7 @@ var upgrades = {
 		"spend_currency": func(amt:Variant): Game.minus_stat("tokens", amt),
 		"get_max": func(): return 1000,
 		"get_desc": func(next:int): return "x" + str(Game.get_upgrade_effect("Token Cash multi", next+1)) + " Cash",
-		"get_cost": func(next:int): return B.new(5)
+		"get_cost": func(_next:int): return B.new(5)
 	},
 	"Token Buy speed": {
 		"name": "Buy Speed",
@@ -284,13 +284,13 @@ var upgrades = {
 		"currency": "PP",
 		"currency_name": "PP",
 		"allow_refund": false,
-		"get_effect": func(val:int): return 1,
+		"get_effect": func(_val:int): return 1,
 		"get_player_currency": func(): return Game.get_reset("prestige").points,
 		"spend_currency": func(amt:Variant): Game.spend_reset_points("prestige", amt),
 		"get_max": func(): return -1, # Unlimited
-		"get_desc": func(next:int): return "Buy 1 stat crate. Cost caps at 1000.",
+		"get_desc": func(_next:int): return "Buy 1 stat crate. Cost caps at 1000.",
 		"get_cost": func(next:int): return B.new(min(100*(next+1), 1000)),
-		"on_buy": func(next:int): Game.increase_crate_count("basic", 1)
+		"on_buy": func(_next:int): Game.increase_crate_count("basic", 1)
 	},
 
 	"Crate Buy Token Crate": {
@@ -299,13 +299,13 @@ var upgrades = {
 		"currency": "tokens",
 		"currency_name": "Tokens",
 		"allow_refund": false,
-		"get_effect": func(val:int): return 1,
+		"get_effect": func(_val:int): return 1,
 		"get_player_currency": func(): return Game.get_stat("tokens"),
 		"spend_currency": func(amt:Variant): Game.minus_stat("tokens", amt),
 		"get_max": func(): return -1, # Unlimited
-		"get_desc": func(next:int): return "Buy 1 token crate.",
-		"get_cost": func(next:int): return B.new(20),
-		"on_buy": func(next:int): Game.increase_crate_count("token", 1)
+		"get_desc": func(_next:int): return "Buy 1 token crate.",
+		"get_cost": func(_next:int): return B.new(20),
+		"on_buy": func(_next:int): Game.increase_crate_count("token", 1)
 	}
 	#endregion
 }

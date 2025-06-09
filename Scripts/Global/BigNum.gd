@@ -726,7 +726,9 @@ func toScientific(no_decimals_on_small_values = false, force_decimals = false) -
 
 func toSuffix() -> String:
 	var rounded_num = round(mantissa * pow(10, 2)) / pow(10, 2)
+	@warning_ignore("integer_division")
 	if exponent / 3 < len(base_suffixes):
+		@warning_ignore("integer_division")
 		return str(rounded_num * pow(10, exponent % 3)) + "" + str(base_suffixes[exponent / 3])
 	else:
 		return toScientific()

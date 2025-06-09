@@ -29,7 +29,7 @@ func load_crate(crate:Dictionary = {}):
 		data_container.get_node("Desc").text = crate_data["desc"]
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if show_data and data_container.visible == false:
 		data_container.visible = true
 	if !show_data and data_container.visible == true:

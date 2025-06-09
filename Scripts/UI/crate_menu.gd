@@ -22,7 +22,7 @@ func _reload_crate_select_data() -> void:
 	for child in %CrateContainer.get_children():
 		child.load_crate(child.crate_data)
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	
 	# I have no idea what this is but im scared to delete it
 	#if $HSplitContainer.split_offset <= get_viewport_rect().size.x/6:

@@ -49,7 +49,7 @@ func _prestige_button_pressed():
 	if Game.get_stat("score").isGreaterThan(1):
 		_prestige()
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if !visible:
 		return
 
