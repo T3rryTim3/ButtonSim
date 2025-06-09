@@ -10,7 +10,10 @@ var PP_BONUS_BASE:float = 1
 var PP_BONUS_DIV_SCALE:float = 10
 
 ## Delay between tokens on each button
+## They arent technically constants because they are arrays.
 var TOKEN_DELAY_INTERVAL:Array[float] = [60,90]
+var TOKEN_EXPIRE_INTERVAL:Array[float] = [5,10] # TODO
+var TOKEN_GAIN_INTERVAL:Array[float] = [1,3] # TODO
 
 const RESET_LAYERS = {
 	"multiplier": {
@@ -47,7 +50,7 @@ const RESET_LAYERS = {
 			"exp_growth": .1
 		},
 		"init_val": 1,
-		"scale_val": 1.9,
+		"scale_val": 1.5,
 		"exp_growth": .0
 	},
 
@@ -65,7 +68,7 @@ const RESET_LAYERS = {
 		},
 		"cost": {
 			"currency": "rebirths",
-			"init": 500,
+			"init": 1000,
 			"scale": 5.5,
 			"exp_growth": .1
 		},
@@ -95,7 +98,7 @@ const RESET_LAYERS = {
 			"exp_growth": 0.15
 		},
 		"init_val": 1,
-		"scale_val": 3,
+		"scale_val": 1.4,
 		"exp_growth": .0
 	},
 
@@ -122,7 +125,7 @@ const RESET_LAYERS = {
 			"exp_growth": 0.25
 		},
 		"init_val": 1,
-		"scale_val": 3,
+		"scale_val": 1.3,
 		"exp_growth": .0
 	},
 	
@@ -282,12 +285,27 @@ var upgrades = {
 		"currency_name": "PP",
 		"allow_refund": false,
 		"get_effect": func(val:int): return 1,
-		"get_player_currency": func(): return Game.get_stat("tokens"),
-		"spend_currency": func(amt:Variant): Game.minus_stat("tokens", amt),
+		"get_player_currency": func(): return Game.get_reset("prestige").points,
+		"spend_currency": func(amt:Variant): Game.spend_reset_points("prestige", amt),
 		"get_max": func(): return -1, # Unlimited
 		"get_desc": func(next:int): return "Buy 1 stat crate. Cost caps at 1000.",
 		"get_cost": func(next:int): return B.new(min(100*(next+1), 1000)),
 		"on_buy": func(next:int): Game.increase_crate_count("basic", 1)
+	},
+
+	"Crate Buy Token Crate": {
+		"name": "Token Crate",
+		"tags": ["crate"],
+		"currency": "tokens",
+		"currency_name": "Tokens",
+		"allow_refund": false,
+		"get_effect": func(val:int): return 1,
+		"get_player_currency": func(): return Game.get_stat("tokens"),
+		"spend_currency": func(amt:Variant): Game.minus_stat("tokens", amt),
+		"get_max": func(): return -1, # Unlimited
+		"get_desc": func(next:int): return "Buy 1 token crate.",
+		"get_cost": func(next:int): return B.new(20),
+		"on_buy": func(next:int): Game.increase_crate_count("token", 1)
 	}
 	#endregion
 }
@@ -306,17 +324,17 @@ var crates = {
 		},
 		"rewards": [
 			{"name": "Common", "color":Color(1,1,1), "weight": 10.0,"multi": {"cash": 0.1}},
-			{"name": "Uncommon", "color":Color(0,1,0), "weight": 5.0,"multi": {"multiplier": 0.1}},
-			{"name": "Rare", "color":Color(0,0,1), "weight": 2.0,"multi": {"rebirths": 0.1}},
-			{"name": "Epic", "color":Color(1,0,1), "weight": 1.0,"multi": {"super": 0.1}},
-			{"name": "Legendary", "color":Color(1,1,0), "weight": 0.5,"multi": {"ultra": 0.1}},
-			{"name": "Mythical", "color":Color(0,1,1), "weight": 0.25,"multi": {"cash": 0.5,"multiplier": 0.5,"rebirths": 0.5}},
-			{"name": "Insane", "color":Color(0.3,0,0.3), "weight": 0.1,"multi": {"cash": 5, "multiplier": 5}},
+			{"name": "Uncommon", "color":Color(0.6,1,0.6), "weight": 5.0,"multi": {"multiplier": 0.1}},
+			{"name": "Rare", "color":Color(0.6,0.6,1), "weight": 2.0,"multi": {"rebirths": 0.1}},
+			{"name": "Epic", "color":Color(1,0.6,1), "weight": 1.0,"multi": {"super": 0.1}},
+			{"name": "Legendary", "color":Color(1,1,0.6), "weight": 0.5,"multi": {"ultra": 0.1}},
+			{"name": "Mythical", "color":Color(0.6,1,1), "weight": 0.25,"multi": {"cash": 0.5,"multiplier": 0.5,"rebirths": 0.5}},
+			{"name": "Insane", "color":Color(0.6,0.3,0.6), "weight": 0.1,"multi": {"cash": 5, "multiplier": 5}},
 		]
 	},
 	"token": {
 		"id": "token", # Must be the same as the key
-		"health": 10,
+		"health": 15,
 		"name": "Token crate",
 		"desc": "Low bonuses, but affects a bunch of stats. Even PP!",
 		"cost": {
@@ -327,8 +345,36 @@ var crates = {
 		},
 		"rewards": [
 			{"name": "Dull", "color":Color(0.6,0.6,0.6), "weight": 10.0,"multi": {"cash": 0.1, "multiplier": 0.1, "rebirths": 0.1}},
-			{"name": "Decent", "color":Color(0.6,0.6,0.8), "weight": 6.0,"multi": {"cash": 0.2, "multiplier": 0.2, "rebirths": 0.1, "ultra": 0.05}},
-			{"name": "Shiny", "color":Color(0.6,0.6,0.8), "weight": 2.0,"multi": {"prestige_points": 0.2}},
+			{"name": "Decent", "color":Color(0.6,0.6,0.8), "weight": 6.0,"multi": {"cash": 0.2, "multiplier": 0.2, "rebirths": 0.1, "super": 0.05}},
+			{"name": "Shiny", "color":Color(0.7,0.7,0.9), "weight": 2.0,"multi": {"prestige_points": 0.2}},
+			{
+				"name": "Pristine", 
+				"color":Color(0.6,0.6,0.8), 
+				"weight": 0.8, 
+				"multi": {
+					"cash": 0.1, 
+					"multiplier": 0.1, 
+					"rebirths": 0.1, 
+					"super": 0.1, 
+					"ultra": 0.1, 
+					"prestige_points": 0.1
+				}
+			},
+			{
+				"name": "Remarkable", 
+				"color":Color(0.6,0.6,1), 
+				"weight": 0.1, 
+				"multi": {
+					"cash": 0.1, 
+					"multiplier": 0.1, 
+					"rebirths": 0.1, 
+					"super": 0.1, 
+					"ultra": 0.1, 
+					"mega": 0.1, 
+					"hyper": 0.1, 
+					"prestige_points": 0.1
+				}
+			},
 		]
 	}
 }

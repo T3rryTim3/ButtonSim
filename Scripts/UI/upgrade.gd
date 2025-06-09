@@ -86,6 +86,7 @@ func purchase() -> void:
 	_update_cost()
 	
 	if not _can_buy():
+		SoundManager.play_audio("res://Assets/Sound/UI SFX/Error1.wav", "SFX")
 		return
 	
 	upgrade_data["spend_currency"].call(cost)
@@ -97,6 +98,7 @@ func purchase() -> void:
 	if "on_buy" in upgrade_data:
 		upgrade_data.on_buy.call(Game.get_upgrade_count(upgrade_id))
 	
+	SoundManager.play_audio("res://Assets/Sound/UI SFX/Upgrade1.wav", "SFX")
 	_load_data()
 
 

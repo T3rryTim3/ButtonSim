@@ -4,10 +4,12 @@ func open():
 	if visible:
 		close()
 		return
+	SoundManager.play_audio("res://Assets/Sound/UI SFX/MenuOpen.wav", "SFX")
 	$Prestige.show()
 	visible = true
 
 func close():
+	SoundManager.play_audio("res://Assets/Sound/UI SFX/MenuClose.wav", "SFX")
 	$Prestige.hide()
 	$Prestige2.hide()
 	visible = false

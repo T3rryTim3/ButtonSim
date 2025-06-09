@@ -5,6 +5,7 @@ extends MarginContainer
 var current_progress:float = 0
 
 func _crate_selected(selected:PanelContainer):
+	SoundManager.play_audio("res://Assets/Sound/UI SFX/Click2.wav", "SFX")
 	%Crate.load_crate(selected.crate_data)
 
 func _load_crate_selections() -> void:

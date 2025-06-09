@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://dvk70soyttxsy"
+path="res://.godot/imported/Token.wav-e882287f08eb78577fc68dc44f0f4cef.sample"
+
+[deps]
+
+source_file="res://Assets/Sound/UI SFX/Token.wav"
+dest_files=["res://.godot/imported/Token.wav-e882287f08eb78577fc68dc44f0f4cef.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

@@ -77,10 +77,10 @@ corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k12tt"]
-content_margin_left = 8.0
-content_margin_top = 8.0
-content_margin_right = 8.0
-content_margin_bottom = 8.0
+content_margin_left = 14.0
+content_margin_top = 14.0
+content_margin_right = 14.0
+content_margin_bottom = 14.0
 bg_color = Color(0.36, 0.252, 0.1008, 1)
 border_width_left = 2
 border_width_top = 2
@@ -169,7 +169,7 @@ theme_override_styles/tab_hovered = SubResource("StyleBoxFlat_hptm8")
 theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_hptm8")
 current_tab = 0
 
-[node name="Buttons" type="TabBar" parent="Game/TabContainer"]
+[node name="Buttons" type="Control" parent="Game/TabContainer"]
 layout_mode = 2
 metadata/_tab_index = 0
 
@@ -240,61 +240,22 @@ layout_mode = 2
 size_flags_horizontal = 4
 text = "Cash: 10"
 
+[node name="OpenPrestigeMenu" type="Button" parent="Game/TabContainer/Buttons/PanelContainer/HSplitContainer/SidePanel/PanelContainer/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Prestige"
+flat = true
+
 [node name="OpenTokenMenu" type="Button" parent="Game/TabContainer/Buttons/PanelContainer/HSplitContainer/SidePanel/PanelContainer/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 self_modulate = Color(1, 1, 0, 1)
 layout_mode = 2
-theme_override_colors/font_disabled_color = Color(1, 1, 1, 1)
-theme_override_colors/font_hover_pressed_color = Color(1, 1, 1, 1)
-theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
-theme_override_colors/icon_disabled_color = Color(1, 1, 1, 1)
-theme_override_colors/icon_hover_pressed_color = Color(1, 1, 1, 1)
-theme_override_colors/icon_hover_color = Color(1, 1, 1, 1)
-theme_override_colors/icon_pressed_color = Color(1, 1, 1, 1)
-theme_override_colors/icon_focus_color = Color(1, 1, 1, 1)
-theme_override_colors/icon_normal_color = Color(1, 1, 1, 1)
-theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
-theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
 text = "Tokens"
-flat = true
-
-[node name="OpenPrestigeMenu" type="Button" parent="Game/TabContainer/Buttons/PanelContainer/HSplitContainer/SidePanel/PanelContainer/MarginContainer/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-theme_override_colors/font_disabled_color = Color(1, 1, 1, 1)
-theme_override_colors/font_hover_pressed_color = Color(1, 1, 1, 1)
-theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
-theme_override_colors/icon_disabled_color = Color(1, 1, 1, 1)
-theme_override_colors/icon_hover_pressed_color = Color(1, 1, 1, 1)
-theme_override_colors/icon_hover_color = Color(1, 1, 1, 1)
-theme_override_colors/icon_pressed_color = Color(1, 1, 1, 1)
-theme_override_colors/icon_focus_color = Color(1, 1, 1, 1)
-theme_override_colors/icon_normal_color = Color(1, 1, 1, 1)
-theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
-theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
-text = "Prestige"
 flat = true
 
 [node name="OpenBuyCrateMenu" type="Button" parent="Game/TabContainer/Buttons/PanelContainer/HSplitContainer/SidePanel/PanelContainer/MarginContainer/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_colors/font_disabled_color = Color(1, 1, 1, 1)
-theme_override_colors/font_hover_pressed_color = Color(1, 1, 1, 1)
-theme_override_colors/font_hover_color = Color(1, 1, 1, 1)
-theme_override_colors/icon_disabled_color = Color(1, 1, 1, 1)
-theme_override_colors/icon_hover_pressed_color = Color(1, 1, 1, 1)
-theme_override_colors/icon_hover_color = Color(1, 1, 1, 1)
-theme_override_colors/icon_pressed_color = Color(1, 1, 1, 1)
-theme_override_colors/icon_focus_color = Color(1, 1, 1, 1)
-theme_override_colors/icon_normal_color = Color(1, 1, 1, 1)
-theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_colors/font_focus_color = Color(1, 1, 1, 1)
-theme_override_colors/font_pressed_color = Color(1, 1, 1, 1)
 text = "Buy Crates"
 flat = true
 
@@ -319,6 +280,7 @@ theme_override_constants/separation = 16
 
 [node name="PrestigeMenu" type="CenterContainer" parent="Game/TabContainer/Buttons"]
 unique_name_in_owner = true
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -329,7 +291,6 @@ mouse_filter = 2
 script = ExtResource("3_8gbba")
 
 [node name="Prestige" type="PanelContainer" parent="Game/TabContainer/Buttons/PrestigeMenu"]
-visible = false
 layout_mode = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_8gbba")
 
@@ -478,6 +439,13 @@ layout_mode = 2
 upgrade_tags = Array[String](["token"])
 display_types = Array[int]([1])
 
+[node name="Exit" type="Button" parent="Game/TabContainer/Buttons/TokenMenu/PanelContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+text = "Exit"
+flat = true
+
 [node name="BuyCrateMenu" type="CenterContainer" parent="Game/TabContainer/Buttons"]
 unique_name_in_owner = true
 layout_mode = 1
@@ -486,7 +454,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-mouse_filter = 2
 script = ExtResource("10_wsu2k")
 
 [node name="PanelContainer" type="PanelContainer" parent="Game/TabContainer/Buttons/BuyCrateMenu"]
@@ -521,7 +488,7 @@ layout_mode = 2
 upgrade_tags = Array[String](["crate"])
 display_types = Array[int]([2])
 
-[node name="Crates" type="TabBar" parent="Game/TabContainer"]
+[node name="Crates" type="Control" parent="Game/TabContainer"]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 1
@@ -689,6 +656,21 @@ theme_override_font_sizes/font_size = 40
 text = "Crate - Click to Open!"
 flat = true
 
+[node name="CrateName" type="Label" parent="Game/TabContainer/Crates/CrateMenu/HSplitContainer/PanelContainer/PanelContainer/VBoxContainer/Crate"]
+self_modulate = Color(1, 1, 1, 0.909804)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -155.0
+offset_top = -63.0
+offset_right = 157.0
+offset_bottom = -3.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 60
+text = "Crate Name"
+horizontal_alignment = 1
+
 [node name="CrateStatIndex" type="Control" parent="Game/TabContainer/Crates/CrateMenu"]
 unique_name_in_owner = true
 visible = false
@@ -716,7 +698,7 @@ layout_mode = 2
 size_flags_vertical = 3
 column_titles_visible = true
 
-[node name="Pets" type="TabBar" parent="Game/TabContainer"]
+[node name="Pets" type="Control" parent="Game/TabContainer"]
 visible = false
 layout_mode = 2
 metadata/_tab_index = 2

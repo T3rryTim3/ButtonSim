@@ -108,15 +108,18 @@ func _open() -> void:
 		$Label.modulate = Color(1,1,1)
 
 	SignalBus.CrateOpened.emit()
+	SoundManager.play_audio("res://Assets/Sound/UI SFX/CrateOpen.wav", "SFX")
 
 func _hit() -> void:
+
+	SoundManager.play_audio("res://Assets/Sound/UI SFX/CrateHit.wav", "SFX")
 
 	if Game.get_crate_count(current_crate["id"]) <= 0:
 		stress = 0.05
 		return
 
 	stress = 0.3
-	health -= 1
+	health -= randf_range(0.5,1.5)
 	if health <= 0:
 		_open()
 
@@ -138,6 +141,7 @@ func load_crate(crate:Dictionary={}) -> void:
 	else:
 		crate_button.texture_normal = load("res://Assets/Textures/Crates/crate.png")
 
+	$CrateName.text = crate["name"]
 	if Game.get_crate_count(current_crate["id"]) <= 0:
 		$Label.text = "You do not own this crate."
 		$Label.modulate = Color(1,0,0)

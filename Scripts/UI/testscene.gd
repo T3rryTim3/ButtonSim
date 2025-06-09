@@ -98,6 +98,8 @@ func _ready() -> void:
 	%OpenTokenMenu.pressed.connect(%TokenMenu.open)
 	%OpenBuyCrateMenu.pressed.connect(%BuyCrateMenu.open)
 
+	$TabContainer.tab_clicked.connect(func(idx:int): SoundManager.play_audio("res://Assets/Sound/UI SFX/Click1.wav", "SFX", randf_range(0.9,1.1)))
+
 
 func _on_crates_tab_selected(tab: int) -> void:
 	pass # Replace with function body.

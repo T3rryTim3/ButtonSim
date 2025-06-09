@@ -4,6 +4,7 @@ class_name ResetLayer
 @onready var button_container:VBoxContainer = $ScrollContainer/VBoxContainer/Buttons
 @onready var title_label:Label = $ScrollContainer/VBoxContainer/Label
 @onready var desc_vbox:VBoxContainer = $ScrollContainer/VBoxContainer/Desc/VBoxContainer/VBoxContainer
+@onready var autobuy_button:Button = $ScrollContainer/VBoxContainer/Autobuy
 
 var reset_button = preload("res://Scenes/UI/reset_button.tscn")
 
@@ -87,6 +88,13 @@ func update_button_count(count:int=10) -> void:
 			button.reset_layer = self
 			button_container.add_child(button)
 
+func _autobuy_pressed(toggled) -> void:
+	SoundManager.play_audio("res://Assets/Sound/UI SFX/Click1.wav", "SFX")
+	if toggled:
+		autobuy_button.text = "Autobuy - Enabled"
+	else:
+		autobuy_button.text = "Autobuy - Disabled"
+
 func _ready() -> void:
 	# Set base stuff up
 	title_label.text = key.capitalize()
@@ -103,5 +111,7 @@ func _ready() -> void:
 		label.set_meta("mult", mult)
 		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		desc_vbox.add_child(label)
+
+	autobuy_button.toggled.connect(_autobuy_pressed)
 
 	_reload()

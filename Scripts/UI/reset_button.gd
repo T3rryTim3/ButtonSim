@@ -68,6 +68,9 @@ func buy(bulk:int=1, auto:bool=false):
 			$TokenOutline.visible = false
 			Game.currency_popup("+1 Token", Color.YELLOW)
 			Game.increase_stat("tokens", 1)
+			SoundManager.play_audio("res://Assets/Sound/UI SFX/Token2.wav", "SFX")
+		else: # Avoid both sounds playing at once (It sounds weird)
+			SoundManager.play_audio("res://Assets/Sound/UI SFX/StatBuy2.wav", "SFX", randf_range(0.4,1.1))
 
 	for i in range(bulk):
 		if not can_buy():
