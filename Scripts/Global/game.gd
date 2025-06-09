@@ -12,6 +12,7 @@ var _cached_stat_increases := {}
 
 var crate_reward_multis := {}
 
+#region Player Data
 func get_player_data():
 	var s = {
 		"time": 0.0,
@@ -56,6 +57,90 @@ func get_player_data():
 			s["crate_rewards"][reward["name"]] = 0
 
 	return s
+
+## Convert a value to json accounting for bignums or other data types as
+## they are added.
+func to_json(d:Variant) -> Variant:
+	var new
+
+	if d is Dictionary:
+		new = {}
+		for k in d:
+			new[k] = to_json(d[k])
+	elif d is Array:
+		new = []
+		for i in d:
+			new.append(to_json(i))
+	elif d is B:
+		new = d.to_json()
+	else:
+		return d
+
+	return new
+
+func from_json(d:Variant) -> Variant:
+	var new
+
+	if d is Dictionary:
+		if not "_type" in d:
+			new = {}
+			for k in d:
+				new[k] = from_json(d[k])
+		elif d._type == "bignum":
+			new = B.from_json(d)
+	elif d is Array:
+		new = []
+		for i in d:
+			new.append(from_json(i))
+	else:
+		return d
+
+	return new
+
+func save_game() -> void:
+	var save_file = FileAccess.open("user://savegame.save", FileAccess.WRITE)
+	
+	var savedata = {
+		"slots": [
+			{
+				"name": "Default",
+				"data": {}
+			}
+		]
+	}
+	
+	var json = JSON.new()
+	
+	var new_save = to_json(player)
+
+	savedata.slots[0]["data"] = new_save
+
+	save_file.store_line(json.stringify(savedata))
+	save_file.close()
+
+	print("Game successfully saved.")
+
+func load_game() -> void:
+	if not FileAccess.file_exists("user://savegame.save"):
+		print("No save data found. Using default.")
+		player = get_player_data()
+		return
+	
+	var json = JSON.new()
+	var save_file = FileAccess.open("user://savegame.save", FileAccess.READ)
+	var parse_result = json.parse(save_file.get_as_text())
+
+	if not parse_result == OK:
+		printerr("Error parsing save data!")
+		print(json.get_error_message())
+		return
+
+	if json.data and json.data["slots"][0]["data"]:
+		player = from_json(json.data["slots"][0]["data"])
+
+	print("Game successfully loaded.")
+
+#endregion
 
 #region Crates
 ## Increments the player's crate rewards by the reward-amount key-value pairs passed
@@ -283,9 +368,17 @@ func _process(delta: float) -> void:
 	player.buy_speed = buy_speed
 	player.autobuy_speed = buy_speed*4
 
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_CLOSE_REQUEST:
+		save_game()
+		get_tree().quit()
 
 func _ready() -> void:
-	if not Game.ready:
-		await Game.ready
-	player = get_player_data()
+
+	get_tree().auto_accept_quit = false
+	load_game()
+
+	tree_exiting.connect(save_game) 
+	# TODO Auto save every n minutes
+	# TODO Save slots + menu to select them
 #endregion

@@ -950,3 +950,16 @@ func toAA(no_decimals_on_small_values = false, use_thousand_symbol = true, force
 
 func _to_string() -> String:
 	return toSuffix()
+
+func to_json() -> Dictionary:
+	return {
+		"_type": "bignum",
+		"mantissa": mantissa,
+		"exp": exponent
+	}
+
+static func from_json(dict:Dictionary) -> B:
+	if "_type" in dict and dict._type == "bignum":
+		return B.new(dict.mantissa, dict.exp)
+	printerr("Invalid data passed for from_json! Returning 0 as fallback")
+	return B.new(0)
