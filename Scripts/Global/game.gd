@@ -12,6 +12,8 @@ var _cached_stat_increases := {}
 
 var crate_reward_multis := {}
 
+var _all_multipliers
+
 #region Player Data
 func get_player_data():
 	var s = {
@@ -358,6 +360,7 @@ func currency_popup(label_text:String, label_color:Color=Color.WHITE, pos=null, 
 #region Base functions
 func _process(_delta: float) -> void:
 	_cached_stat_increases = {} # Reset cache every frame
+	_all_multipliers = {}
 
 	# Update buy speed
 	var buy_speed = Config.BASE_BUY_SPEED
@@ -365,6 +368,8 @@ func _process(_delta: float) -> void:
 	buy_speed *= get_upgrade_effect("Token Buy speed")
 	player.buy_speed = buy_speed
 	player.autobuy_speed = buy_speed*4
+
+	_cache_multis()
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_CLOSE_REQUEST:
@@ -385,3 +390,54 @@ func _ready() -> void:
 	#          - Different button display layouts
 	#          - Tabbar position
 #endregion
+
+## Multiply a cached value if present, creating objects if needed to do so.
+func _multiply_cache_multi(k:String,v:B,src_string:String):
+	if k in _all_multipliers:
+		_all_multipliers[k].val.multiplyEquals(v)
+		_all_multipliers[k].source.append(src_string + ": x" + str(v))
+	elif not k in _all_multipliers:
+		_all_multipliers[k] = {
+			"val": v,
+			"source": [src_string + ": x" + str(v)],
+		}
+
+## Calculate all stat multipliers for the frame. Must be called each frame once.
+func _cache_multis():
+	#print(Config.reset_stat_multis)
+	for stat in Config.reset_stat_multis:
+		for source in Config.reset_stat_multis[stat]:
+			_multiply_cache_multi(stat, get_stat(source[0]).multiply(source[1]).plus(1), "Reset - " + source[0])
+			#print("--")
+			#print(stat + " - " + source[0])
+			#print("current: " + str(get_stat(source[0])))
+			#print("current cache: " + str(_all_multipliers[stat]))
+			#print(source[0] + " mult:" + str(source[1]+1))
+			#print("Total multiplier: " + str(get_stat(source[0]).multiply(source[1]).plus(1)))
+	
+	# Upgrades
+	for upgrade in Config.upgrades:
+		if "get_multi" in Config.upgrades[upgrade]:
+			var multipliers = Config.upgrades[upgrade].get_multi.call(get_upgrade_count(upgrade))
+			for multiplier in multipliers:
+				_multiply_cache_multi(multiplier, multipliers[multiplier], "Upgrade - " + upgrade)
+	
+	# Crates (A tad ugly, I know)
+	for crate in Config.crates:
+		for reward in Config.crates[crate]["rewards"]:
+			for multi in reward["multi"]:
+				_multiply_cache_multi(
+					multi, 
+					B.new(player.crate_rewards[reward["name"]]*reward["multi"][multi]+1),
+					"Crate Reward - " + reward["name"]
+				)
+	
+	#print("----------")
+	#return
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventKey:
+		if event.pressed:
+			match event.keycode:
+				KEY_U:
+					print(JSON.stringify(_all_multipliers, "\t"))

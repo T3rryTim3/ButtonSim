@@ -249,7 +249,8 @@ var upgrades = {
 		"spend_currency": func(amt:Variant): Game.minus_stat("tokens", amt),
 		"get_max": func(): return 1000,
 		"get_desc": func(next:int): return "x" + str(Game.get_upgrade_effect("Token Cash multi", next+1)) + " Cash",
-		"get_cost": func(_next:int): return B.new(5)
+		"get_cost": func(_next:int): return B.new(5),
+		"get_multi": func(val:int) -> Dictionary[String, B]: return {"cash": B.new(val+1)}
 	},
 	"Token Buy speed": {
 		"name": "Buy Speed",
