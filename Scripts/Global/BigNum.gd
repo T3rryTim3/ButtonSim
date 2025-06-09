@@ -163,7 +163,7 @@ static var options = {
 ## Maximum B Number Mantissa
 const MANTISSA_MAX: float = 1209600.0
 ## B Number Mantissa floating-point precision
-const MANTISSA_PRECISION: float = 0.0000001
+const MANTISSA_PRECISION: float = 0.00001 # Note: Removed 2 0s for optimization
 
 ## int (signed 64-bit) minimum value
 const INT_MIN: int = -9223372036854775808

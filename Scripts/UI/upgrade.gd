@@ -42,7 +42,7 @@ func _exceeds_max() -> bool:
 func _can_buy() -> bool:
 	if _exceeds_max(): # Max is -1 if unlimited
 		return false
-	return !upgrade_data["get_player_currency"].call().isLessThan(cost)
+	return !Game.get_stat(upgrade_data["currency"]).isLessThan(cost)
 
 
 ## Load the upgrade data into the display for the upgrade.
@@ -88,7 +88,7 @@ func purchase() -> void:
 		SoundManager.play_audio("res://Assets/Sound/UI SFX/Error1.wav", "SFX")
 		return
 	
-	upgrade_data["spend_currency"].call(cost)
+	Game.minus_stat(upgrade_data["currency"], cost)
 	Game.increase_upgrade_count(upgrade_id)
 	
 	if "prestige" in upgrade_data["tags"]:

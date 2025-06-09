@@ -98,4 +98,5 @@ func _ready() -> void:
 	%OpenTokenMenu.pressed.connect(%TokenMenu.open)
 	%OpenBuyCrateMenu.pressed.connect(%BuyCrateMenu.open)
 
-	$TabContainer.tab_clicked.connect(func(_idx:int): SoundManager.play_audio("res://Assets/Sound/UI SFX/Click1.wav", "SFX", randf_range(0.9,1.1)))
+	%GameTabs.tab_clicked.connect(func(_idx:int): SoundManager.play_audio("res://Assets/Sound/UI SFX/Click1.wav", "SFX", randf_range(0.9,1.1)))
+	%GameTabs.tab_clicked.connect(func(idx:int): SignalBus.TabSelected.emit(%GameTabs.get_tab_control(idx)))

@@ -12,7 +12,7 @@ var _cached_stat_increases := {}
 
 var crate_reward_multis := {}
 
-var _all_multipliers
+var _all_multipliers:Dictionary
 
 #region Player Data
 func get_player_data():
@@ -30,11 +30,11 @@ func get_player_data():
 		"ultra":B.new(0),
 		"mega":B.new(0),
 		"hyper":B.new(0),
+		"prestige_points": B.new(100000),
 
 		"resets": {
 			"prestige": {
 				"count" : B.new(0),
-				"points":B.new(100)
 			},
 		},
 
@@ -147,25 +147,6 @@ func load_game() -> void:
 func increase_crate_rewards(reward_dict:Dictionary):
 	for k in reward_dict:
 		player.crate_rewards[k] += reward_dict[k]["amt"]
-	_update_crate_reward_multis()
-
-
-## Updates the internal crate multi dict; called on crate opening
-func _update_crate_reward_multis() -> void:
-	var new_multis = {}
-	for crate in Config.crates:
-		for reward in Config.crates[crate]["rewards"]:
-			for multi in reward["multi"]:
-				if not multi in new_multis:
-					new_multis[multi] = B.new(1)
-				new_multis[multi].multiplyEquals(player.crate_rewards[reward["name"]]*reward["multi"][multi]+1)
-	crate_reward_multis = new_multis
-
-## Get the multiplier of a given stat 
-func _get_crate_reward_multi(mul:B, key:String) -> B:
-	if key in crate_reward_multis:
-		mul.multiplyEquals(crate_reward_multis[key])
-	return mul
 
 
 ## Returns a dictionary of crate reward names to their respective multipliers.
@@ -192,48 +173,17 @@ func increase_crate_count(crate:String, amt:int = 1) -> void:
 #endregion
 
 #region Stat Management
-## Get the multiplier of a stat from all of the reset data.
-func _get_reset_multi(mul:B, key:String) -> B:
-
-	if key in Config.reset_stat_multis:
-		for k in Config.reset_stat_multis[key]:
-			mul.multiplyEquals(player[k[0]].multiply(k[1]).quickPlusEquals(1.0))
-
-	var prestige_mutlis = get_prestige_bonuses()
-	if key in prestige_mutlis:
-		mul.multiplyEquals(prestige_mutlis[key])
-
-	return mul
-
-
-## Get a stats upgrade multipler based on upgrade data.
-func _get_upgrade_multi(mul:B, key:String) -> B:
-
-	match key:
-		"cash":
-			mul.multiplyEquals(get_upgrade_effect("Token Cash multi"))
-
-	return mul
-
-
 ## Get the amount that a stat would be increased by accounting for multipliers.
 func get_stat_increase(key:String, val:B):
 
-	if key not in Game.player:
+	if key not in player:
 		print_debug("Warning: Key not found for increase.")
+	if key not in _all_multipliers:
+		print_debug("Warning: Key '" + key +"' not found in _all_multipliers")
 
-	var mul:B
+	var new = val.multiply(_all_multipliers[key].val)
 
-	if key in _cached_stat_increases:
-		mul = _cached_stat_increases[key]
-	else:
-		mul = B.new(1)
-		mul = _get_reset_multi(mul, key)
-		mul = _get_upgrade_multi(mul, key)
-		mul = _get_crate_reward_multi(mul, key)
-		_cached_stat_increases[key] = mul
-
-	return val.multiply(mul)
+	return new
 
 
 ## Increase a stat accounting for multipliers. The stat is assumed to be a direct key of player
@@ -269,17 +219,6 @@ func minus_stat(stat:String, val:Variant) -> void:
 ## Sets a stat to zero.
 func zero_stat(stat:String) -> void:
 	player[stat] = Game.NUM_0
-#endregion
-
-#region Prestige Bonuses
-func get_prestige_bonuses() -> Dictionary:
-	var bonuses = {}
-	var pp = get_reset("prestige").points
-
-	for k in range(get_upgrade_count("PP Boost")):
-		bonuses[(["cash"]+Config.RESET_LAYERS.keys())[k]] = B.new(Config.PP_BONUS_BASE).divide(pow(Config.PP_BONUS_DIV_SCALE, k)).multiply(pp).plus(1)
-
-	return bonuses
 #endregion
 
 #region Resets
@@ -360,7 +299,6 @@ func currency_popup(label_text:String, label_color:Color=Color.WHITE, pos=null, 
 #region Base functions
 func _process(_delta: float) -> void:
 	_cached_stat_increases = {} # Reset cache every frame
-	_all_multipliers = {}
 
 	# Update buy speed
 	var buy_speed = Config.BASE_BUY_SPEED
@@ -381,6 +319,8 @@ func _ready() -> void:
 	get_tree().auto_accept_quit = false
 	load_game()
 
+	_cache_multis()
+
 	tree_exiting.connect(save_game) 
 	# TODO Auto save every n minutes
 	# TODO Save slots + menu to select them
@@ -395,25 +335,20 @@ func _ready() -> void:
 func _multiply_cache_multi(k:String,v:B,src_string:String):
 	if k in _all_multipliers:
 		_all_multipliers[k].val.multiplyEquals(v)
-		_all_multipliers[k].source.append(src_string + ": x" + str(v))
+		_all_multipliers[k].source.append(src_string.capitalize() + ": x" + str(v))
 	elif not k in _all_multipliers:
 		_all_multipliers[k] = {
 			"val": v,
-			"source": [src_string + ": x" + str(v)],
+			"source": [src_string.capitalize() + ": x" + str(v)],
 		}
 
-## Calculate all stat multipliers for the frame. Must be called each frame once.
+## Calculate all stat multipliers. Should be called each frame once.
 func _cache_multis():
+	_all_multipliers = {}
 	#print(Config.reset_stat_multis)
 	for stat in Config.reset_stat_multis:
 		for source in Config.reset_stat_multis[stat]:
 			_multiply_cache_multi(stat, get_stat(source[0]).multiply(source[1]).plus(1), "Reset - " + source[0])
-			#print("--")
-			#print(stat + " - " + source[0])
-			#print("current: " + str(get_stat(source[0])))
-			#print("current cache: " + str(_all_multipliers[stat]))
-			#print(source[0] + " mult:" + str(source[1]+1))
-			#print("Total multiplier: " + str(get_stat(source[0]).multiply(source[1]).plus(1)))
 	
 	# Upgrades
 	for upgrade in Config.upgrades:

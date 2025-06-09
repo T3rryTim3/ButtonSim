@@ -164,8 +164,6 @@ var upgrades = {
 		"tags": ["prestige"],
 		"currency": "prestige_points",
 		"currency_name": "PP",
-		"get_player_currency": func(): return Game.get_reset("prestige").points,
-		"spend_currency": func(amt:Variant): Game.spend_reset_points("prestige", amt),
 		"get_max": func(): return 20,
 		"get_desc": func(next:int): return "Button count is increased by " + str(5*(next+1)),
 		"get_cost": func(next:int): return B.new(4).multiply(B.new(8).power(next))
@@ -175,8 +173,6 @@ var upgrades = {
 		"tags": ["prestige"],
 		"currency": "prestige_points",
 		"currency_name": "PP",
-		"get_player_currency": func(): return Game.get_reset("prestige").points,
-		"spend_currency": func(amt:Variant): Game.spend_reset_points("prestige", amt),
 		"get_max": func(): return len(RESET_LAYERS.keys()) - 3,
 		"get_desc": func(next:int): return "Unlock " + str(RESET_LAYERS.keys()[next+3]),
 		"get_cost": func(next:int): return B.new(60).multiply(B.new(40).power(next))
@@ -186,8 +182,6 @@ var upgrades = {
 		"tags": ["prestige"],
 		"currency": "prestige_points",
 		"currency_name": "PP",
-		"get_player_currency": func(): return Game.get_reset("prestige").points,
-		"spend_currency": func(amt:Variant): Game.spend_reset_points("prestige", amt),
 		"get_max": func(): return len(RESET_LAYERS.keys()),
 		"get_desc": func(next:int): return "Unlock auto-buy for " + str(RESET_LAYERS.keys()[next]),
 		"get_cost": func(next:int): return B.new(100).multiply(B.new(1000).power(next))
@@ -197,8 +191,6 @@ var upgrades = {
 		"tags": ["prestige"],
 		"currency": "prestige_points",
 		"currency_name": "PP",
-		"get_player_currency": func(): return Game.get_reset("prestige").points,
-		"spend_currency": func(amt:Variant): Game.spend_reset_points("prestige", amt),
 		"get_max": func(): return len(RESET_LAYERS.keys()),
 		"get_desc": func(next:int): return str(RESET_LAYERS.keys()[next]).capitalize() + " Purchases do not spend anything.",
 		"get_cost": func(next:int): return B.new(10).multiply(B.new(1000).power(next))
@@ -208,19 +200,21 @@ var upgrades = {
 		"tags": ["prestige"],
 		"currency": "prestige_points",
 		"currency_name": "PP",
-		"get_player_currency": func(): return Game.get_reset("prestige").points,
-		"spend_currency": func(amt:Variant): Game.spend_reset_points("prestige", amt),
 		"get_max": func(): return len(RESET_LAYERS.keys()) + 1,
 		"get_desc": func(next:int): return "Your PP now multiplies " + str((["cash"] + RESET_LAYERS.keys() + ["All purchased."])[next]),
-		"get_cost": func(next:int): return B.new(40).multiply(B.new(1200).power(next))
+		"get_cost": func(next:int): return B.new(40).multiply(B.new(1200).power(next)),
+		"get_multi": func(val:int) -> Dictionary[String, B]: 
+	var total:Dictionary[String, B] = {}
+	var pp = Game.get_stat("prestige_points")
+	for k in range(Game.get_upgrade_count("PP Boost")):
+		total[(["cash"]+RESET_LAYERS.keys())[k]] = B.new(1).divide(pow(10, k)).multiply(pp).plus(1)
+	return total
 	},
 	"PP Buy speed": {
 		"name": "Buy speed",
 		"tags": ["prestige"],
 		"currency": "prestige_points",
 		"currency_name": "PP",
-		"get_player_currency": func(): return Game.get_reset("prestige").points,
-		"spend_currency": func(amt:Variant): Game.spend_reset_points("prestige", amt),
 		"get_max": func(): return 20,
 		"get_desc": func(_next:int): return "Your buy speed is 20% faster.",
 		"get_cost": func(next:int): return B.new(25).multiply(B.new(15).power(next))
@@ -230,11 +224,10 @@ var upgrades = {
 		"tags": ["prestige"],
 		"currency": "prestige_points",
 		"currency_name": "PP",
-		"get_player_currency": func(): return Game.get_reset("prestige").points,
-		"spend_currency": func(amt:Variant): Game.spend_reset_points("prestige", amt),
 		"get_max": func(): return 100,
 		"get_desc": func(_next:int): return "Your PP is multiplied by " + str(Game.get_upgrade_count("PP PP Multi") + 2),
-		"get_cost": func(next:int): return B.new(2).multiply(B.new(3).power(next))
+		"get_cost": func(next:int): return B.new(2).multiply(B.new(3).power(next)),
+		"get_multi": func(val:int) -> Dictionary[String, B]: return {"prestige_points": B.new(val+1)}
 	},
 	#endregion
 
@@ -244,11 +237,8 @@ var upgrades = {
 		"tags": ["token"],
 		"currency": "tokens",
 		"currency_name": "Tokens",
-		"get_effect": func(val:int): return val+1,
-		"get_player_currency": func(): return Game.get_stat("tokens"),
-		"spend_currency": func(amt:Variant): Game.minus_stat("tokens", amt),
 		"get_max": func(): return 1000,
-		"get_desc": func(next:int): return "x" + str(Game.get_upgrade_effect("Token Cash multi", next+1)) + " Cash",
+		"get_desc": func(next:int): return "x" + str(next+1) + " Cash",
 		"get_cost": func(_next:int): return B.new(5),
 		"get_multi": func(val:int) -> Dictionary[String, B]: return {"cash": B.new(val+1)}
 	},
@@ -258,8 +248,6 @@ var upgrades = {
 		"currency": "tokens",
 		"currency_name": "Tokens",
 		"get_effect": func(val:int): return pow(0.95, val),
-		"get_player_currency": func(): return Game.get_stat("tokens"),
-		"spend_currency": func(amt:Variant): Game.minus_stat("tokens", amt),
 		"get_max": func(): return 10,
 		"get_desc": func(next:int): return "Buy speed increased by " + str(round((1-Game.get_upgrade_effect("Token Buy speed", next+1))*100)) + "%",
 		"get_cost": func(next:int): return B.new(3).multiply(next+1)
@@ -269,12 +257,10 @@ var upgrades = {
 		"tags": ["token"],
 		"currency": "prestige_points",
 		"currency_name": "Tokens",
-		"get_effect": func(val:int): return 1+(val)/2.0,
-		"get_player_currency": func(): return Game.get_stat("tokens"),
-		"spend_currency": func(amt:Variant): Game.minus_stat("tokens", amt),
 		"get_max": func(): return 10,
-		"get_desc": func(next:int): return str(Game.get_upgrade_effect("Token PP Multi", next+1)) + "x PP Gain",
-		"get_cost": func(next:int): return B.new(3).multiply(next+1)
+		"get_desc": func(next:int): return str(1+(next+1)/2.0) + "x PP Gain",
+		"get_cost": func(next:int): return B.new(3).multiply(next+1),
+		"get_multi": func(val:int) -> Dictionary[String, B]: return {"prestige_points": B.new(1+(val)/2.0)}
 	},
 	#endregion
 
@@ -282,12 +268,9 @@ var upgrades = {
 	"Crate Buy Stat Crate": {
 		"name": "Stat Crate",
 		"tags": ["crate"],
-		"currency": "PP",
+		"currency": "prestige_points",
 		"currency_name": "PP",
 		"allow_refund": false,
-		"get_effect": func(_val:int): return 1,
-		"get_player_currency": func(): return Game.get_reset("prestige").points,
-		"spend_currency": func(amt:Variant): Game.spend_reset_points("prestige", amt),
 		"get_max": func(): return -1, # Unlimited
 		"get_desc": func(_next:int): return "Buy 1 stat crate. Cost caps at 1000.",
 		"get_cost": func(next:int): return B.new(min(100*(next+1), 1000)),
@@ -300,9 +283,6 @@ var upgrades = {
 		"currency": "tokens",
 		"currency_name": "Tokens",
 		"allow_refund": false,
-		"get_effect": func(_val:int): return 1,
-		"get_player_currency": func(): return Game.get_stat("tokens"),
-		"spend_currency": func(amt:Variant): Game.minus_stat("tokens", amt),
 		"get_max": func(): return -1, # Unlimited
 		"get_desc": func(_next:int): return "Buy 1 token crate.",
 		"get_cost": func(_next:int): return B.new(20),
@@ -319,8 +299,8 @@ var crates = {
 		"desc": "A basic crate. Affects various early multipliers.",
 		"cost": {
 			"currency_name": "PP",
-			"get_player_currency": func(): return Game.get_reset("prestige").points,
-			"spend_currency": func(amt:Variant): Game.spend_reset_points("prestige", amt),
+			"get_player_currency": func(): return Game.get_stat("prestige_points"),
+			"spend_currency": func(amt:Variant): Game.minus_stat("prestige_points", amt),
 			"get_cost": func(): return B.new(100)
 		},
 		"rewards": [

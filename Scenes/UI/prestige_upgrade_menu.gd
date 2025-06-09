@@ -11,4 +11,4 @@ func close():
 func _process(_delta: float) -> void:
 	if !visible:
 		return
-	$VBoxContainer/Current.text = "You currently have " + str(Game.get_reset("prestige")["points"]) + " PP."
+	$VBoxContainer/Current.text = "You currently have " + str(Game.get_stat("prestige_points")) + " PP."
