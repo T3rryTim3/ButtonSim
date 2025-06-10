@@ -178,12 +178,11 @@ func get_stat_increase(key:String, val:B):
 
 	if key not in player:
 		print_debug("Warning: Key not found for increase.")
-	if key not in _all_multipliers:
-		print_debug("Warning: Key '" + key +"' not found in _all_multipliers")
+	
+	if key in _all_multipliers:
+		return val.multiply(_all_multipliers[key].val)
 
-	var new = val.multiply(_all_multipliers[key].val)
-
-	return new
+	return val
 
 
 ## Increase a stat accounting for multipliers. The stat is assumed to be a direct key of player
@@ -333,6 +332,8 @@ func _ready() -> void:
 
 ## Multiply a cached value if present, creating objects if needed to do so.
 func _multiply_cache_multi(k:String,v:B,src_string:String):
+	#if v.isEqualTo(1):
+		#return
 	if k in _all_multipliers:
 		_all_multipliers[k].val.multiplyEquals(v)
 		_all_multipliers[k].source.append(src_string.capitalize() + ": x" + str(v))
@@ -345,7 +346,8 @@ func _multiply_cache_multi(k:String,v:B,src_string:String):
 ## Calculate all stat multipliers. Should be called each frame once.
 func _cache_multis():
 	_all_multipliers = {}
-	#print(Config.reset_stat_multis)
+	
+	# Reset layers (multiplier, rebirths, etc.)
 	for stat in Config.reset_stat_multis:
 		for source in Config.reset_stat_multis[stat]:
 			_multiply_cache_multi(stat, get_stat(source[0]).multiply(source[1]).plus(1), "Reset - " + source[0])

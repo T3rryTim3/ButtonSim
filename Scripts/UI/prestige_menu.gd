@@ -31,16 +31,17 @@ func _prestige() -> void:
 
 	# Update prestige data
 	Game.player.resets.prestige.count.plusEquals(1)
-	Game.increase_stat("prestige_points", _get_pp_gain())
+	Game.increase_stat("prestige_points", _get_base_pp_gain())
 
-func _get_pp_gain() -> B:
+func _get_base_pp_gain() -> B:
 	var num = B.new(0)
 	num.plusEquals(Game.get_stat("score"))
 	num.powerEquals(2)
 	num.minusEquals(100)
-	#num.multiplyEquals(Game.get_upgrade_count("PP PP Multi") + 1)
-	#num.multiplyEquals(Game.get_upgrade_effect("Token PP Multi"))
-	#num = Game._get_crate_reward_multi(num, "prestige_points")
+	return num
+
+func _get_pp_gain() -> B:
+	var num = _get_base_pp_gain()
 	num = Game.get_stat_increase("prestige_points", num)
 	
 	return num
@@ -67,7 +68,7 @@ func _process(_delta: float) -> void:
 	var bonuses = Config.upgrades["PP Boost"].get_multi.call(Game.get_upgrade_count("PP Boost"))
 	var i:int = 0
 	for k in bonuses:
-		bonus_display_str += k.capitalize() + ": x" + str(Game.get_prestige_bonuses()[k])
+		bonus_display_str += k.capitalize() + ": x" + str(bonuses[k])
 
 		# Only add commas before the end
 		if i < len(bonuses) - 1:

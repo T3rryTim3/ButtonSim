@@ -92,7 +92,7 @@ func _ready() -> void:
 	_reload_reset_layers()
 	_update_reset_layers()
 
-	SignalBus.PrestigeUpgradeBought.connect(_update_reset_layers)
+	SignalBus.PrestigeUpgradeBought.connect(_update_reset_layers.call_deferred)
 
 	%OpenPrestigeMenu.pressed.connect(%PrestigeMenu.open)
 	%OpenTokenMenu.pressed.connect(%TokenMenu.open)

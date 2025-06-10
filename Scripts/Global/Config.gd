@@ -255,7 +255,7 @@ var upgrades = {
 	"Token PP Multi": {
 		"name": "PP Multiplier",
 		"tags": ["token"],
-		"currency": "prestige_points",
+		"currency": "tokens",
 		"currency_name": "Tokens",
 		"get_max": func(): return 10,
 		"get_desc": func(next:int): return str(1+(next+1)/2.0) + "x PP Gain",

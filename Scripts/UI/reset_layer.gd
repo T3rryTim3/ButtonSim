@@ -18,6 +18,8 @@ var buy_time:float = 0.0 ## Current time spent buying. Used to calculate buy amo
 ## The type of currency needed to buy this layer
 var currency:String
 
+var last_button_count:int = 0
+
 func _get_button_count():
 	return 10 + Game.get_upgrade_count("PP Buttons")*5
 
@@ -73,6 +75,10 @@ func _process(delta: float) -> void:
 		bought = 0
 
 func update_button_count(count:int=10) -> void:
+
+	if count == last_button_count:
+		return
+	last_button_count = count
 
 	for button in button_container.get_children():
 		button.queue_free()
