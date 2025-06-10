@@ -20,6 +20,8 @@ jobs:
         with:
           version: ${{ vars.GODOT_VERSION }}
           csharp: ${{ vars.USE_MONO }}
+      - name: "Give export script permissions"
+        run: chmod +rwx gh_scripts/export godot
       - name: "Build"
         run: gh_scripts/export godot
       - uses: actions/upload-artifact@v4
