@@ -24,16 +24,16 @@ func get_player_data():
 
 		"score": B.new(0),
 
-		"tokens": B.new(100),
+		"tokens": B.new(0),
 
 		"cash": B.new(0),
 		"multiplier": B.new(0),
-		"rebirths": B.new(10),
+		"rebirths": B.new(0),
 		"super":B.new(0),
 		"ultra":B.new(0),
 		"mega":B.new(0),
 		"hyper":B.new(0),
-		"prestige_points": B.new(100000),
+		"prestige_points": B.new(0),
 
 		"resets": {
 			"prestige": {
@@ -57,7 +57,7 @@ func get_player_data():
 		}
 
 	for crate in Config.crates:
-		s["crates"][crate] = 20
+		s["crates"][crate] = 0
 		for reward in Config.crates[crate]["rewards"]:
 			s["crate_rewards"][reward["name"]] = 0
 
