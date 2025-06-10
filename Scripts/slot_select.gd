@@ -20,11 +20,25 @@ func load_slots():
 		node_slot.set_meta("idx", i)
 		
 		node_slot.NameChanged.connect( func(new): Globals.save_manager.change_slot_name(i, new) )
-		node_slot.WipeClicked.connect( func(): Globals.save_manager.delete_slot(i) ; load_slots() )
+		node_slot.WipeClicked.connect( func(): _delete_slot(i, save_data) ; load_slots() )
 		node_slot.PlayClicked.connect( func(): Globals.main.load_game_from_slot(i) )
 		
 		slot_container.add_child(node_slot)
 		i += 1
 
+
+## Prompt the player to delete a slot, giving a warning.
+func _delete_slot(idx:int, data:Dictionary) -> void:
+	%DeleteWarning.show()
+	%DeleteWarning.get_node("PanelContainer/VBoxContainer/Info").text = "Slot name: " + data["slots"][idx]["name"]
+	%DeleteWarning.set_meta("delete_target", idx)
+
+
 func _ready() -> void:
 	new_slot_button.pressed.connect( func(): Globals.save_manager.new_slot() ; load_slots() )
+
+	%DeleteWarning.get_node("PanelContainer/VBoxContainer/HBoxContainer/Confirm").pressed.connect(
+		func(): 
+			Globals.save_manager.delete_slot(%DeleteWarning.get_meta("delete_target")) ; load_slots() ; %DeleteWarning.hide())
+
+	%DeleteWarning.get_node("PanelContainer/VBoxContainer/HBoxContainer/Cancel").pressed.connect(%DeleteWarning.hide)

@@ -1,10 +1,11 @@
-[gd_scene load_steps=11 format=3 uid="uid://bkp35abfhaedd"]
+[gd_scene load_steps=14 format=3 uid="uid://bkp35abfhaedd"]
 
 [ext_resource type="Script" uid="uid://cgmp5kp2jf1fv" path="res://Scripts/Global/main.gd" id="1_bo1nx"]
 [ext_resource type="Script" uid="uid://bjrpxnr0dftym" path="res://Scripts/Global/save_manager.gd" id="1_h1bgf"]
 [ext_resource type="Theme" uid="uid://5e4ibfuhq8tg" path="res://Resources/UI/game.tres" id="3_8gbba"]
 [ext_resource type="Script" uid="uid://bgqloj3ul6cjx" path="res://Scripts/select.gd" id="4_jjvhh"]
 [ext_resource type="Script" uid="uid://d00bu3ekdhjam" path="res://Scripts/slot_select.gd" id="5_21xkr"]
+[ext_resource type="PackedScene" uid="uid://dbxkyig03jnkv" path="res://Scenes/UI/save_slot.tscn" id="6_21xkr"]
 
 [sub_resource type="Gradient" id="Gradient_8gbba"]
 colors = PackedColorArray(1, 1, 1, 0.262745, 1, 1, 1, 0)
@@ -12,6 +13,38 @@ colors = PackedColorArray(1, 1, 1, 0.262745, 1, 1, 1, 0)
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_jjvhh"]
 gradient = SubResource("Gradient_8gbba")
 fill_from = Vector2(0.512821, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_21xkr"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.21, 0.0294, 0.0294, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.815459, 0.151687, 1.92523e-07, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6bp64"]
+content_margin_left = 16.0
+content_margin_top = 16.0
+content_margin_right = 16.0
+content_margin_bottom = 16.0
+bg_color = Color(0.215686, 0.0901961, 0.105882, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.342349, 0.136865, 0.121101, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 
 [sub_resource type="Gradient" id="Gradient_kry3j"]
 colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 0.0745098)
@@ -127,10 +160,122 @@ horizontal_alignment = 1
 [node name="Slots" type="VBoxContainer" parent="Select/MarginContainer/VBoxContainer/SlotSelect/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_constants/separation = 30
+
+[node name="Slot" parent="Select/MarginContainer/VBoxContainer/SlotSelect/ScrollContainer/VBoxContainer/Slots" instance=ExtResource("6_21xkr")]
+layout_mode = 2
+
+[node name="Slot2" parent="Select/MarginContainer/VBoxContainer/SlotSelect/ScrollContainer/VBoxContainer/Slots" instance=ExtResource("6_21xkr")]
+layout_mode = 2
+
+[node name="Slot3" parent="Select/MarginContainer/VBoxContainer/SlotSelect/ScrollContainer/VBoxContainer/Slots" instance=ExtResource("6_21xkr")]
+layout_mode = 2
 
 [node name="New" type="Button" parent="Select/MarginContainer/VBoxContainer/SlotSelect/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 text = "New slot.."
+flat = true
+
+[node name="PanelContainer" type="PanelContainer" parent="Select/MarginContainer/VBoxContainer/SlotSelect"]
+visible = false
+z_index = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_21xkr")
+
+[node name="HSplitContainer" type="HSplitContainer" parent="Select/MarginContainer/VBoxContainer/SlotSelect/PanelContainer"]
+layout_mode = 2
+dragging_enabled = false
+
+[node name="Button" type="Button" parent="Select/MarginContainer/VBoxContainer/SlotSelect/PanelContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 8
+theme_override_colors/font_color = Color(1, 0.278431, 0.215686, 1)
+text = "Confirm"
+flat = true
+
+[node name="Button2" type="Button" parent="Select/MarginContainer/VBoxContainer/SlotSelect/PanelContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 8
+theme_override_colors/font_color = Color(0.4, 0.94902, 0.305882, 1)
+text = "Cancel"
+flat = true
+
+[node name="DeleteWarning" type="CenterContainer" parent="Select/MarginContainer/VBoxContainer/SlotSelect"]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 0
+
+[node name="PanelContainer" type="PanelContainer" parent="Select/MarginContainer/VBoxContainer/SlotSelect/DeleteWarning"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_6bp64")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Select/MarginContainer/VBoxContainer/SlotSelect/DeleteWarning/PanelContainer"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Title" type="Label" parent="Select/MarginContainer/VBoxContainer/SlotSelect/DeleteWarning/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_colors/font_color = Color(1, 0.180392, 0.211765, 1)
+theme_override_font_sizes/font_size = 40
+text = "Delete slot?"
+
+[node name="Warning" type="Label" parent="Select/MarginContainer/VBoxContainer/SlotSelect/DeleteWarning/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_colors/font_color = Color(0.73, 0.1314, 0.151353, 1)
+theme_override_font_sizes/font_size = 20
+text = "This cannot be undone!"
+horizontal_alignment = 1
+
+[node name="Info" type="Label" parent="Select/MarginContainer/VBoxContainer/SlotSelect/DeleteWarning/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_colors/font_color = Color(0.73, 0.1314, 0.151353, 1)
+theme_override_font_sizes/font_size = 20
+text = "--"
+horizontal_alignment = 1
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Select/MarginContainer/VBoxContainer/SlotSelect/DeleteWarning/PanelContainer/VBoxContainer"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 60
+alignment = 1
+
+[node name="Confirm" type="Button" parent="Select/MarginContainer/VBoxContainer/SlotSelect/DeleteWarning/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(0.999792, 0.201173, 0.149905, 1)
+theme_override_colors/font_color = Color(0.968627, 0, 0, 1)
+theme_override_colors/font_focus_color = Color(0.968627, 0, 0, 1)
+theme_override_colors/font_pressed_color = Color(0.909965, 0, 0, 1)
+theme_override_font_sizes/font_size = 20
+text = "Confirm"
+flat = true
+
+[node name="Cancel" type="Button" parent="Select/MarginContainer/VBoxContainer/SlotSelect/DeleteWarning/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_hover_color = Color(0.156752, 0.895053, 0.166624, 1)
+theme_override_colors/font_color = Color(0.152941, 0.847059, 0.160784, 1)
+theme_override_colors/font_focus_color = Color(0.152941, 0.847059, 0.160784, 1)
+theme_override_colors/font_pressed_color = Color(0.132918, 0.675507, 0.135354, 1)
+theme_override_font_sizes/font_size = 20
+text = "Cancel"
 flat = true
 
 [node name="Clouds" type="TextureRect" parent="Select"]

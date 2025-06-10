@@ -27,15 +27,18 @@ func _to_json(d:Variant) -> Variant:
 		new = {}
 		for k in d:
 			new[k] = _to_json(d[k])
+	
 	elif d is Array:
 		new = []
 		for i in d:
 			new.append(_to_json(i))
+	
 	elif d is B:
 		new = d.to_json()
+	
 	else:
-		return d
-
+		return float(d)
+	
 	return new
 
 
@@ -44,7 +47,7 @@ func _from_json(d:Variant) -> Variant:
 	var new
 
 	if d is Dictionary:
-		if not "_type" in d:
+		if "_type" not in d:
 			new = {}
 			for k in d:
 				new[k] = _from_json(d[k])
@@ -55,6 +58,7 @@ func _from_json(d:Variant) -> Variant:
 		new = []
 		for i in d:
 			new.append(_from_json(i))
+	
 	else:
 		return d
 
@@ -72,7 +76,6 @@ func change_slot_name(idx:int, new_name:String) -> void:
 
 	savedata.slots[idx]["name"] = new_name
 	_write_to_save(savedata)
-	print(savedata)
 	return
 
 ## Change the slot name at a given index
@@ -80,7 +83,6 @@ func new_slot() -> void:
 	var savedata:Dictionary = get_all_save_data()
 	savedata.slots.append(SLOT_TEMPLATE)
 	_write_to_save(savedata)
-	print(savedata)
 	return
 
 ## Delete slot at a passed index. Use with caution!
@@ -102,32 +104,31 @@ func delete_slot(idx:int=0) -> void:
 ## This does not validate the structure of the data passed.
 func _write_to_save(savedata:Dictionary):
 	var save_file = FileAccess.open("user://savegame.save", FileAccess.WRITE)
-	save_file.store_line(JSON.stringify(savedata))
+	save_file.store_string(JSON.stringify(savedata))
+
 
 ## Saves the game to a JSON file. A player data dictionary must be passed.
 func save_game(player, slot : int = 0) -> void:
 	var savedata = get_all_save_data()
 	var save_file = FileAccess.open("user://savegame.save", FileAccess.WRITE)
-	print(player)
-	print(slot)
 	# Ensure game save data structure is valid
-	savedata = Globals.main.fill_dict(savedata, SAVE_TEMPLATE, true, false)
+	savedata = Globals.main.fill_dict(savedata, SAVE_TEMPLATE)
 	for i in savedata.slots:
-		i = Globals.main.fill_dict(i, SLOT_TEMPLATE, true, false)
-	print("--")
-	
+		i = Globals.main.fill_dict(i, SLOT_TEMPLATE)
 	
 	var new_save = _to_json(player)
 
-	savedata.slots[0]["data"] = new_save
+	savedata.slots[slot]["data"] = new_save
 
-	save_file.store_line(JSON.stringify(savedata))
+	save_file.store_string(JSON.stringify(savedata))
 	save_file.close()
 
 	print("Game successfully saved.")
 
+
 ## Returns a dictionary of all save data.
 func get_all_save_data() -> Dictionary:
+	
 	if not FileAccess.file_exists("user://savegame.save"):
 		print_debug("No save data found. Returning template data...")
 		return SAVE_TEMPLATE
@@ -142,4 +143,10 @@ func get_all_save_data() -> Dictionary:
 		return {}
 	
 	return json.data
+
+
+## Parse data using _from_json. Must be done when loading data into the game.
+func parse_save_data(savedata:Dictionary) -> Dictionary:
+	return _from_json(savedata)
+
 #endregion

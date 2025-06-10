@@ -46,8 +46,11 @@ theme_override_constants/separation = 12
 [node name="Label" type="Label" parent="ScrollContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
-theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
-theme_override_constants/outline_size = 2
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.219608)
+theme_override_colors/font_outline_color = Color(0.17881, 0.17881, 0.17881, 1)
+theme_override_constants/shadow_offset_x = 0
+theme_override_constants/shadow_offset_y = 1
+theme_override_constants/shadow_outline_size = 4
 theme_override_font_sizes/font_size = 20
 text = "Multiplier"
 

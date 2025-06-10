@@ -1,12 +1,21 @@
-[gd_resource type="Theme" load_steps=3 format=3 uid="uid://5e4ibfuhq8tg"]
+[gd_resource type="Theme" load_steps=4 format=3 uid="uid://5e4ibfuhq8tg"]
 
 [ext_resource type="FontFile" uid="uid://c1mjhk6ik1fv7" path="res://Assets/Fonts/PixelFont7-G02A.ttf" id="1_smtld"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jjvhh"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_smtld"]
+bg_color = Color(0.614745, 0.614745, 0.614744, 1)
+border_width_left = 1
+border_width_top = 2
+border_width_right = 1
+border_width_bottom = 2
+border_color = Color(0.8, 0.8, 0.8, 0)
+
 [resource]
 default_font = ExtResource("1_smtld")
-default_font_size = 20
+default_font_size = 18
 Button/fonts/font = ExtResource("1_smtld")
 Button/styles/focus = SubResource("StyleBoxEmpty_jjvhh")
+HScrollBar/styles/grabber = SubResource("StyleBoxFlat_smtld")
 Label/fonts/font = ExtResource("1_smtld")

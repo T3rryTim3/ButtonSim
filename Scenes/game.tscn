@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=3 uid="uid://cfq44mrggfq0h"]
+[gd_scene load_steps=38 format=3 uid="uid://cfq44mrggfq0h"]
 
 [ext_resource type="Theme" uid="uid://5e4ibfuhq8tg" path="res://Resources/UI/game.tres" id="1_ewbju"]
 [ext_resource type="Script" uid="uid://dqxwaycwn71wq" path="res://Scripts/Global/game.gd" id="2_nnt18"]
@@ -141,6 +141,16 @@ fill_to = Vector2(0, 0)
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_h1bgf"]
 
+[sub_resource type="Gradient" id="Gradient_ewbju"]
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 0.0588235)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_85qyi"]
+gradient = SubResource("Gradient_ewbju")
+width = 128
+height = 128
+fill_from = Vector2(0.461774, 0)
+fill_to = Vector2(0, 1)
+
 [node name="Game" type="Control"]
 layout_mode = 3
 anchors_preset = 15
@@ -169,10 +179,9 @@ theme_override_styles/panel = ExtResource("3_85qyi")
 theme_override_styles/tab_selected = SubResource("StyleBoxFlat_hptm8")
 theme_override_styles/tab_hovered = SubResource("StyleBoxFlat_hptm8")
 theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_hptm8")
-current_tab = 2
+current_tab = 0
 
 [node name="Buttons" type="Control" parent="GameTabs"]
-visible = false
 layout_mode = 2
 script = ExtResource("4_ewbju")
 metadata/_tab_index = 0
@@ -207,7 +216,7 @@ theme_override_constants/margin_right = 8
 theme_override_constants/margin_bottom = 8
 
 [node name="PanelContainer" type="PanelContainer" parent="GameTabs/Buttons/PanelContainer/HSplitContainer/SidePanel"]
-self_modulate = Color(0.631373, 0, 1, 1)
+self_modulate = Color(0.396078, 0.207843, 1, 1)
 layout_mode = 2
 theme_override_styles/panel = ExtResource("4_iivbl")
 
@@ -263,6 +272,13 @@ layout_mode = 2
 text = "Buy Crates"
 flat = true
 
+[node name="SaveAndExit" type="Button" parent="GameTabs/Buttons/PanelContainer/HSplitContainer/SidePanel/PanelContainer/MarginContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.863486, 0.912884, 1, 1)
+text = "Save and Exit"
+flat = true
+
 [node name="Resets" type="MarginContainer" parent="GameTabs/Buttons/PanelContainer/HSplitContainer"]
 layout_mode = 2
 theme_override_constants/margin_left = 8
@@ -280,7 +296,7 @@ unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-theme_override_constants/separation = 16
+theme_override_constants/separation = 24
 
 [node name="PrestigeMenu" type="CenterContainer" parent="GameTabs/Buttons"]
 unique_name_in_owner = true
@@ -704,6 +720,7 @@ size_flags_vertical = 3
 column_titles_visible = true
 
 [node name="Stats" type="Control" parent="GameTabs"]
+visible = false
 layout_mode = 2
 mouse_filter = 2
 metadata/_tab_index = 2
@@ -885,3 +902,23 @@ size_flags_horizontal = 4
 theme_override_colors/font_color = Color(1, 0, 0, 1)
 text = "Req. ______"
 horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(1, 1, 1, 0.0431373)
+
+[node name="TextureRect" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("GradientTexture2D_85qyi")

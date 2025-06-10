@@ -1,6 +1,8 @@
 extends Node
 class_name Game
 
+signal save_and_exit
+
 var scn_upgrade = preload("res://Scenes/UI/upgrade.tscn")
 var scn_currency_popup = preload("res://Scenes/UI/CurrencyPopup.tscn")
 
@@ -276,7 +278,6 @@ func _process(delta: float) -> void:
 	_cache_multis()
 
 func _ready() -> void:
-	print("Readying..")
 	if not player:
 		print("No player found. Loading default..")
 		player = get_player_data()
@@ -287,9 +288,9 @@ func _ready() -> void:
 	
 	%GameTabs.tab_clicked.connect(func(_idx:int): SoundManager.play_audio("res://Assets/Sound/UI SFX/Click1.wav", "SFX", randf_range(0.9,1.1)))
 	%GameTabs.tab_clicked.connect(func(idx:int): SignalBus.TabSelected.emit(%GameTabs.get_tab_control(idx)))
+	%SaveAndExit.pressed.connect(save_and_exit.emit)
 
 	# TODO Auto save every n minutes
-	# TODO Save slots + menu to select them
 	# TODO Create settings menu
 	#          - Visual effect options
 	#          - Audio sliders

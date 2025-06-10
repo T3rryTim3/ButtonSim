@@ -8,8 +8,6 @@ var game_path = "res://Scenes/game.tscn"
 var current_game:Control
 var current_slot:int
 
-# TODO Auto save on quit
-
 #region Utility
 ## Fills in a dictionary's missing keys and values based on a
 ## passed template. 
@@ -19,7 +17,7 @@ var current_slot:int
 ##
 ## If delete_unused is enabled (default), keys in target not present
 ## in source will also be deleted.
-func fill_dict(target:Dictionary, source:Dictionary, match_type:bool=true, delete_unused:bool=true) -> Dictionary:
+func fill_dict(target:Dictionary, source:Dictionary) -> Dictionary:
 	
 	for k in source:
 		
@@ -27,23 +25,15 @@ func fill_dict(target:Dictionary, source:Dictionary, match_type:bool=true, delet
 			target[k] = source[k]
 			continue
 		
-		if ( typeof(source[k]) != typeof(target[k]) ) and match_type:
-			target[k] = source[k]
-			continue
-		
 		if typeof(source[k]) == TYPE_DICTIONARY:
-			target[k] = fill_dict(target[k], source[k], match_type, delete_unused)
-	
-	if delete_unused:
-		for k in target:
-			if k not in source:
-				target.erase(k)
+			target[k] = fill_dict(target[k], source[k])
 	
 	return target
 
 
 #endregion
 
+#region Game Management
 ## Save the current game into the current slot's data.
 func save_current_game() -> void:
 	
@@ -54,12 +44,6 @@ func save_current_game() -> void:
 			return
 		
 		print("Game not saved; current_slot == -1")
-
-func _notification(what: int) -> void:
-	
-	if what == NOTIFICATION_WM_CLOSE_REQUEST:
-		save_current_game()
-		get_tree().quit()
 
 
 ## Loads in the game from a passed dictionary of player data.
@@ -72,11 +56,13 @@ func load_game_from_data(player:Dictionary, save_slot:int=-1) -> void:
 	current_slot = save_slot
 	
 	current_game = load(game_path).instantiate()
-	current_game.player = player
+	current_game.player = save_manager.parse_save_data(player)
 	
 	Globals.game = current_game
 
 	add_child(current_game)
+	
+	current_game.save_and_exit.connect(save_game_and_exit)
 
 ## Load in the game from a save slot index.
 func load_game_from_slot(slot:int) -> void:
@@ -87,6 +73,17 @@ func load_game_from_slot(slot:int) -> void:
 	load_game_from_data(savedata["slots"][slot]["data"], slot)
 
 
+## Save the game and exit to the main menu.
+func save_game_and_exit() -> void:
+	if not current_game:
+		return
+	save_current_game()
+	current_game.queue_free()
+	$Select/MarginContainer/VBoxContainer/SlotSelect.load_slots()
+	
+#endregion
+
+#region Built-in functions
 # Debug controls; delete during production
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey:
@@ -94,6 +91,13 @@ func _input(event: InputEvent) -> void:
 			match event.keycode:
 				KEY_P:
 					save_manager.save_game(Globals.game.player, 0)
+
+
+func _notification(what: int) -> void:
+	
+	if what == NOTIFICATION_WM_CLOSE_REQUEST:
+		save_current_game()
+		get_tree().quit()
 
 
 func _ready() -> void:
@@ -110,3 +114,4 @@ func _ready() -> void:
 		$Select/Warning.show()
 	
 	#load_game_from_data({})
+#endregion
