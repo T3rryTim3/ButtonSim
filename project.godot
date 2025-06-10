@@ -17,11 +17,11 @@ config/icon="res://Assets/Textures/icon.svg"
 
 [autoload]
 
-Game="*res://Scripts/Global/game.gd"
 Config="*res://Scripts/Global/Config.gd"
 SignalBus="*res://Scripts/Global/SignalBus.gd"
 Upgrades="*res://Scripts/Global/upgrades.gd"
 SoundManager="*res://Scripts/Global/SoundManager.gd"
+Globals="*res://Scripts/Global/Globals.gd"
 
 [display]
 

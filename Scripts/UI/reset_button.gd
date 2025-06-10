@@ -29,7 +29,7 @@ func _get_buy_speed() -> float:
 
 func can_buy() -> bool:
 	update_stats()
-	return Game.get_stat(currency).exceeds(cost)
+	return Globals.game.get_stat(currency).exceeds(cost)
 
 func _get_button_cost(button_index:int):
 
@@ -61,7 +61,7 @@ func buy(bulk:int=1, auto:bool=false):
 		return
 
 	if not auto:
-		Game.currency_popup("+" + str(gain) + " " + key.capitalize(), Config.RESET_LAYERS[key]["color"])
+		Globals.game.currency_popup("+" + str(gain) + " " + key.capitalize(), Config.RESET_LAYERS[key]["color"])
 		if token_ready:
 			
 			var gain_amt = randi_range(Config.TOKEN_GAIN_INTERVAL[0],Config.TOKEN_GAIN_INTERVAL[1])
@@ -70,8 +70,8 @@ func buy(bulk:int=1, auto:bool=false):
 			_reset_token_time()
 			$TokenOutline.visible = false
 			
-			Game.currency_popup("+" + str(gain_amt) + " Token", Color.YELLOW)
-			Game.increase_stat("tokens", gain_amt)
+			Globals.game.currency_popup("+" + str(gain_amt) + " Token", Color.YELLOW)
+			Globals.game.increase_stat("tokens", gain_amt)
 			SoundManager.play_audio("res://Assets/Sound/UI SFX/Token2.wav", "SFX")
 			
 		else: # Avoid both sounds playing at once (It sounds weird)
@@ -81,12 +81,12 @@ func buy(bulk:int=1, auto:bool=false):
 		if not can_buy():
 			return
 
-		if Game.get_upgrade_count("PP Free Cost") <= Game.get_reset_idx(key):
-			Game.set_stat(currency, Game.player[currency].minus(cost))
+		if Globals.game.get_upgrade_count("PP Free Cost") <= Globals.game.get_reset_idx(key):
+			Globals.game.set_stat(currency, Globals.game.player[currency].minus(cost))
 			for reset in Config.RESET_LAYERS[key]["reset"]:
-				Game.zero_stat(reset)
+				Globals.game.zero_stat(reset)
 
-		Game.increase_stat(key, gain)
+		Globals.game.increase_stat(key, gain)
 		bought += 1
 
 func update_stats() -> void: # Updates internal cost and gain values
@@ -100,18 +100,18 @@ func update():
 
 	text = "Buy " + str(gain) + " " + key + " - " + str(cost) + " " + currency
 
-	disabled = not Game.get_stat(currency).exceeds(cost)
+	disabled = not Globals.game.get_stat(currency).exceeds(cost)
 
 func _process(delta: float) -> void:
 	#current_update_cooldown += delta
 	#if current_update_cooldown > update_cooldown:
 		#current_update_cooldown = 0
-	gain = Game.get_stat_increase(key, button_gain)
+	gain = Globals.game.get_stat_increase(key, button_gain)
 
 	## Hold-to-buy
 	if buying:
 		if not disabled:
-			var to_buy = buy_time / Game.get_stat("buy_speed")
+			var to_buy = buy_time / Globals.game.get_stat("buy_speed")
 			buy_time += delta
 			buy(max(0, to_buy - bought))
 

@@ -64,7 +64,7 @@ func update_tree() -> void:
 			if reward_item.has_meta("reward_data"):
 				# Show current multiplier
 				var reward = reward_item.get_meta("reward_data")
-				var reward_count = Game.get_crate_rewards()[reward["name"]]
+				var reward_count = Globals.game.get_crate_rewards()[reward["name"]]
 				var text = ""
 				
 				if reward_count > 0:
@@ -82,8 +82,8 @@ func open() -> void:
 	show()	
 
 func _ready():
-	if not Game.ready:
-		await Game.ready
+	if not Globals.game.ready:
+		await Globals.game.ready
 	load_tree()
 
 	$PanelContainer/VBoxContainer/ExitButton.pressed.connect(hide)

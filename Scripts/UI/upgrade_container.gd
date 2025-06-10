@@ -38,14 +38,14 @@ func close():
 ## This deletes all nodes that are currently inside of the VBoxContainer.
 func _load_upgrades() -> void:
 	for tag in range(len(upgrade_tags)):
-		var upgrades = Game.get_upgrades_by_tag(upgrade_tags[tag])
+		var upgrades = Globals.game.get_upgrades_by_tag(upgrade_tags[tag])
 
 		# Clear placeholders / previously loaded upgrades
 		for child in upgrade_container.get_children():
 			child.queue_free() 
 
 		for k in upgrades:
-			var button:Upgrade = Game.scn_upgrade.instantiate()
+			var button:Upgrade = Globals.game.scn_upgrade.instantiate()
 			button.display = display_types[tag]
 			button.upgrade_id = k
 			button.upgrade_data = upgrades[k]
@@ -53,6 +53,6 @@ func _load_upgrades() -> void:
 #endregion
 
 func _ready() -> void:
-	if not Game.ready:
-		await Game.ready
+	if not Globals.game.is_node_ready():
+		await Globals.game.ready
 	_load_upgrades()

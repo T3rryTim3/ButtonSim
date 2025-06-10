@@ -58,7 +58,7 @@ func _open() -> void:
 	#$GPUParticles2D.position = get_viewport_transform().origin
 	#$GPUParticles2D.emitting = true
 
-	var open_count = min(buy_count, Game.get_crate_count(current_crate["id"]))
+	var open_count = min(buy_count, Globals.game.get_crate_count(current_crate["id"]))
 
 	# Select rewards
 	var rewards = {}
@@ -94,13 +94,13 @@ func _open() -> void:
 		#reward_disp.show()
 		var theta = (2*PI)/len(rewards)*i - PI/2
 		var dir = Vector2(cos(theta), sin(theta))
-		Game.currency_popup(str(rewards[k].amt) + " " + k, rewards[k].dict.color, null, 3, dir, 1)
+		Globals.game.currency_popup(str(rewards[k].amt) + " " + k, rewards[k].dict.color, null, 3, dir, 1)
 		i += 1
 
-	Game.increase_crate_rewards(rewards)
-	Game.decrease_crate_count(current_crate["id"], open_count)
+	Globals.game.increase_crate_rewards(rewards)
+	Globals.game.decrease_crate_count(current_crate["id"], open_count)
 
-	if Game.get_crate_count(current_crate["id"]) <= 0:
+	if Globals.game.get_crate_count(current_crate["id"]) <= 0:
 		$Label.text = "No crates remaining."
 		$Label.modulate = Color(1,0,0)
 	else:
@@ -114,7 +114,7 @@ func _hit() -> void:
 
 	SoundManager.play_audio("res://Assets/Sound/UI SFX/CrateHit.wav", "SFX")
 
-	if Game.get_crate_count(current_crate["id"]) <= 0:
+	if Globals.game.get_crate_count(current_crate["id"]) <= 0:
 		stress = 0.05
 		return
 
@@ -142,7 +142,7 @@ func load_crate(crate:Dictionary={}) -> void:
 		crate_button.texture_normal = load("res://Assets/Textures/Crates/crate.png")
 
 	$CrateName.text = crate["name"]
-	if Game.get_crate_count(current_crate["id"]) <= 0:
+	if Globals.game.get_crate_count(current_crate["id"]) <= 0:
 		$Label.text = "You do not own this crate."
 		$Label.modulate = Color(1,0,0)
 	else:

@@ -1,0 +1,12 @@
+[gd_resource type="Theme" load_steps=3 format=3 uid="uid://5e4ibfuhq8tg"]
+
+[ext_resource type="FontFile" uid="uid://c1mjhk6ik1fv7" path="res://Assets/Fonts/PixelFont7-G02A.ttf" id="1_smtld"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jjvhh"]
+
+[resource]
+default_font = ExtResource("1_smtld")
+default_font_size = 20
+Button/fonts/font = ExtResource("1_smtld")
+Button/styles/focus = SubResource("StyleBoxEmpty_jjvhh")
+Label/fonts/font = ExtResource("1_smtld")

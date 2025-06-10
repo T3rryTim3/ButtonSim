@@ -8,13 +8,13 @@ var crate_data:Dictionary = {}
 var show_data:bool = true
 
 func update_crate_display() -> void:
-	var count = Game.get_crate_count(crate_data["id"])
+	var count = Globals.game.get_crate_count(crate_data["id"])
 	if count <= 0:
 		hide()
 	else:
 		show()
 	if "name" in crate_data:
-		data_container.get_node("Title").text = crate_data["name"] + " x" + str(Game.get_crate_count(crate_data["id"]))
+		data_container.get_node("Title").text = crate_data["name"] + " x" + str(Globals.game.get_crate_count(crate_data["id"]))
 
 func load_crate(crate:Dictionary = {}):
 	crate_data = crate
@@ -39,5 +39,8 @@ func _process(_delta: float) -> void:
 
 
 func _ready() -> void:
+	if not Globals.game.is_node_ready():
+		await Globals.game.ready
+
 	$Button.pressed.connect(clicked.emit)
 	SignalBus.CrateOpened.connect(func(): load_crate(crate_data))

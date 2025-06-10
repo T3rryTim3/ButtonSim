@@ -1,4 +1,5 @@
 extends Node
+class_name Game
 
 var scn_upgrade = preload("res://Scenes/UI/upgrade.tscn")
 var scn_currency_popup = preload("res://Scenes/UI/CurrencyPopup.tscn")
@@ -17,7 +18,7 @@ var _all_multipliers:Dictionary
 #region Player Data
 func get_player_data():
 	var s = {
-		"time": 0.0,
+		"time": 69.420,
 
 		"score": B.new(0),
 
@@ -59,86 +60,6 @@ func get_player_data():
 			s["crate_rewards"][reward["name"]] = 0
 
 	return s
-
-## Convert a value to json accounting for bignums or other data types as
-## they are added.
-func to_json(d:Variant) -> Variant:
-	var new
-
-	if d is Dictionary:
-		new = {}
-		for k in d:
-			new[k] = to_json(d[k])
-	elif d is Array:
-		new = []
-		for i in d:
-			new.append(to_json(i))
-	elif d is B:
-		new = d.to_json()
-	else:
-		return d
-
-	return new
-
-func from_json(d:Variant) -> Variant:
-	var new
-
-	if d is Dictionary:
-		if not "_type" in d:
-			new = {}
-			for k in d:
-				new[k] = from_json(d[k])
-		elif d._type == "bignum":
-			new = B.from_json(d)
-	elif d is Array:
-		new = []
-		for i in d:
-			new.append(from_json(i))
-	else:
-		return d
-
-	return new
-
-func save_game() -> void:
-	var save_file = FileAccess.open("user://savegame.save", FileAccess.WRITE)
-	
-	var savedata = {
-		"slots": [
-			{
-				"name": "Default",
-				"data": {}
-			}
-		]
-	}
-	
-	var new_save = to_json(player)
-
-	savedata.slots[0]["data"] = new_save
-
-	save_file.store_line(JSON.stringify(savedata))
-	save_file.close()
-
-	print("Game successfully saved.")
-
-func load_game() -> void:
-	if not FileAccess.file_exists("user://savegame.save"):
-		print("No save data found. Using default.")
-		player = get_player_data()
-		return
-	
-	var json = JSON.new()
-	var save_file = FileAccess.open("user://savegame.save", FileAccess.READ)
-	var parse_result = json.parse(save_file.get_as_text())
-
-	if not parse_result == OK:
-		printerr("Error parsing save data!")
-		print(json.get_error_message())
-		return
-
-	if json.data and json.data["slots"][0]["data"]:
-		player = from_json(json.data["slots"][0]["data"])
-
-	print("Game successfully loaded.")
 
 #endregion
 
@@ -194,7 +115,7 @@ func increase_stat(key:String, val:Variant):
 		printerr("Non-number passed to increase stat!")
 		return
 
-	if key not in Game.player:
+	if key not in Globals.game.player:
 		print_debug("Warning: Key not found for increase.")
 
 	player[key] = player[key].plus(get_stat_increase(key, val))
@@ -217,7 +138,51 @@ func minus_stat(stat:String, val:Variant) -> void:
 
 ## Sets a stat to zero.
 func zero_stat(stat:String) -> void:
-	player[stat] = Game.NUM_0
+	player[stat] = Globals.game.NUM_0
+
+
+## Multiply a cached value if present, creating objects if needed to do so.
+func _multiply_cache_multi(k:String,v:B,src_string:String):
+	#if v.isEqualTo(1):
+		#return
+	if k in _all_multipliers:
+		_all_multipliers[k].val.multiplyEquals(v)
+		_all_multipliers[k].source.append(src_string.capitalize() + ": x" + str(v))
+	elif not k in _all_multipliers:
+		_all_multipliers[k] = {
+			"val": v,
+			"source": [src_string.capitalize() + ": x" + str(v)],
+		}
+
+
+## Calculate all stat multipliers. Should be called each frame once.
+func _cache_multis():
+	_all_multipliers = {}
+	
+	# Reset layers (multiplier, rebirths, etc.)
+	for stat in Config.reset_stat_multis:
+		for source in Config.reset_stat_multis[stat]:
+			_multiply_cache_multi(stat, get_stat(source[0]).multiply(source[1]).plus(1), "Reset - " + source[0])
+	
+	# Upgrades
+	for upgrade in Config.upgrades:
+		if "get_multi" in Config.upgrades[upgrade]:
+			var multipliers = Config.upgrades[upgrade].get_multi.call(get_upgrade_count(upgrade))
+			for multiplier in multipliers:
+				_multiply_cache_multi(multiplier, multipliers[multiplier], "Upgrade - " + upgrade)
+	
+	# Crates (A tad ugly, I know)
+	for crate in Config.crates:
+		for reward in Config.crates[crate]["rewards"]:
+			for multi in reward["multi"]:
+				_multiply_cache_multi(
+					multi, 
+					B.new(player.crate_rewards[reward["name"]]*reward["multi"][multi]+1),
+					"Crate Reward - " + reward["name"]
+				)
+	
+	#print("----------")
+	#return
 #endregion
 
 #region Resets
@@ -308,19 +273,17 @@ func _process(_delta: float) -> void:
 
 	_cache_multis()
 
-func _notification(what: int) -> void:
-	if what == NOTIFICATION_WM_CLOSE_REQUEST:
-		save_game()
-		get_tree().quit()
-
 func _ready() -> void:
-
-	get_tree().auto_accept_quit = false
-	load_game()
+	print("Readying..")
+	if not player:
+		print("No player found. Loading default..")
+		player = get_player_data()
 
 	_cache_multis()
+	
+	%GameTabs.tab_clicked.connect(func(_idx:int): SoundManager.play_audio("res://Assets/Sound/UI SFX/Click1.wav", "SFX", randf_range(0.9,1.1)))
+	%GameTabs.tab_clicked.connect(func(idx:int): SignalBus.TabSelected.emit(%GameTabs.get_tab_control(idx)))
 
-	tree_exiting.connect(save_game) 
 	# TODO Auto save every n minutes
 	# TODO Save slots + menu to select them
 	# TODO Create settings menu
@@ -330,47 +293,6 @@ func _ready() -> void:
 	#          - Tabbar position
 #endregion
 
-## Multiply a cached value if present, creating objects if needed to do so.
-func _multiply_cache_multi(k:String,v:B,src_string:String):
-	#if v.isEqualTo(1):
-		#return
-	if k in _all_multipliers:
-		_all_multipliers[k].val.multiplyEquals(v)
-		_all_multipliers[k].source.append(src_string.capitalize() + ": x" + str(v))
-	elif not k in _all_multipliers:
-		_all_multipliers[k] = {
-			"val": v,
-			"source": [src_string.capitalize() + ": x" + str(v)],
-		}
-
-## Calculate all stat multipliers. Should be called each frame once.
-func _cache_multis():
-	_all_multipliers = {}
-	
-	# Reset layers (multiplier, rebirths, etc.)
-	for stat in Config.reset_stat_multis:
-		for source in Config.reset_stat_multis[stat]:
-			_multiply_cache_multi(stat, get_stat(source[0]).multiply(source[1]).plus(1), "Reset - " + source[0])
-	
-	# Upgrades
-	for upgrade in Config.upgrades:
-		if "get_multi" in Config.upgrades[upgrade]:
-			var multipliers = Config.upgrades[upgrade].get_multi.call(get_upgrade_count(upgrade))
-			for multiplier in multipliers:
-				_multiply_cache_multi(multiplier, multipliers[multiplier], "Upgrade - " + upgrade)
-	
-	# Crates (A tad ugly, I know)
-	for crate in Config.crates:
-		for reward in Config.crates[crate]["rewards"]:
-			for multi in reward["multi"]:
-				_multiply_cache_multi(
-					multi, 
-					B.new(player.crate_rewards[reward["name"]]*reward["multi"][multi]+1),
-					"Crate Reward - " + reward["name"]
-				)
-	
-	#print("----------")
-	#return
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey:

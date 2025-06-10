@@ -1,0 +1,50 @@
+[gd_scene load_steps=3 format=3 uid="uid://dbxkyig03jnkv"]
+
+[ext_resource type="Script" uid="uid://dgkufuadhinm4" path="res://Scenes/UI/save_slot.gd" id="1_htkj5"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_htkj5"]
+
+[node name="Slot" type="HBoxContainer"]
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/separation = 20
+alignment = 1
+script = ExtResource("1_htkj5")
+
+[node name="Wipe" type="Button" parent="."]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.799723, 0.770301, 1)
+text = "Wipe"
+flat = true
+alignment = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+alignment = 1
+
+[node name="Name" type="LineEdit" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_colors/selection_color = Color(0.189192, 0.415808, 0.808839, 0.243137)
+theme_override_colors/font_selected_color = Color(0.79, 0.79, 0.79, 1)
+theme_override_font_sizes/font_size = 40
+theme_override_styles/focus = SubResource("StyleBoxEmpty_htkj5")
+text = "S"
+alignment = 1
+max_length = 24
+expand_to_text_length = true
+emoji_menu_enabled = false
+flat = true
+
+[node name="TimePlayed" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.83, 0.83, 0.83, 1)
+text = "10:24:20"
+horizontal_alignment = 1
+
+[node name="Play" type="Button" parent="."]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.744113, 0.901385, 0.782032, 1)
+text = "Play"
+flat = true

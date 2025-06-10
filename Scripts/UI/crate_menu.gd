@@ -43,6 +43,8 @@ func _process(_delta: float) -> void:
 
 
 func _ready() -> void:
+	if not Globals.game.is_node_ready():
+		await Globals.game.ready
 	_load_crate_selections()
 	$HSplitContainer/ScrollContainer/VBoxContainer/ShowStatIndex.pressed.connect($CrateStatIndex.open)
 	SignalBus.CrateGained.connect(_reload_crate_select_data)

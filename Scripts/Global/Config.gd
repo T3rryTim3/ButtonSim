@@ -204,9 +204,10 @@ var upgrades = {
 		"get_desc": func(next:int): return "Your PP now multiplies " + str((["cash"] + RESET_LAYERS.keys() + ["All purchased."])[next]),
 		"get_cost": func(next:int): return B.new(40).multiply(B.new(1200).power(next)),
 		"get_multi": func(val:int) -> Dictionary[String, B]: 
+	# Ugly, but lambda doesnt support indentation like this.
 	var total:Dictionary[String, B] = {}
-	var pp = Game.get_stat("prestige_points")
-	for k in range(Game.get_upgrade_count("PP Boost")):
+	var pp = Globals.game.get_stat("prestige_points")
+	for k in range(val):
 		total[(["cash"]+RESET_LAYERS.keys())[k]] = B.new(1).divide(pow(10, k)).multiply(pp).plus(1)
 	return total
 	},
@@ -225,7 +226,7 @@ var upgrades = {
 		"currency": "prestige_points",
 		"currency_name": "PP",
 		"get_max": func(): return 100,
-		"get_desc": func(_next:int): return "Your PP is multiplied by " + str(Game.get_upgrade_count("PP PP Multi") + 2),
+		"get_desc": func(_next:int): return "Your PP is multiplied by " + str(Globals.game.get_upgrade_count("PP PP Multi") + 2),
 		"get_cost": func(next:int): return B.new(2).multiply(B.new(3).power(next)),
 		"get_multi": func(val:int) -> Dictionary[String, B]: return {"prestige_points": B.new(val+1)}
 	},
@@ -249,7 +250,7 @@ var upgrades = {
 		"currency_name": "Tokens",
 		"get_effect": func(val:int): return pow(0.95, val),
 		"get_max": func(): return 10,
-		"get_desc": func(next:int): return "Buy speed increased by " + str(round((1-Game.get_upgrade_effect("Token Buy speed", next+1))*100)) + "%",
+		"get_desc": func(next:int): return "Buy speed increased by " + str(round((1-Globals.game.get_upgrade_effect("Token Buy speed", next+1))*100)) + "%",
 		"get_cost": func(next:int): return B.new(3).multiply(next+1)
 	},
 	"Token PP Multi": {
@@ -274,7 +275,7 @@ var upgrades = {
 		"get_max": func(): return -1, # Unlimited
 		"get_desc": func(_next:int): return "Buy 1 stat crate. Cost caps at 1000.",
 		"get_cost": func(next:int): return B.new(min(100*(next+1), 1000)),
-		"on_buy": func(_next:int): Game.increase_crate_count("basic", 1)
+		"on_buy": func(_next:int): Globals.game.increase_crate_count("basic", 1)
 	},
 
 	"Crate Buy Token Crate": {
@@ -286,7 +287,7 @@ var upgrades = {
 		"get_max": func(): return -1, # Unlimited
 		"get_desc": func(_next:int): return "Buy 1 token crate.",
 		"get_cost": func(_next:int): return B.new(20),
-		"on_buy": func(_next:int): Game.increase_crate_count("token", 1)
+		"on_buy": func(_next:int): Globals.game.increase_crate_count("token", 1)
 	}
 	#endregion
 }
@@ -299,8 +300,8 @@ var crates = {
 		"desc": "A basic crate. Affects various early multipliers.",
 		"cost": {
 			"currency_name": "PP",
-			"get_player_currency": func(): return Game.get_stat("prestige_points"),
-			"spend_currency": func(amt:Variant): Game.minus_stat("prestige_points", amt),
+			"get_player_currency": func(): return Globals.game.get_stat("prestige_points"),
+			"spend_currency": func(amt:Variant): Globals.game.minus_stat("prestige_points", amt),
 			"get_cost": func(): return B.new(100)
 		},
 		"rewards": [
@@ -320,8 +321,8 @@ var crates = {
 		"desc": "Low bonuses, but affects a bunch of stats. Even PP!",
 		"cost": {
 			"currency_name": "Tokens",
-			"get_player_currency": func(): return Game.get_reset("tokens").points,
-			"spend_currency": func(amt:Variant): Game.spend_reset_points("tokens", amt),
+			"get_player_currency": func(): return Globals.game.get_reset("tokens").points,
+			"spend_currency": func(amt:Variant): Globals.game.spend_reset_points("tokens", amt),
 			"get_cost": func(): return B.new(100)
 		},
 		"rewards": [

@@ -2,7 +2,7 @@ extends Control
 
 var reset_layer = preload("res://Scenes/UI/reset_layer.tscn")
 
-@onready var player = Game.player
+@onready var player = Globals.game.player
 
 ## Used to determine the next update frame
 var update_prog:float = 0
@@ -11,24 +11,24 @@ func _update_score():
 	var score = B.new(1)
 
 	for k in Config.RESET_LAYERS:
-		if Game.get_stat(k).isLessThanOrEqualTo(0):
+		if Globals.game.get_stat(k).isLessThanOrEqualTo(0):
 			continue
-		score.plusEquals(B.new(Game.get_stat(k).absLog10()+1).multiply(pow(2,Game.get_reset_idx(k))))
+		score.plusEquals(B.new(Globals.game.get_stat(k).absLog10()+1).multiply(pow(2,Globals.game.get_reset_idx(k))))
 
-	Game.set_stat("score", score)
+	Globals.game.set_stat("score", score)
 
 	%Labels/Score.text = "Score: " + str(score)
 
 func _process(delta: float) -> void:
 
-	Game.increase_stat("cash", 10*delta)
+	Globals.game.increase_stat("cash", 10*delta)
 
 	_update_score()
 
-	#$PanelContainer/MarginContainer/VBoxContainer/Label.text = Game.player.cash.to_scientific_notation()
-	%Labels/Cash.text = "Cash: " + str(Game.player.cash)
+	#$PanelContainer/MarginContainer/VBoxContainer/Label.text = Globals.game.player.cash.to_scientific_notation()
+	%Labels/Cash.text = "Cash: " + str(Globals.game.player.cash)
 
-	if Game.get_stat("score").isGreaterThan(Config.MIN_PRESTIGE_SCORE):
+	if Globals.game.get_stat("score").isGreaterThan(Config.MIN_PRESTIGE_SCORE):
 		%OpenPrestigeMenu.self_modulate = Color(0,1,0)
 		%OpenPrestigeMenu.text = "Prestige - " + str(%PrestigeMenu._get_pp_gain()) + "PP"
 	else:
@@ -36,7 +36,7 @@ func _process(delta: float) -> void:
 		%OpenPrestigeMenu.text = "Prestige \n(" + str(Config.MIN_PRESTIGE_SCORE) + " score req.)"
 
 	for k in Config.RESET_LAYERS:
-		%Labels.get_node(k).text = k.capitalize() + ": " + str(Game.get_stat(k))
+		%Labels.get_node(k).text = k.capitalize() + ": " + str(Globals.game.get_stat(k))
 
 func _update_reset_layers() -> void:
 	var idx = 0
@@ -47,12 +47,12 @@ func _update_reset_layers() -> void:
 		if %ResetLayers.has_node(k):
 			l = %ResetLayers.get_node(k)
 
-		if l and l.reset_idx > Game.get_upgrade_count("PP Layers")+2:
+		if l and l.reset_idx > Globals.game.get_upgrade_count("PP Layers")+2:
 			l.queue_free()
 			continue
 		elif l:
 			l.update_button_count(l._get_button_count())
-		elif not l and idx <= Game.get_upgrade_count("PP Layers")+2:
+		elif not l and idx <= Globals.game.get_upgrade_count("PP Layers")+2:
 			l = reset_layer.instantiate()
 			l.name = k
 			l.key = k
@@ -86,8 +86,8 @@ func _reload_reset_layers() -> void:
 
 func _ready() -> void:
 
-	if not Game.ready:
-		await Game.ready
+	if not Globals.game.is_node_ready():
+		await Globals.game.ready
 
 	_reload_reset_layers()
 	_update_reset_layers()
@@ -97,6 +97,3 @@ func _ready() -> void:
 	%OpenPrestigeMenu.pressed.connect(%PrestigeMenu.open)
 	%OpenTokenMenu.pressed.connect(%TokenMenu.open)
 	%OpenBuyCrateMenu.pressed.connect(%BuyCrateMenu.open)
-
-	%GameTabs.tab_clicked.connect(func(_idx:int): SoundManager.play_audio("res://Assets/Sound/UI SFX/Click1.wav", "SFX", randf_range(0.9,1.1)))
-	%GameTabs.tab_clicked.connect(func(idx:int): SignalBus.TabSelected.emit(%GameTabs.get_tab_control(idx)))

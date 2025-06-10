@@ -1,896 +1,147 @@
-[gd_scene load_steps=37 format=3 uid="uid://bkp35abfhaedd"]
+[gd_scene load_steps=12 format=3 uid="uid://bkp35abfhaedd"]
 
-[ext_resource type="FontFile" uid="uid://c1mjhk6ik1fv7" path="res://Assets/Fonts/PixelFont7-G02A.ttf" id="1_bo1nx"]
-[ext_resource type="Script" uid="uid://dfcks4t8dx0th" path="res://Scripts/UI/testscene.gd" id="1_jjgbg"]
-[ext_resource type="Script" uid="uid://daw6cp120mdg4" path="res://Scripts/UI/prestige_menu.gd" id="3_8gbba"]
-[ext_resource type="StyleBox" uid="uid://dpdgoj7jxl8ff" path="res://Resources/UI/Panels/bg.tres" id="3_21xkr"]
-[ext_resource type="StyleBox" uid="uid://q0ofwer7ixj7" path="res://Resources/UI/Panels/reset_layer.tres" id="3_kry3j"]
-[ext_resource type="Script" uid="uid://bpyb5ycmops7w" path="res://Scenes/UI/prestige_upgrade_menu.gd" id="4_jjvhh"]
-[ext_resource type="Script" uid="uid://nejc22vbxnfu" path="res://Scenes/UI/panel_container.gd" id="7_6bp64"]
-[ext_resource type="Script" uid="uid://eopdtqu4ga" path="res://Scripts/UI/token_menu.gd" id="7_ynf5e"]
-[ext_resource type="PackedScene" uid="uid://bryjk0joq3w1p" path="res://Scenes/UI/upgrade_container.tscn" id="8_344ge"]
-[ext_resource type="Script" uid="uid://irfudhnita5b" path="res://Scripts/UI/crate_menu.gd" id="10_fdnlq"]
-[ext_resource type="Texture2D" uid="uid://dxxodv8cucnv1" path="res://Assets/Textures/Crates/crate.png" id="10_hptm8"]
-[ext_resource type="Script" uid="uid://dq0dmkggqyskl" path="res://Scenes/buy_crate_menu.gd" id="10_wsu2k"]
-[ext_resource type="Script" uid="uid://0bfd861rx2h8" path="res://Scenes/UI/crate.gd" id="11_d1ilt"]
-[ext_resource type="PackedScene" uid="uid://iaaahkovbb77" path="res://Scenes/UI/crate_select_option.tscn" id="11_jkdf5"]
-[ext_resource type="Script" uid="uid://b12pkbwg513aw" path="res://Scripts/UI/crate_stat_index.gd" id="14_jkdf5"]
-[ext_resource type="Script" uid="uid://jih0oljoddmy" path="res://Scripts/UI/stat_index_tree.gd" id="16_k12tt"]
+[ext_resource type="Script" uid="uid://cgmp5kp2jf1fv" path="res://Scripts/Global/main.gd" id="1_bo1nx"]
+[ext_resource type="Script" uid="uid://bjrpxnr0dftym" path="res://Scripts/Global/save_manager.gd" id="1_h1bgf"]
+[ext_resource type="Theme" uid="uid://5e4ibfuhq8tg" path="res://Resources/UI/game.tres" id="3_8gbba"]
+[ext_resource type="Script" uid="uid://bgqloj3ul6cjx" path="res://Scripts/select.gd" id="4_jjvhh"]
+[ext_resource type="Script" uid="uid://d00bu3ekdhjam" path="res://Scripts/slot_select.gd" id="5_21xkr"]
+[ext_resource type="PackedScene" uid="uid://dbxkyig03jnkv" path="res://Scenes/UI/save_slot.tscn" id="5_kry3j"]
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jjvhh"]
+[sub_resource type="Gradient" id="Gradient_8gbba"]
+colors = PackedColorArray(1, 1, 1, 0.262745, 1, 1, 1, 0)
 
-[sub_resource type="Theme" id="Theme_jjgbg"]
-default_font = ExtResource("1_bo1nx")
-default_font_size = 20
-Button/fonts/font = ExtResource("1_bo1nx")
-Button/styles/focus = SubResource("StyleBoxEmpty_jjvhh")
-Label/fonts/font = ExtResource("1_bo1nx")
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_jjvhh"]
+gradient = SubResource("Gradient_8gbba")
+fill_from = Vector2(0.512821, 1)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ynf5e"]
-bg_color = Color(0, 0, 0, 1)
+[sub_resource type="Gradient" id="Gradient_kry3j"]
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 0.0745098)
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hptm8"]
-content_margin_left = 9.0
-content_margin_top = 2.0
-content_margin_right = 9.0
-content_margin_bottom = 2.0
-bg_color = Color(0.11, 0.0733333, 0, 0)
-border_width_left = 6
-border_width_right = 6
-border_color = Color(0.8, 0.8, 0.8, 0)
-corner_radius_top_left = 6
-corner_radius_top_right = 6
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_21xkr"]
+frequency = 0.008
+fractal_octaves = 2
 
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_bo1nx"]
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8gbba"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8gbba"]
-content_margin_left = 16.0
-content_margin_top = 16.0
-content_margin_right = 16.0
-content_margin_bottom = 16.0
-bg_color = Color(0.162927, 0.000308422, 0.295543, 1)
-border_width_left = 4
-border_width_top = 4
-border_width_right = 4
-border_width_bottom = 4
-border_color = Color(0.819116, 0.494426, 0.99577, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jjvhh"]
-content_margin_left = 8.0
-content_margin_top = 8.0
-content_margin_right = 8.0
-content_margin_bottom = 8.0
-bg_color = Color(0.113665, 0.113665, 0.113665, 0.537255)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.513167, 0.0491571, 0.75939, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k12tt"]
-content_margin_left = 14.0
-content_margin_top = 14.0
-content_margin_right = 14.0
-content_margin_bottom = 14.0
-bg_color = Color(0.36, 0.252, 0.1008, 1)
-border_width_left = 2
-border_width_top = 2
-border_width_right = 2
-border_width_bottom = 2
-border_color = Color(0.31, 0.196333, 0, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-
-[sub_resource type="Gradient" id="Gradient_hptm8"]
-colors = PackedColorArray(0.3382, 0.2223, 0.57, 1, 0.387447, 0.2047, 0.89, 1)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_d1ilt"]
-gradient = SubResource("Gradient_hptm8")
-fill_from = Vector2(0.50641, 1)
-fill_to = Vector2(0.508547, 0)
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_hptm8"]
-particle_flag_disable_z = true
-emission_shape_scale = Vector3(800, 1, 1)
-emission_shape = 3
-emission_box_extents = Vector3(1, 1, 1)
-angle_min = -180.0
-angle_max = 180.0
-gravity = Vector3(0, -98, 0)
-scale_min = 7.0
-scale_max = 8.0
-color = Color(0.60933, 0.60933, 0.60933, 1)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jkdf5"]
-bg_color = Color(0.52, 0.52, 0.52, 0.129412)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_fdnlq"]
-content_margin_left = 8.0
-content_margin_top = 8.0
-content_margin_right = 8.0
-content_margin_bottom = 8.0
-bg_color = Color(0, 0, 0, 0.376471)
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_jkdf5"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_6iyac"]
-content_margin_left = 120.0
-content_margin_top = 120.0
-content_margin_right = 120.0
-content_margin_bottom = 120.0
-bg_color = Color(0.6, 0.6, 0.6, 0)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wsu2k"]
-content_margin_left = 8.0
-content_margin_top = 8.0
-content_margin_right = 8.0
-content_margin_bottom = 8.0
-bg_color = Color(0, 0, 0, 1)
-
-[sub_resource type="Gradient" id="Gradient_wsu2k"]
-colors = PackedColorArray(0.162, 0.234, 0.45, 0.266667, 1, 1, 1, 0)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_k12tt"]
-gradient = SubResource("Gradient_wsu2k")
-fill_from = Vector2(1, 1)
-fill_to = Vector2(0, 0)
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_h1bgf"]
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_6bp64"]
+color_ramp = SubResource("Gradient_kry3j")
+noise = SubResource("FastNoiseLite_21xkr")
 
 [node name="Main" type="Node"]
+script = ExtResource("1_bo1nx")
 
-[node name="Game" type="Control" parent="."]
+[node name="SaveManager" type="Node" parent="."]
+script = ExtResource("1_h1bgf")
+
+[node name="Select" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = SubResource("Theme_jjgbg")
-script = ExtResource("1_jjgbg")
-
-[node name="GameTabs" type="TabContainer" parent="Game"]
-unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/side_margin = 10
-theme_override_constants/icon_separation = 0
-theme_override_constants/icon_max_width = 0
-theme_override_styles/tab_focus = ExtResource("3_21xkr")
-theme_override_styles/tab_disabled = ExtResource("3_21xkr")
-theme_override_styles/tabbar_background = SubResource("StyleBoxFlat_ynf5e")
-theme_override_styles/panel = ExtResource("3_21xkr")
-theme_override_styles/tab_selected = SubResource("StyleBoxFlat_hptm8")
-theme_override_styles/tab_hovered = SubResource("StyleBoxFlat_hptm8")
-theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_hptm8")
-current_tab = 2
-
-[node name="Buttons" type="Control" parent="Game/GameTabs"]
-visible = false
-layout_mode = 2
-metadata/_tab_index = 0
-
-[node name="ColorRect" type="ColorRect" parent="Game/GameTabs/Buttons"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.0188478, 0.0935561, 0.198039, 1)
-
-[node name="PanelContainer" type="PanelContainer" parent="Game/GameTabs/Buttons"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_styles/panel = ExtResource("3_21xkr")
-
-[node name="HSplitContainer" type="HSplitContainer" parent="Game/GameTabs/Buttons/PanelContainer"]
-layout_mode = 2
-split_offset = 200
-
-[node name="SidePanel" type="MarginContainer" parent="Game/GameTabs/Buttons/PanelContainer/HSplitContainer"]
-layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
-
-[node name="PanelContainer" type="PanelContainer" parent="Game/GameTabs/Buttons/PanelContainer/HSplitContainer/SidePanel"]
-self_modulate = Color(0.631373, 0, 1, 1)
-layout_mode = 2
-theme_override_styles/panel = ExtResource("3_kry3j")
-
-[node name="MarginContainer" type="MarginContainer" parent="Game/GameTabs/Buttons/PanelContainer/HSplitContainer/SidePanel/PanelContainer"]
-layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Game/GameTabs/Buttons/PanelContainer/HSplitContainer/SidePanel/PanelContainer/MarginContainer"]
-layout_mode = 2
-
-[node name="ScrollContainer" type="ScrollContainer" parent="Game/GameTabs/Buttons/PanelContainer/HSplitContainer/SidePanel/PanelContainer/MarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_styles/panel = SubResource("StyleBoxEmpty_bo1nx")
-theme_override_styles/focus = SubResource("StyleBoxEmpty_8gbba")
-
-[node name="Labels" type="VBoxContainer" parent="Game/GameTabs/Buttons/PanelContainer/HSplitContainer/SidePanel/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 6
-
-[node name="Score" type="Label" parent="Game/GameTabs/Buttons/PanelContainer/HSplitContainer/SidePanel/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/Labels"]
-self_modulate = Color(0.33, 0.553333, 1, 1)
-layout_mode = 2
-size_flags_horizontal = 4
-text = "Score: "
-
-[node name="Cash" type="Label" parent="Game/GameTabs/Buttons/PanelContainer/HSplitContainer/SidePanel/PanelContainer/MarginContainer/VBoxContainer/ScrollContainer/Labels"]
-self_modulate = Color(0, 0.89, 0.296667, 1)
-layout_mode = 2
-size_flags_horizontal = 4
-text = "Cash: 10"
-
-[node name="OpenPrestigeMenu" type="Button" parent="Game/GameTabs/Buttons/PanelContainer/HSplitContainer/SidePanel/PanelContainer/MarginContainer/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Prestige"
-flat = true
-
-[node name="OpenTokenMenu" type="Button" parent="Game/GameTabs/Buttons/PanelContainer/HSplitContainer/SidePanel/PanelContainer/MarginContainer/VBoxContainer"]
-unique_name_in_owner = true
-self_modulate = Color(1, 1, 0, 1)
-layout_mode = 2
-text = "Tokens"
-flat = true
-
-[node name="OpenBuyCrateMenu" type="Button" parent="Game/GameTabs/Buttons/PanelContainer/HSplitContainer/SidePanel/PanelContainer/MarginContainer/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Buy Crates"
-flat = true
-
-[node name="Resets" type="MarginContainer" parent="Game/GameTabs/Buttons/PanelContainer/HSplitContainer"]
-layout_mode = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
-
-[node name="ScrollContainer" type="ScrollContainer" parent="Game/GameTabs/Buttons/PanelContainer/HSplitContainer/Resets"]
-layout_mode = 2
-mouse_filter = 0
-vertical_scroll_mode = 0
-
-[node name="ResetLayers" type="HBoxContainer" parent="Game/GameTabs/Buttons/PanelContainer/HSplitContainer/Resets/ScrollContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/separation = 16
-
-[node name="PrestigeMenu" type="CenterContainer" parent="Game/GameTabs/Buttons"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-script = ExtResource("3_8gbba")
-
-[node name="Prestige" type="PanelContainer" parent="Game/GameTabs/Buttons/PrestigeMenu"]
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_8gbba")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Game/GameTabs/Buttons/PrestigeMenu/Prestige"]
-layout_mode = 2
-theme_override_constants/separation = 12
-
-[node name="Label" type="Label" parent="Game/GameTabs/Buttons/PrestigeMenu/Prestige/VBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 40
-text = "Presitge"
-horizontal_alignment = 1
-
-[node name="Current" type="Label" parent="Game/GameTabs/Buttons/PrestigeMenu/Prestige/VBoxContainer"]
-layout_mode = 2
-text = "You have 0 PP"
-horizontal_alignment = 1
-
-[node name="Gain" type="Label" parent="Game/GameTabs/Buttons/PrestigeMenu/Prestige/VBoxContainer"]
-layout_mode = 2
-text = "If you prestiged now, you would gain __ PP."
-horizontal_alignment = 1
-
-[node name="Label2" type="Label" parent="Game/GameTabs/Buttons/PrestigeMenu/Prestige/VBoxContainer"]
-layout_mode = 2
-text = "Reset all of your cash, rebirths, etc. to gain Prestige Points (PP)"
-horizontal_alignment = 1
-
-[node name="Bonuses" type="PanelContainer" parent="Game/GameTabs/Buttons/PrestigeMenu/Prestige/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_styles/panel = SubResource("StyleBoxFlat_jjvhh")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Game/GameTabs/Buttons/PrestigeMenu/Prestige/VBoxContainer/Bonuses"]
-layout_mode = 2
-
-[node name="BonusesTitle" type="Label" parent="Game/GameTabs/Buttons/PrestigeMenu/Prestige/VBoxContainer/Bonuses/VBoxContainer"]
-layout_mode = 2
-text = "Current PP Bonuses:"
-horizontal_alignment = 1
-
-[node name="PPBonusesDisplay" type="Label" parent="Game/GameTabs/Buttons/PrestigeMenu/Prestige/VBoxContainer/Bonuses/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 4
-text = "Cash: x10
-Multiplier: x5"
-horizontal_alignment = 1
-
-[node name="OpenPrestigeUpgrades" type="Button" parent="Game/GameTabs/Buttons/PrestigeMenu/Prestige/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "View Prestige Upgrades"
-
-[node name="PrestigeButton" type="Button" parent="Game/GameTabs/Buttons/PrestigeMenu/Prestige/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Prestige!"
-
-[node name="Exit" type="Button" parent="Game/GameTabs/Buttons/PrestigeMenu/Prestige"]
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 0
-text = "Exit"
-flat = true
-
-[node name="Prestige2" type="PanelContainer" parent="Game/GameTabs/Buttons/PrestigeMenu"]
-visible = false
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_8gbba")
+theme = ExtResource("3_8gbba")
 script = ExtResource("4_jjvhh")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Game/GameTabs/Buttons/PrestigeMenu/Prestige2"]
-layout_mode = 2
-theme_override_constants/separation = 12
+[node name="ColorRect" type="ColorRect" parent="Select"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.2496, 0.3822, 0.78, 1)
 
-[node name="Label" type="Label" parent="Game/GameTabs/Buttons/PrestigeMenu/Prestige2/VBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 40
-text = "Presitge Upgrades"
-horizontal_alignment = 1
+[node name="TextureRect" type="TextureRect" parent="Select"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture2D_jjvhh")
 
-[node name="Label2" type="Label" parent="Game/GameTabs/Buttons/PrestigeMenu/Prestige2/VBoxContainer"]
-layout_mode = 2
-text = "The following upgrades can be purchased with PP."
-horizontal_alignment = 1
+[node name="MarginContainer" type="MarginContainer" parent="Select"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 40
 
-[node name="Current" type="Label" parent="Game/GameTabs/Buttons/PrestigeMenu/Prestige2/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Select/MarginContainer"]
 layout_mode = 2
-text = "Your current PP:"
-horizontal_alignment = 1
+theme_override_constants/separation = 50
 
-[node name="ScrollContainer" parent="Game/GameTabs/Buttons/PrestigeMenu/Prestige2/VBoxContainer" instance=ExtResource("8_344ge")]
+[node name="Title" type="VBoxContainer" parent="Select/MarginContainer/VBoxContainer"]
 layout_mode = 2
-upgrade_tags = Array[String](["prestige"])
-display_types = Array[int]([0])
 
-[node name="ExitPrestigeUpgrades" type="Button" parent="Game/GameTabs/Buttons/PrestigeMenu/Prestige2/VBoxContainer"]
-unique_name_in_owner = true
+[node name="Main" type="Label" parent="Select/MarginContainer/VBoxContainer/Title"]
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 0
-text = "Back"
-flat = true
+theme_override_colors/font_color = Color(0.693402, 0.815145, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0.216225, 0.458801, 1)
+theme_override_constants/shadow_offset_x = 3
+theme_override_constants/shadow_offset_y = 3
+theme_override_font_sizes/font_size = 80
+text = "Untitled"
 
-[node name="TokenMenu" type="CenterContainer" parent="Game/GameTabs/Buttons"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-script = ExtResource("7_ynf5e")
-
-[node name="PanelContainer" type="PanelContainer" parent="Game/GameTabs/Buttons/TokenMenu"]
-self_modulate = Color(1, 1, 0.35, 1)
+[node name="Version" type="Label" parent="Select/MarginContainer/VBoxContainer/Title"]
 layout_mode = 2
-theme_override_styles/panel = ExtResource("3_kry3j")
-script = ExtResource("7_6bp64")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Game/GameTabs/Buttons/TokenMenu/PanelContainer"]
-layout_mode = 2
-
-[node name="Title" type="Label" parent="Game/GameTabs/Buttons/TokenMenu/PanelContainer/VBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 40
-text = "Tokens"
-horizontal_alignment = 1
-
-[node name="Desc" type="Label" parent="Game/GameTabs/Buttons/TokenMenu/PanelContainer/VBoxContainer"]
-layout_mode = 2
-text = "Click on highlighted buttons to earn tokens.
-Tokens can be spent to improve various stats."
-horizontal_alignment = 1
-
-[node name="CurrentTokens" type="Label" parent="Game/GameTabs/Buttons/TokenMenu/PanelContainer/VBoxContainer"]
-layout_mode = 2
-text = "Current tokens: "
-horizontal_alignment = 1
-
-[node name="ScrollContainer" parent="Game/GameTabs/Buttons/TokenMenu/PanelContainer/VBoxContainer" instance=ExtResource("8_344ge")]
-layout_mode = 2
-upgrade_tags = Array[String](["token"])
-display_types = Array[int]([1])
-
-[node name="Exit" type="Button" parent="Game/GameTabs/Buttons/TokenMenu/PanelContainer"]
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 0
-text = "Exit"
-flat = true
-
-[node name="BuyCrateMenu" type="CenterContainer" parent="Game/GameTabs/Buttons"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("10_wsu2k")
-
-[node name="PanelContainer" type="PanelContainer" parent="Game/GameTabs/Buttons/BuyCrateMenu"]
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_k12tt")
-
-[node name="Exit" type="Button" parent="Game/GameTabs/Buttons/BuyCrateMenu/PanelContainer"]
-layout_mode = 2
-size_flags_horizontal = 0
-size_flags_vertical = 0
-text = "Exit"
-flat = true
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Game/GameTabs/Buttons/BuyCrateMenu/PanelContainer"]
-layout_mode = 2
-mouse_filter = 2
-
-[node name="Title" type="Label" parent="Game/GameTabs/Buttons/BuyCrateMenu/PanelContainer/VBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 40
-text = "Buy Crates"
-horizontal_alignment = 1
-
-[node name="Title2" type="Label" parent="Game/GameTabs/Buttons/BuyCrateMenu/PanelContainer/VBoxContainer"]
-layout_mode = 2
-text = "Here you can purchase crates that you
-can open in the \"Crates\" tab."
-horizontal_alignment = 1
-
-[node name="UpgradeContainer" parent="Game/GameTabs/Buttons/BuyCrateMenu/PanelContainer/VBoxContainer" instance=ExtResource("8_344ge")]
-layout_mode = 2
-upgrade_tags = Array[String](["crate"])
-display_types = Array[int]([2])
-
-[node name="Crates" type="Control" parent="Game/GameTabs"]
-visible = false
-layout_mode = 2
-metadata/_tab_index = 1
-
-[node name="ColorRect" type="ColorRect" parent="Game/GameTabs/Crates"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.332881, 0.332881, 0.332881, 1)
-
-[node name="TextureRect" type="TextureRect" parent="Game/GameTabs/Crates"]
-modulate = Color(0.264509, 0.000862696, 0.55234, 1)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = SubResource("GradientTexture2D_d1ilt")
-
-[node name="GPUParticles2D" type="GPUParticles2D" parent="Game/GameTabs/Crates"]
-modulate = Color(0, 0.0166669, 1, 1)
-position = Vector2(590, 630)
-amount = 20
-lifetime = 5.0
-process_material = SubResource("ParticleProcessMaterial_hptm8")
-
-[node name="CrateMenu" type="MarginContainer" parent="Game/GameTabs/Crates"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/margin_left = 0
-theme_override_constants/margin_top = 0
-theme_override_constants/margin_right = 0
-theme_override_constants/margin_bottom = 0
-script = ExtResource("10_fdnlq")
-
-[node name="ProgressBar2" type="ProgressBar" parent="Game/GameTabs/Crates/CrateMenu"]
-layout_mode = 2
-size_flags_vertical = 1
-theme_override_styles/fill = SubResource("StyleBoxFlat_jkdf5")
-max_value = 1.0
-step = 0.001
-value = 0.5
-show_percentage = false
-
-[node name="HSplitContainer" type="HSplitContainer" parent="Game/GameTabs/Crates/CrateMenu"]
-layout_mode = 2
-split_offset = 300
-
-[node name="ScrollContainer" type="ScrollContainer" parent="Game/GameTabs/Crates/CrateMenu/HSplitContainer"]
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_fdnlq")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Game/GameTabs/Crates/CrateMenu/HSplitContainer/ScrollContainer"]
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-
-[node name="ShowStatIndex" type="Button" parent="Game/GameTabs/Crates/CrateMenu/HSplitContainer/ScrollContainer/VBoxContainer"]
-layout_mode = 2
-text = "View Stat Index"
-flat = true
-
-[node name="Label" type="Label" parent="Game/GameTabs/Crates/CrateMenu/HSplitContainer/ScrollContainer/VBoxContainer"]
-layout_mode = 2
-text = "-------------------
-Owned Crates"
-horizontal_alignment = 1
-
-[node name="CrateContainer" type="VBoxContainer" parent="Game/GameTabs/Crates/CrateMenu/HSplitContainer/ScrollContainer/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme_override_constants/separation = 10
-
-[node name="CrateSelectOption" parent="Game/GameTabs/Crates/CrateMenu/HSplitContainer/ScrollContainer/VBoxContainer/CrateContainer" instance=ExtResource("11_jkdf5")]
-layout_mode = 2
-
-[node name="CrateSelectOption2" parent="Game/GameTabs/Crates/CrateMenu/HSplitContainer/ScrollContainer/VBoxContainer/CrateContainer" instance=ExtResource("11_jkdf5")]
-layout_mode = 2
-
-[node name="PanelContainer" type="PanelContainer" parent="Game/GameTabs/Crates/CrateMenu/HSplitContainer"]
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxEmpty_jkdf5")
-
-[node name="PanelContainer" type="PanelContainer" parent="Game/GameTabs/Crates/CrateMenu/HSplitContainer/PanelContainer"]
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_6iyac")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Game/GameTabs/Crates/CrateMenu/HSplitContainer/PanelContainer/PanelContainer"]
-layout_mode = 2
-
-[node name="Crate" type="Control" parent="Game/GameTabs/Crates/CrateMenu/HSplitContainer/PanelContainer/PanelContainer/VBoxContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_vertical = 3
-script = ExtResource("11_d1ilt")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Game/GameTabs/Crates/CrateMenu/HSplitContainer/PanelContainer/PanelContainer/VBoxContainer/Crate"]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -20.0
-offset_top = -20.0
-offset_right = 20.0
-offset_bottom = 20.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Reward" type="Label" parent="Game/GameTabs/Crates/CrateMenu/HSplitContainer/PanelContainer/PanelContainer/VBoxContainer/Crate"]
-visible = false
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -51.0
-offset_top = -10.0
-offset_right = 51.0
-offset_bottom = 10.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_font_sizes/font_size = 40
-text = "+1 Multiplier"
-horizontal_alignment = 1
-
-[node name="Crate" type="TextureButton" parent="Game/GameTabs/Crates/CrateMenu/HSplitContainer/PanelContainer/PanelContainer/VBoxContainer/Crate"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_vertical = 3
-texture_normal = ExtResource("10_hptm8")
-stretch_mode = 5
-
-[node name="Label" type="Button" parent="Game/GameTabs/Crates/CrateMenu/HSplitContainer/PanelContainer/PanelContainer/VBoxContainer/Crate"]
-layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
-anchor_bottom = 1.0
-offset_left = -255.0
-offset_top = -22.0
-offset_right = 255.0
-offset_bottom = 29.0
-grow_horizontal = 2
-grow_vertical = 0
 size_flags_horizontal = 4
-theme_override_font_sizes/font_size = 40
-text = "Crate - Click to Open!"
-flat = true
+size_flags_vertical = 0
+theme_override_colors/font_color = Color(0.693402, 0.815145, 1, 1)
+theme_override_colors/font_shadow_color = Color(0.0468, 0.20696, 0.39, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 20
+text = "v0.0.0-alpha"
 
-[node name="CrateName" type="Label" parent="Game/GameTabs/Crates/CrateMenu/HSplitContainer/PanelContainer/PanelContainer/VBoxContainer/Crate"]
-self_modulate = Color(1, 1, 1, 0.909804)
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -155.0
-offset_top = -63.0
-offset_right = 157.0
-offset_bottom = -3.0
-grow_horizontal = 2
-theme_override_font_sizes/font_size = 60
-text = "Crate Name"
-horizontal_alignment = 1
-
-[node name="CrateStatIndex" type="Control" parent="Game/GameTabs/Crates/CrateMenu"]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-script = ExtResource("14_jkdf5")
-
-[node name="PanelContainer" type="PanelContainer" parent="Game/GameTabs/Crates/CrateMenu/CrateStatIndex"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_wsu2k")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Game/GameTabs/Crates/CrateMenu/CrateStatIndex/PanelContainer"]
-layout_mode = 2
-
-[node name="ExitButton" type="Button" parent="Game/GameTabs/Crates/CrateMenu/CrateStatIndex/PanelContainer/VBoxContainer"]
-layout_mode = 2
-text = "Exit"
-
-[node name="AllCratesTree" type="Tree" parent="Game/GameTabs/Crates/CrateMenu/CrateStatIndex/PanelContainer/VBoxContainer"]
+[node name="SlotSelect" type="Control" parent="Select/MarginContainer/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-column_titles_visible = true
+script = ExtResource("5_21xkr")
 
-[node name="Stats" type="Control" parent="Game/GameTabs"]
+[node name="ScrollContainer" type="ScrollContainer" parent="Select/MarginContainer/VBoxContainer/SlotSelect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Select/MarginContainer/VBoxContainer/SlotSelect/ScrollContainer"]
 layout_mode = 2
-mouse_filter = 2
-metadata/_tab_index = 2
-
-[node name="ColorRect" type="ColorRect" parent="Game/GameTabs/Stats"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-color = Color(0.038, 0, 0.19, 1)
-
-[node name="TextureRect" type="TextureRect" parent="Game/GameTabs/Stats"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-texture = SubResource("GradientTexture2D_k12tt")
-
-[node name="Tree" type="Tree" parent="Game/GameTabs/Stats"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
-theme_override_colors/font_color = Color(1, 1, 1, 1)
-theme_override_constants/v_separation = 12
-theme_override_styles/panel = SubResource("StyleBoxEmpty_h1bgf")
-hide_root = true
-script = ExtResource("16_k12tt")
-
-[node name="Rank" type="Control" parent="Game"]
-visible = false
-layout_mode = 2
-anchors_preset = 0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = 24.0
-
-[node name="ColorRect" type="ColorRect" parent="Game/Rank"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.26, 0.104, 0.104, 1)
-
-[node name="TextureRect" type="TextureRect" parent="Game/Rank"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = SubResource("GradientTexture2D_k12tt")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Game/Rank"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
+size_flags_horizontal = 6
 theme_override_constants/separation = 20
-alignment = 1
 
-[node name="Label" type="Label" parent="Game/Rank/VBoxContainer"]
+[node name="Label" type="Label" parent="Select/MarginContainer/VBoxContainer/SlotSelect/ScrollContainer/VBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 4
-theme_override_colors/font_color = Color(1, 0, 0, 1)
-theme_override_font_sizes/font_size = 60
-text = "Rank Up"
-
-[node name="Label2" type="Label" parent="Game/Rank/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_colors/font_color = Color(1, 0, 0, 1)
-text = "Reset all of your progress to increase your rank.
-This unlocks new features and gives permaneant bonuses."
-horizontal_alignment = 1
-
-[node name="HBoxContainer" type="HBoxContainer" parent="Game/Rank/VBoxContainer"]
-layout_mode = 2
-alignment = 1
-
-[node name="VBoxContainer" type="VBoxContainer" parent="Game/Rank/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="Game/Rank/VBoxContainer/HBoxContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_colors/font_color = Color(1, 0, 0, 1)
-theme_override_font_sizes/font_size = 30
-text = "You will keep:"
-horizontal_alignment = 1
-
-[node name="Label2" type="Label" parent="Game/Rank/VBoxContainer/HBoxContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_colors/font_color = Color(1, 1, 1, 0.611765)
 theme_override_font_sizes/font_size = 20
-text = "- Most crate rewards
-- Rank bonuses
-"
-
-[node name="Label" type="Label" parent="Game/Rank/VBoxContainer/HBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 0
-theme_override_colors/font_color = Color(1, 0, 0, 1)
-theme_override_font_sizes/font_size = 30
-text = "|
-|
-    |    
-|
-|
-|
-|"
+text = "Select a slot from below."
 horizontal_alignment = 1
 
-[node name="VBoxContainer2" type="VBoxContainer" parent="Game/Rank/VBoxContainer/HBoxContainer"]
+[node name="Slots" type="VBoxContainer" parent="Select/MarginContainer/VBoxContainer/SlotSelect/ScrollContainer/VBoxContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Game/Rank/VBoxContainer/HBoxContainer/VBoxContainer2"]
+[node name="Slot" parent="Select/MarginContainer/VBoxContainer/SlotSelect/ScrollContainer/VBoxContainer/Slots" instance=ExtResource("5_kry3j")]
 layout_mode = 2
-size_flags_horizontal = 4
-theme_override_colors/font_color = Color(1, 0, 0, 1)
-theme_override_font_sizes/font_size = 30
-text = "You will lose:"
-horizontal_alignment = 1
 
-[node name="Label2" type="Label" parent="Game/Rank/VBoxContainer/HBoxContainer/VBoxContainer2"]
+[node name="New" type="Button" parent="Select/MarginContainer/VBoxContainer/SlotSelect/ScrollContainer/VBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 4
-theme_override_colors/font_color = Color(1, 0, 0, 1)
-theme_override_font_sizes/font_size = 20
-text = "- Prestige upgrades
-- Token upgrades
-- Cash, multiplier, etc.
-- Prestige crate rewards
-"
-
-[node name="Label3" type="Label" parent="Game/Rank/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-theme_override_colors/font_color = Color(1, 0, 0, 1)
-text = "Next rank will unlock _____"
-horizontal_alignment = 1
-
-[node name="RankUpButton" type="Button" parent="Game/Rank/VBoxContainer"]
-self_modulate = Color(1, 0, 0, 1)
-layout_mode = 2
-theme_override_font_sizes/font_size = 40
-text = "Rank up!"
+text = "New slot.."
 flat = true
 
-[node name="Label3" type="Label" parent="Game/Rank/VBoxContainer/RankUpButton"]
+[node name="Clouds" type="TextureRect" parent="Select"]
 layout_mode = 1
-anchors_preset = 7
-anchor_left = 0.5
-anchor_top = 1.0
-anchor_right = 0.5
+anchors_preset = 15
+anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -59.0
-offset_top = -6.0
-offset_right = 59.0
-offset_bottom = 14.0
 grow_horizontal = 2
-grow_vertical = 0
-size_flags_horizontal = 4
-theme_override_colors/font_color = Color(1, 0, 0, 1)
-text = "Req. ______"
-horizontal_alignment = 1
+grow_vertical = 2
+mouse_filter = 2
+texture = SubResource("NoiseTexture2D_6bp64")

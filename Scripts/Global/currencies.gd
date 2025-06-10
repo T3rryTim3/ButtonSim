@@ -2,6 +2,6 @@ extends Node
 
 var multiplier: 
 	set(new):
-		Game.player.multiplier = new
+		Globals.game.player.multiplier = new
 	get():
-		return Game.player.multiplier
+		return Globals.game.player.multiplier

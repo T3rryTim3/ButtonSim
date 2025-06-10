@@ -4,7 +4,7 @@ var root:TreeItem
 var hide_unused:bool = true
 
 func _get_multipliers() -> Dictionary:
-	return Game._all_multipliers
+	return Globals.game._all_multipliers
 
 ## Update each item's visibility based on metadata and `hide_unused`
 func _update_visibility() -> void:
@@ -53,8 +53,8 @@ func _create() -> void:
 
 func _ready() -> void:
 	
-	if not Game.is_node_ready():
-		await Game.ready
+	if not Globals.game.is_node_ready():
+		await Globals.game.ready
 		
 	root = create_item()
 	

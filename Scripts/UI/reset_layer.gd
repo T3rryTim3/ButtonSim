@@ -21,7 +21,7 @@ var currency:String
 var last_button_count:int = 0
 
 func _get_button_count():
-	return 10 + Game.get_upgrade_count("PP Buttons")*5
+	return 10 + Globals.game.get_upgrade_count("PP Buttons")*5
 
 ## Buy the most expensive button
 func buy_highest_cost(bulk:int) -> void:
@@ -48,10 +48,10 @@ func _reload() -> void:
 	for child in desc_vbox.get_children():
 		if child.has_meta("mult"):
 			var mult = child.get_meta("mult")
-			child.text = mult.capitalize() + ": x" + str((Game.get_stat(key).multiply(Config.RESET_LAYERS[key]["multiplies"][mult])))
+			child.text = mult.capitalize() + ": x" + str((Globals.game.get_stat(key).multiply(Config.RESET_LAYERS[key]["multiplies"][mult])))
 
 func _update_autobuy():
-	var autobuy_tier = Game.get_upgrade_count("PP Auto Buy")
+	var autobuy_tier = Globals.game.get_upgrade_count("PP Auto Buy")
 
 	if autobuy_tier <= reset_idx:
 		autobuying = false
@@ -68,7 +68,7 @@ func _process(delta: float) -> void:
 
 	if autobuying:
 		buy_time += delta
-		var to_buy = buy_time / Game.get_stat("autobuy_speed")
+		var to_buy = buy_time / Globals.game.get_stat("autobuy_speed")
 		buy_highest_cost(max(0, to_buy - bought))
 	else:
 		buy_time = 0
@@ -100,6 +100,8 @@ func _autobuy_pressed(toggled) -> void:
 		autobuy_button.text = "Autobuy - Disabled"
 
 func _ready() -> void:
+	if not Globals.game.is_node_ready():
+		await Globals.game.ready
 	# Set base stuff up
 	title_label.text = key.capitalize()
 	modulate = Config.RESET_LAYERS[key]["color"]

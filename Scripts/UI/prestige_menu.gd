@@ -25,39 +25,39 @@ func _close_upgrades():
 func _prestige() -> void:
 
 	# Wipe stats
-	Game.set_stat("cash", B.new(0))
+	Globals.game.set_stat("cash", B.new(0))
 	for k in Config.RESET_LAYERS:
-		Game.set_stat(k, B.new(0))
+		Globals.game.set_stat(k, B.new(0))
 
 	# Update prestige data
-	Game.player.resets.prestige.count.plusEquals(1)
-	Game.increase_stat("prestige_points", _get_base_pp_gain())
+	Globals.game.player.resets.prestige.count.plusEquals(1)
+	Globals.game.increase_stat("prestige_points", _get_base_pp_gain())
 
 func _get_base_pp_gain() -> B:
 	var num = B.new(0)
-	num.plusEquals(Game.get_stat("score"))
+	num.plusEquals(Globals.game.get_stat("score"))
 	num.powerEquals(2)
 	num.minusEquals(100)
 	return num
 
 func _get_pp_gain() -> B:
 	var num = _get_base_pp_gain()
-	num = Game.get_stat_increase("prestige_points", num)
+	num = Globals.game.get_stat_increase("prestige_points", num)
 	
 	return num
 
 func _prestige_button_pressed():
-	if Game.get_stat("score").isGreaterThan(1):
+	if Globals.game.get_stat("score").isGreaterThan(1):
 		_prestige()
 
 func _process(_delta: float) -> void:
 	if !visible:
 		return
 
-	$Prestige/VBoxContainer/Current.text = "You currently have " + str(Game.get_stat("prestige_points")) + " PP."
+	$Prestige/VBoxContainer/Current.text = "You currently have " + str(Globals.game.get_stat("prestige_points")) + " PP."
 	$Prestige/VBoxContainer/Gain.text = "If you prestiged now, you would gain " + str(_get_pp_gain()) + " PP."
 
-	if Game.get_stat("score").isGreaterThan(Config.MIN_PRESTIGE_SCORE):
+	if Globals.game.get_stat("score").isGreaterThan(Config.MIN_PRESTIGE_SCORE):
 		%PrestigeButton.disabled = false
 		%PrestigeButton.text = "Prestige! - " + str(_get_pp_gain()) + " PP"
 	else:
@@ -65,7 +65,7 @@ func _process(_delta: float) -> void:
 		%PrestigeButton.text = "Minimum " + str(Config.MIN_PRESTIGE_SCORE) + " score to prestige."
 
 	var bonus_display_str = ""
-	var bonuses = Config.upgrades["PP Boost"].get_multi.call(Game.get_upgrade_count("PP Boost"))
+	var bonuses = Config.upgrades["PP Boost"].get_multi.call(Globals.game.get_upgrade_count("PP Boost"))
 	var i:int = 0
 	for k in bonuses:
 		bonus_display_str += k.capitalize() + ": x" + str(bonuses[k])

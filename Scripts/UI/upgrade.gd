@@ -29,7 +29,7 @@ func _update_cost() -> void:
 
 ## Upgrade the internal amount bought value.
 func _update_upgrade_count() -> void:
-	upgrade_count = Game.get_upgrade_count(upgrade_id)
+	upgrade_count = Globals.game.get_upgrade_count(upgrade_id)
 
 
 ## Check if the player's purchase count exceeds the maximum.
@@ -42,7 +42,7 @@ func _exceeds_max() -> bool:
 func _can_buy() -> bool:
 	if _exceeds_max(): # Max is -1 if unlimited
 		return false
-	return !Game.get_stat(upgrade_data["currency"]).isLessThan(cost)
+	return !Globals.game.get_stat(upgrade_data["currency"]).isLessThan(cost)
 
 
 ## Load the upgrade data into the display for the upgrade.
@@ -56,7 +56,7 @@ func _load_data() -> void:
 	if max_purchase == -1:
 		max_text = 'inf'
 	
-	var count_display = str(Game.get_upgrade_count(upgrade_id)) + "/" + max_text
+	var count_display = str(Globals.game.get_upgrade_count(upgrade_id)) + "/" + max_text
 
 	$VBoxContainer2/HBoxContainer/Title.text = upgrade_data.name
 	$VBoxContainer2/HBoxContainer/Purchased.text = count_display
@@ -88,14 +88,14 @@ func purchase() -> void:
 		SoundManager.play_audio("res://Assets/Sound/UI SFX/Error1.wav", "SFX")
 		return
 	
-	Game.minus_stat(upgrade_data["currency"], cost)
-	Game.increase_upgrade_count(upgrade_id)
+	Globals.game.minus_stat(upgrade_data["currency"], cost)
+	Globals.game.increase_upgrade_count(upgrade_id)
 	
 	if "prestige" in upgrade_data["tags"]:
 		SignalBus.PrestigeUpgradeBought.emit()
 	
 	if "on_buy" in upgrade_data:
-		upgrade_data.on_buy.call(Game.get_upgrade_count(upgrade_id))
+		upgrade_data.on_buy.call(Globals.game.get_upgrade_count(upgrade_id))
 	
 	SoundManager.play_audio("res://Assets/Sound/UI SFX/Upgrade1.wav", "SFX")
 	_load_data()
