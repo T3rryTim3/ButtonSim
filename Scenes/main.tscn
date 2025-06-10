@@ -1,11 +1,10 @@
-[gd_scene load_steps=12 format=3 uid="uid://bkp35abfhaedd"]
+[gd_scene load_steps=11 format=3 uid="uid://bkp35abfhaedd"]
 
 [ext_resource type="Script" uid="uid://cgmp5kp2jf1fv" path="res://Scripts/Global/main.gd" id="1_bo1nx"]
 [ext_resource type="Script" uid="uid://bjrpxnr0dftym" path="res://Scripts/Global/save_manager.gd" id="1_h1bgf"]
 [ext_resource type="Theme" uid="uid://5e4ibfuhq8tg" path="res://Resources/UI/game.tres" id="3_8gbba"]
 [ext_resource type="Script" uid="uid://bgqloj3ul6cjx" path="res://Scripts/select.gd" id="4_jjvhh"]
 [ext_resource type="Script" uid="uid://d00bu3ekdhjam" path="res://Scripts/slot_select.gd" id="5_21xkr"]
-[ext_resource type="PackedScene" uid="uid://dbxkyig03jnkv" path="res://Scenes/UI/save_slot.tscn" id="5_kry3j"]
 
 [sub_resource type="Gradient" id="Gradient_8gbba"]
 colors = PackedColorArray(1, 1, 1, 0.262745, 1, 1, 1, 0)
@@ -127,9 +126,7 @@ horizontal_alignment = 1
 
 [node name="Slots" type="VBoxContainer" parent="Select/MarginContainer/VBoxContainer/SlotSelect/ScrollContainer/VBoxContainer"]
 layout_mode = 2
-
-[node name="Slot" parent="Select/MarginContainer/VBoxContainer/SlotSelect/ScrollContainer/VBoxContainer/Slots" instance=ExtResource("5_kry3j")]
-layout_mode = 2
+size_flags_vertical = 3
 
 [node name="New" type="Button" parent="Select/MarginContainer/VBoxContainer/SlotSelect/ScrollContainer/VBoxContainer"]
 layout_mode = 2
@@ -145,3 +142,22 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 texture = SubResource("NoiseTexture2D_6bp64")
+
+[node name="Warning" type="Label" parent="Select"]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -291.5
+offset_top = -20.0
+offset_right = 291.5
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 20
+text = "Warnking: Save data will not persist. If you are on a browser, please enable cookies."
+horizontal_alignment = 1

@@ -261,7 +261,7 @@ func currency_popup(label_text:String, label_color:Color=Color.WHITE, pos=null, 
 #endregion
 
 #region Base functions
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	_cached_stat_increases = {} # Reset cache every frame
 
 	# Update buy speed
@@ -270,6 +270,8 @@ func _process(_delta: float) -> void:
 	buy_speed *= get_upgrade_effect("Token Buy speed")
 	player.buy_speed = buy_speed
 	player.autobuy_speed = buy_speed*4
+	
+	player.time += delta
 
 	_cache_multis()
 
@@ -278,6 +280,8 @@ func _ready() -> void:
 	if not player:
 		print("No player found. Loading default..")
 		player = get_player_data()
+	
+	player = Globals.main.fill_dict(player, get_player_data())
 
 	_cache_multis()
 	

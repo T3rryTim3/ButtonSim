@@ -1,30 +1,52 @@
-[gd_scene load_steps=3 format=3 uid="uid://dbxkyig03jnkv"]
+[gd_scene load_steps=5 format=3 uid="uid://dbxkyig03jnkv"]
 
 [ext_resource type="Script" uid="uid://dgkufuadhinm4" path="res://Scenes/UI/save_slot.gd" id="1_htkj5"]
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ygstj"]
+
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_htkj5"]
 
-[node name="Slot" type="HBoxContainer"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_htkj5"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.21, 0.0294, 0.0294, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.815459, 0.151687, 1.92523e-07, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[node name="Slot" type="PanelContainer"]
+offset_right = 256.0
+offset_bottom = 90.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
-theme_override_constants/separation = 20
-alignment = 1
+theme_override_styles/panel = SubResource("StyleBoxEmpty_ygstj")
 script = ExtResource("1_htkj5")
 
-[node name="Wipe" type="Button" parent="."]
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Wipe" type="Button" parent="HBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(1, 0.799723, 0.770301, 1)
 text = "Wipe"
 flat = true
 alignment = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
+[node name="VBoxContainer" type="VBoxContainer" parent="HBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 alignment = 1
 
-[node name="Name" type="LineEdit" parent="VBoxContainer"]
+[node name="Name" type="LineEdit" parent="HBoxContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/selection_color = Color(0.189192, 0.415808, 0.808839, 0.243137)
 theme_override_colors/font_selected_color = Color(0.79, 0.79, 0.79, 1)
@@ -35,16 +57,29 @@ alignment = 1
 max_length = 24
 expand_to_text_length = true
 emoji_menu_enabled = false
+deselect_on_focus_loss_enabled = false
 flat = true
 
-[node name="TimePlayed" type="Label" parent="VBoxContainer"]
+[node name="TimePlayed" type="Label" parent="HBoxContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.83, 0.83, 0.83, 1)
 text = "10:24:20"
 horizontal_alignment = 1
 
-[node name="Play" type="Button" parent="."]
+[node name="Play" type="Button" parent="HBoxContainer"]
 layout_mode = 2
 theme_override_colors/font_color = Color(0.744113, 0.901385, 0.782032, 1)
 text = "Play"
 flat = true
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_htkj5")
+
+[node name="Label" type="Label" parent="PanelContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+text = "Delete slot?"
