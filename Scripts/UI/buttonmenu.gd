@@ -30,7 +30,7 @@ func _process(delta: float) -> void:
 
 	if Globals.game.get_stat("score").isGreaterThan(Config.MIN_PRESTIGE_SCORE):
 		%OpenPrestigeMenu.self_modulate = Color(0,1,0)
-		%OpenPrestigeMenu.text = "Prestige - " + str(%PrestigeMenu._get_pp_gain()) + "PP"
+		%OpenPrestigeMenu.text = "Prestige - " + str(%PrestigeMenu._get_pp_gain()) + " PP"
 	else:
 		%OpenPrestigeMenu.self_modulate = Color(1,0,0)
 		%OpenPrestigeMenu.text = "Prestige \n(" + str(Config.MIN_PRESTIGE_SCORE) + " score req.)"
@@ -47,12 +47,12 @@ func _update_reset_layers() -> void:
 		if %ResetLayers.has_node(k):
 			l = %ResetLayers.get_node(k)
 
-		if l and l.reset_idx > Globals.game.get_upgrade_count("PP Layers")+2:
+		if l and l.reset_idx > Globals.game.get_upgrade_count("PP Layers")+1:
 			l.queue_free()
 			continue
 		elif l:
 			l.update_button_count(l._get_button_count())
-		elif not l and idx <= Globals.game.get_upgrade_count("PP Layers")+2:
+		elif not l and idx <= Globals.game.get_upgrade_count("PP Layers")+1:
 			l = reset_layer.instantiate()
 			l.name = k
 			l.key = k

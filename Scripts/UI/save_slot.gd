@@ -11,7 +11,7 @@ func load_slot_data(slot:Dictionary):
 		printerr("Slot not found! Cannot load data!")
 		return
 		
-	$Name/TimePlayed.text = str(slot["data"]["time"])
+	$Name/TimePlayed.text = str(Globals.main.format_time(slot["data"]["time"]))
 
 func _ready() -> void:
 	$Name/Wipe.pressed.connect(WipeClicked.emit)

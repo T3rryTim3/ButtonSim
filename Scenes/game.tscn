@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=3 uid="uid://cfq44mrggfq0h"]
+[gd_scene load_steps=42 format=3 uid="uid://cfq44mrggfq0h"]
 
 [ext_resource type="Theme" uid="uid://5e4ibfuhq8tg" path="res://Resources/UI/game.tres" id="1_ewbju"]
 [ext_resource type="Script" uid="uid://dqxwaycwn71wq" path="res://Scripts/Global/game.gd" id="2_nnt18"]
@@ -17,6 +17,8 @@
 [ext_resource type="Texture2D" uid="uid://dxxodv8cucnv1" path="res://Assets/Textures/Crates/crate.png" id="14_cwurv"]
 [ext_resource type="Script" uid="uid://b12pkbwg513aw" path="res://Scripts/UI/crate_stat_index.gd" id="15_mucmn"]
 [ext_resource type="Script" uid="uid://jih0oljoddmy" path="res://Scripts/UI/stat_index_tree.gd" id="16_8m3t6"]
+[ext_resource type="Script" uid="uid://ddvns4fmlix6y" path="res://Scripts/Dev/stat_giver.gd" id="18_85qyi"]
+[ext_resource type="Script" uid="uid://bw2s7mj2dnx2f" path="res://Scripts/dev/dev_panel.gd" id="18_iivbl"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ynf5e"]
 bg_color = Color(0, 0, 0, 1)
@@ -150,6 +152,20 @@ width = 128
 height = 128
 fill_from = Vector2(0.461774, 0)
 fill_to = Vector2(0, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_iivbl"]
+bg_color = Color(0.168627, 0.168627, 0.168627, 0.682353)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_7nbq1"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.140447, 0.140447, 0.140447, 0.592157)
+corner_radius_top_left = 5
+corner_radius_top_right = 5
+corner_radius_bottom_right = 5
+corner_radius_bottom_left = 5
 
 [node name="Game" type="Control"]
 layout_mode = 3
@@ -475,6 +491,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
 script = ExtResource("10_22asu")
 
 [node name="PanelContainer" type="PanelContainer" parent="GameTabs/Buttons/BuyCrateMenu"]
@@ -922,3 +939,66 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
 texture = SubResource("GradientTexture2D_85qyi")
+
+[node name="DevPanel" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchor_left = 0.808
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.18396
+grow_horizontal = 0
+grow_vertical = 2
+script = ExtResource("18_iivbl")
+
+[node name="PanelContainer" type="PanelContainer" parent="DevPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_iivbl")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="DevPanel/PanelContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="DevPanel/PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "Dev Panel"
+horizontal_alignment = 1
+
+[node name="StatGiver" type="PanelContainer" parent="DevPanel/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_7nbq1")
+script = ExtResource("18_85qyi")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="DevPanel/PanelContainer/VBoxContainer/StatGiver"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="DevPanel/PanelContainer/VBoxContainer/StatGiver/VBoxContainer"]
+layout_mode = 2
+text = "Stat Giver"
+horizontal_alignment = 1
+
+[node name="StatOption" type="OptionButton" parent="DevPanel/PanelContainer/VBoxContainer/StatGiver/VBoxContainer"]
+layout_mode = 2
+alignment = 1
+
+[node name="LineEdit" type="LineEdit" parent="DevPanel/PanelContainer/VBoxContainer/StatGiver/VBoxContainer"]
+layout_mode = 2
+placeholder_text = "Value (10e69)"
+alignment = 1
+virtual_keyboard_type = 2
+select_all_on_focus = true
+
+[node name="Button" type="Button" parent="DevPanel/PanelContainer/VBoxContainer/StatGiver/VBoxContainer"]
+layout_mode = 2
+text = "Set"
+
+[node name="SetAll" type="Button" parent="DevPanel/PanelContainer/VBoxContainer/StatGiver/VBoxContainer"]
+layout_mode = 2
+text = "Set All"
+
+[connection signal="pressed" from="DevPanel/PanelContainer/VBoxContainer/StatGiver/VBoxContainer/Button" to="DevPanel/PanelContainer/VBoxContainer/StatGiver" method="_on_button_pressed"]
+[connection signal="pressed" from="DevPanel/PanelContainer/VBoxContainer/StatGiver/VBoxContainer/SetAll" to="DevPanel/PanelContainer/VBoxContainer/StatGiver" method="_on_set_all_pressed"]

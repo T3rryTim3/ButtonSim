@@ -93,9 +93,9 @@ const RESET_LAYERS = {
 		},
 		"cost": {
 			"currency": "super",
-			"init": 2000,
+			"init": 6000,
 			"scale": 2.5,
-			"exp_growth": 0.15
+			"exp_growth": 0.2
 		},
 		"init_val": 1,
 		"scale_val": 1.4,
@@ -122,7 +122,7 @@ const RESET_LAYERS = {
 			"currency": "ultra",
 			"init": 30000,
 			"scale": 3,
-			"exp_growth": 0.25
+			"exp_growth": 0.2
 		},
 		"init_val": 1,
 		"scale_val": 1.3,
@@ -140,19 +140,20 @@ const RESET_LAYERS = {
 			"mega"
 		],
 		"multiplies": {
-			"multiplier": .2,
-			"rebirths": .2,
-			"ultra": .2,
-			"super": 1
+			"multiplier": .1,
+			"rebirths": .1,
+			"ultra": .1,
+			"super": .2,
+			"mega": 1
 		},
 		"cost": {
 			"currency": "mega",
 			"init": 400000,
 			"scale": 3.5,
-			"exp_growth": .35
+			"exp_growth": .25
 		},
 		"init_val": 1,
-		"scale_val": 3,
+		"scale_val": 1.3,
 		"exp_growth": .0
 	}
 }
@@ -173,9 +174,9 @@ var upgrades = {
 		"tags": ["prestige"],
 		"currency": "prestige_points",
 		"currency_name": "PP",
-		"get_max": func(): return len(RESET_LAYERS.keys()) - 3,
-		"get_desc": func(next:int): return "Unlock " + str(RESET_LAYERS.keys()[next+3]),
-		"get_cost": func(next:int): return B.new(60).multiply(B.new(40).power(next))
+		"get_max": func(): return len(RESET_LAYERS.keys()) - 2,
+		"get_desc": func(next:int): return "Unlock " + str(RESET_LAYERS.keys()[next+2]),
+		"get_cost": func(next:int): return B.new(60).multiply(B.new(400).power(next))
 	},
 	"PP Auto Buy": {
 		"name": "Auto Buy",
@@ -208,7 +209,7 @@ var upgrades = {
 	var total:Dictionary[String, B] = {}
 	var pp = Globals.game.get_stat("prestige_points")
 	for k in range(val):
-		total[(["cash"]+RESET_LAYERS.keys())[k]] = B.new(1).divide(pow(10, k)).multiply(pp).plus(1)
+		total[(["cash"]+RESET_LAYERS.keys())[k]] = B.new(1).multiply(pp).divide(pow(10, k)).plus(1)
 	return total
 	},
 	"PP Buy speed": {
@@ -274,7 +275,7 @@ var upgrades = {
 		"allow_refund": false,
 		"get_max": func(): return -1, # Unlimited
 		"get_desc": func(_next:int): return "Buy 1 stat crate. Cost caps at 1000.",
-		"get_cost": func(next:int): return B.new(min(100*(next+1), 1000)),
+		"get_cost": func(next:int): return B.new(min(100*(next+1), 1000000)),
 		"on_buy": func(_next:int): Globals.game.increase_crate_count("basic", 1)
 	},
 

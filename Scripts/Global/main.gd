@@ -30,6 +30,13 @@ func fill_dict(target:Dictionary, source:Dictionary) -> Dictionary:
 	
 	return target
 
+## Formats time in seconds into a HH:MM:SS format
+func format_time(time:float) -> String:
+	var seconds = int(fmod(time, 60))
+	var minutes = int(fmod(time/60, 60))
+	var hours = int(fmod(time/60/60, 60))
+	
+	return str(hours) + ":" + str(minutes) + ":" + str(seconds)
 
 #endregion
 
