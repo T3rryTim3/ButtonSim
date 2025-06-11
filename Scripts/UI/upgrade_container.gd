@@ -56,3 +56,4 @@ func _ready() -> void:
 	if not Globals.game.is_node_ready():
 		await Globals.game.ready
 	_load_upgrades()
+	visibility_changed.connect(func(): if is_visible_in_tree(): _load_upgrades())

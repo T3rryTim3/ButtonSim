@@ -1,13 +1,59 @@
 extends Node
 class_name Game
+## The main game node.
+##
+## -- Overview --
+## This handles all in-game data and manipulation of such. All data is kept within the "player" dictionary,
+## but is never modified directly from any outside script. In the event you want to modify player data
+## (E.g. spending cash), use a method within this node to do so.
+##
+## All "stats" should be bignums (B) and kept within the dictionary not nested within anything else.
+## Not doing so leads to the setter and getter functions not working. 
+##
+## -- Other data types  + Saving/loading --
+## If you ever use a data type which is not already present within the player dictionary, be sure
+## to check if it can be converted into JSON within save_manager.gd. If not, implement it or
+## consider an alternative. Do not change where stats are positioned for the sake of saving
+## and loading data.
+##
+## -- Multiplier Caching --
+## To save performance, a dictionary is kept and updated each frame with all of the multipliers.
+## Whenever adding something which multiplies other stats, implement in properly within _cache_multis().
+## Doing so allows for readability and for it to be seen in the stat index. Follow the examples within
+## the function to add your implementation.
+##
+## -- Core functions --
+## set_stat(): Used to set player stats that are directly present in the dictionary.
+## get_stat(): Self-explanitory.
+## _cache_multis() (Very important): Described in "Multiplier caching"
+## increase_stat(): Use this whenever you increase a player's stat. This will ensure that it gets
+## multiplied correctly from the cached multipliers.
+##
+## -- Adding on --
+## If you add a feature which requires different setter and getter methods, create a separate region for it.
+## Look at the upgrades and crates region for examples of how to do this.
+##
+## -- Use Config.gd --
+## Config.gd (a global script) contains data for any features such as upgrades and crates. Add your data there.
+## Do not add it anywhere else without a good reason to do so. This allows for easy balance changes
+## later on should it be needed.
+##
+## -- Why not directly? --
+## Changing stats only through these methods allows for easy changes later in development. Should you
+## change how stats work there is no need to rewrite code in a bunch of different scripts.
 
+#region Variables
+
+## Emitting this will cause main to save and exit the game to the menu.
 signal save_and_exit
 
 var scn_upgrade = preload("res://Scenes/UI/upgrade.tscn")
 var scn_currency_popup = preload("res://Scenes/UI/CurrencyPopup.tscn")
 
+## The player dictionary. Initialized at _ready().
 var player := {}
 
+## Constants for big nums. use these instead of creating a bignum where applicable for performance.
 var NUM_0 := B.new(0)
 var NUM_1 := B.new(1)
 
@@ -15,16 +61,21 @@ var _cached_stat_increases := {}
 
 var crate_reward_multis := {}
 
+## All of the cached multipliers for the frame.
 var _all_multipliers:Dictionary
+
+#endregion
 
 #region Player Data
 func get_player_data():
 	var s = {
-		"time": 69.420,
+		"time": 0.0,
 
 		"score": B.new(0),
 
 		"tokens": B.new(0),
+
+		"rank": 0,
 
 		"cash": B.new(0),
 		"multiplier": B.new(0),
@@ -93,9 +144,27 @@ func increase_crate_count(crate:String, amt:int = 1) -> void:
 	if amt > 0:
 		SignalBus.CrateGained.emit()
 
+
+## Clears all crates and their rewards according to the tag provided.
+## Tags can be found in each crate under Config.gd
+func wipe_crates_by_tag(tag:String) -> void:
+	
+	for crate in Config.crates:
+		
+		var crate_data = Config.crates[crate]
+		
+		if not ("reset_tags" in crate_data and crate_data.reset_tags.has(tag)):
+			continue
+		
+		player.crates[crate] = 0
+		
+		for reward in crate_data.rewards:
+			player.crate_rewards[reward.name] = 0
 #endregion
 
 #region Stat Management
+
+#region Changing stats
 ## Get the amount that a stat would be increased by accounting for multipliers.
 func get_stat_increase(key:String, val:B):
 
@@ -143,6 +212,17 @@ func zero_stat(stat:String) -> void:
 	player[stat] = Globals.game.NUM_0
 
 
+## Sets all reset layers to 0, including cash.
+func wipe_reset_layers() -> void:
+	
+	for layer in Config.RESET_LAYERS:
+		zero_stat(layer)
+		
+	set_stat("cash", B.new(0))
+
+#endregion
+
+#region Multiplier caching
 ## Multiply a cached value if present, creating objects if needed to do so.
 func _multiply_cache_multi(k:String,v:B,src_string:String):
 	#if v.isEqualTo(1):
@@ -187,6 +267,8 @@ func _cache_multis():
 	#return
 #endregion
 
+#endregion
+
 #region Resets
 ## Gets a reset data dict from the player
 func get_reset(stat:String) -> Variant:
@@ -204,10 +286,6 @@ func get_reset_idx(stat:String) -> int:
 			break
 
 	return idx
-
-
-func spend_reset_points(stat:String, amt:Variant) -> void:
-	player["resets"][stat].points.minusEquals(amt)
 #endregion
 
 #region Upgrades
@@ -241,6 +319,32 @@ func increase_upgrade_count(upgrade:String, amt:int=1) -> void:
 ## Reset an upgrade's buy count to zero.
 func reset_upgrade_count(upgrade:String, _amt:int=1) -> void:
 	player["upgrades"][upgrade]["purchased"] = 0
+
+## Clears all crates and their rewards according to the tag provided.
+## Tags can be found in each crate under Config.gd
+##
+## Note that this uses reset_tag and not tag like it does in
+## get_upgrades_by_tag()
+func wipe_upgrades_by_tag(tag:String) -> void:
+	
+	for upgrade in Config.upgrades:
+		
+		var upgrade_data = Config.upgrades[upgrade]
+		
+		if not ("reset_tags" in upgrade_data and upgrade_data.reset_tags.has(tag)):
+			continue
+		
+		reset_upgrade_count(upgrade)
+
+
+#endregion
+
+#region Rank
+func get_rank() -> int:
+	return int(player.rank)
+
+func get_rank_data(key) -> Dictionary:
+	return Config.ranks[key]
 #endregion
 
 #region UI Effects

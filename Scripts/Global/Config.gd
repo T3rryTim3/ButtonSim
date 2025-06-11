@@ -1,4 +1,19 @@
 extends Node
+## Config for most of the game's data.
+##
+## -- Overview --
+## This does not do much by itself, but contains data for all of the upgrades, crates, etc.
+## Not all data is here, but for large dictionaries of game data this is the best place to put it.
+##
+## The dictionaries are not constant because they contain lambdas within them, though they are
+## not meant to be changed during the game, so do not do so.
+##
+## Do note that this requires Globals.game to be set to use most of the lambda values,
+## so without a game present there will be an error; no checking is done.
+##
+## The data can get quite long, so please use regions where appropriate (See the "upgrades") variable.
+##
+## Do not add any functionality here for the game itself for organization. Only add data.
 
 const UPDATE_RATE:float = 0.5
 
@@ -163,6 +178,7 @@ var upgrades = {
 	"PP Buttons": {
 		"name": "Buttons",
 		"tags": ["prestige"],
+		"reset_tags": ["rank"],
 		"currency": "prestige_points",
 		"currency_name": "PP",
 		"get_max": func(): return 20,
@@ -172,6 +188,7 @@ var upgrades = {
 	"PP Layers": {
 		"name": "Rebirths",
 		"tags": ["prestige"],
+		"reset_tags": ["rank"],
 		"currency": "prestige_points",
 		"currency_name": "PP",
 		"get_max": func(): return len(RESET_LAYERS.keys()) - 2,
@@ -181,6 +198,7 @@ var upgrades = {
 	"PP Auto Buy": {
 		"name": "Auto Buy",
 		"tags": ["prestige"],
+		"reset_tags": ["rank"],
 		"currency": "prestige_points",
 		"currency_name": "PP",
 		"get_max": func(): return len(RESET_LAYERS.keys()),
@@ -190,6 +208,7 @@ var upgrades = {
 	"PP Free Cost": {
 		"name": "Free cost",
 		"tags": ["prestige"],
+		"reset_tags": ["rank"],
 		"currency": "prestige_points",
 		"currency_name": "PP",
 		"get_max": func(): return len(RESET_LAYERS.keys()),
@@ -199,13 +218,14 @@ var upgrades = {
 	"PP Boost": {
 		"name": "PP Boost",
 		"tags": ["prestige"],
+		"reset_tags": ["rank"],
 		"currency": "prestige_points",
 		"currency_name": "PP",
 		"get_max": func(): return len(RESET_LAYERS.keys()) + 1,
 		"get_desc": func(next:int): return "Your PP now multiplies " + str((["cash"] + RESET_LAYERS.keys() + ["All purchased."])[next]),
 		"get_cost": func(next:int): return B.new(40).multiply(B.new(1200).power(next)),
 		"get_multi": func(val:int) -> Dictionary[String, B]: 
-	# Ugly, but lambda doesnt support indentation like this.
+	# Ugly, but lambda doesnt support indentation that isn't.
 	var total:Dictionary[String, B] = {}
 	var pp = Globals.game.get_stat("prestige_points")
 	for k in range(val):
@@ -215,6 +235,7 @@ var upgrades = {
 	"PP Buy speed": {
 		"name": "Buy speed",
 		"tags": ["prestige"],
+		"reset_tags": ["rank"],
 		"currency": "prestige_points",
 		"currency_name": "PP",
 		"get_max": func(): return 20,
@@ -224,6 +245,7 @@ var upgrades = {
 	"PP PP Multi": {
 		"name": "PP Multi",
 		"tags": ["prestige"],
+		"reset_tags": ["rank"],
 		"currency": "prestige_points",
 		"currency_name": "PP",
 		"get_max": func(): return 100,
@@ -237,6 +259,7 @@ var upgrades = {
 	"Token Cash multi": {
 		"name": "Cash multiplier",
 		"tags": ["token"],
+		"reset_tags": ["rank"],
 		"currency": "tokens",
 		"currency_name": "Tokens",
 		"get_max": func(): return 1000,
@@ -247,6 +270,7 @@ var upgrades = {
 	"Token Buy speed": {
 		"name": "Buy Speed",
 		"tags": ["token"],
+		"reset_tags": ["rank"],
 		"currency": "tokens",
 		"currency_name": "Tokens",
 		"get_effect": func(val:int): return pow(0.95, val),
@@ -257,6 +281,7 @@ var upgrades = {
 	"Token PP Multi": {
 		"name": "PP Multiplier",
 		"tags": ["token"],
+		"reset_tags": ["rank"],
 		"currency": "tokens",
 		"currency_name": "Tokens",
 		"get_max": func(): return 10,
@@ -294,11 +319,13 @@ var upgrades = {
 }
 
 var crates = {
+
 	"basic": {
 		"id": "basic", # Must be the same as the key
 		"health": 10,
 		"name": "Stat crate",
 		"desc": "A basic crate. Affects various early multipliers.",
+		"reset_tags": ["rank"],
 		"cost": {
 			"currency_name": "PP",
 			"get_player_currency": func(): return Globals.game.get_stat("prestige_points"),
@@ -313,19 +340,23 @@ var crates = {
 			{"name": "Legendary", "color":Color(1,1,0.6), "weight": 0.5,"multi": {"ultra": 0.1}},
 			{"name": "Mythical", "color":Color(0.6,1,1), "weight": 0.25,"multi": {"cash": 0.5,"multiplier": 0.5,"rebirths": 0.5}},
 			{"name": "Insane", "color":Color(0.6,0.3,0.6), "weight": 0.1,"multi": {"cash": 5, "multiplier": 5}},
+			{"name": "Unfathomable", "color":Color(0.3,0.6,0.6), "weight": 0.01,"multi": {"cash": 100, "multiplier": 100, "rebirths": 100, "prestige_points": 2}},
 		]
 	},
+
 	"token": {
 		"id": "token", # Must be the same as the key
 		"health": 15,
 		"name": "Token crate",
 		"desc": "Low bonuses, but affects a bunch of stats. Even PP!",
+		"reset_tags": ["rank"],
 		"cost": {
 			"currency_name": "Tokens",
 			"get_player_currency": func(): return Globals.game.get_reset("tokens").points,
 			"spend_currency": func(amt:Variant): Globals.game.spend_reset_points("tokens", amt),
 			"get_cost": func(): return B.new(100)
 		},
+		
 		"rewards": [
 			{"name": "Dull", "color":Color(0.6,0.6,0.6), "weight": 10.0,"multi": {"cash": 0.1, "multiplier": 0.1, "rebirths": 0.1}},
 			{"name": "Decent", "color":Color(0.6,0.6,0.8), "weight": 6.0,"multi": {"cash": 0.2, "multiplier": 0.2, "rebirths": 0.1, "super": 0.05}},
@@ -348,17 +379,42 @@ var crates = {
 				"color":Color(0.6,0.6,1), 
 				"weight": 0.1, 
 				"multi": {
-					"cash": 0.1, 
-					"multiplier": 0.1, 
-					"rebirths": 0.1, 
-					"super": 0.1, 
-					"ultra": 0.1, 
-					"mega": 0.1, 
-					"hyper": 0.1, 
-					"prestige_points": 0.1
+					"cash": 0.5, 
+					"multiplier": 0.4, 
+					"rebirths": 0.3, 
+					"super": 0.2, 
+					"ultra": 0.2, 
+					"mega": 0.2, 
+					"hyper": 0.2, 
+					"prestige_points": 0.2
 				}
 			},
 		]
+	},
+
+	# Keep these together, preferably at the end.
+	#region Rank crates
+	"rank1": {
+		"id": "rank1", # Must be the same as the key
+		"health": 30,
+		"name": "Rank 1 Crate",
+		"desc": "Reward for reaching rank 1. Only 1 reward.",
+		"reset_tags": [],
+		"rewards": [
+			{"name": "Rank 1", "color":Color(0.8,0.4,0.4), "weight": 10.0,"multi": {"cash": 1, "prestige_points": 0.5}},
+		]
+	},
+	#endregion
+}
+
+# NOTE: Most rank logic done in rank.gd to avoid a bunch of lambdas
+var ranks = {
+	1: {
+		"requirement": {
+			"text": "30M PP",
+			"get_progress": func() -> float: return min(Globals.game.get_stat("prestige_points").divide(B.new(3, 7)).mantissa, 1)
+		},
+		"unlock": "Mastery menu, rank 1 crate"
 	}
 }
 

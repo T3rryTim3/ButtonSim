@@ -22,6 +22,7 @@ func load_slots():
 		node_slot.NameChanged.connect( func(new): Globals.save_manager.change_slot_name(i, new) )
 		node_slot.WipeClicked.connect( func(): _delete_slot(i, save_data) ; load_slots() )
 		node_slot.PlayClicked.connect( func(): Globals.main.load_game_from_slot(i) )
+		node_slot.DuplicateClicked.connect( func(): Globals.save_manager.duplicate_slot(i) ; load_slots() )
 		
 		slot_container.add_child(node_slot)
 		i += 1

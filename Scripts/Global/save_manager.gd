@@ -97,6 +97,16 @@ func delete_slot(idx:int=0) -> void:
 	savedata.slots.pop_at(idx)
 	_write_to_save(savedata)
 
+func duplicate_slot(idx:int=0) -> void:
+	var savedata:Dictionary = get_all_save_data()
+	
+	if idx >= len(savedata["slots"]):
+		printerr("Can't duplicate slot: No slot found at index " + str(idx) + ".")
+		return
+	
+	savedata.slots.append(savedata.slots[idx])
+	_write_to_save(savedata)
+
 #endregion
 
 #region Save Data

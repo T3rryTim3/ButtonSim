@@ -11,12 +11,6 @@ var current_slot:int
 #region Utility
 ## Fills in a dictionary's missing keys and values based on a
 ## passed template. 
-##
-## If match_type is enabled (default), the item
-## will be replaced if its value differs in type from source.
-##
-## If delete_unused is enabled (default), keys in target not present
-## in source will also be deleted.
 func fill_dict(target:Dictionary, source:Dictionary) -> Dictionary:
 	
 	for k in source:
@@ -91,13 +85,13 @@ func save_game_and_exit() -> void:
 #endregion
 
 #region Built-in functions
-# Debug controls; delete during production
-func _input(event: InputEvent) -> void:
-	if event is InputEventKey:
-		if event.pressed:
-			match event.keycode:
-				KEY_P:
-					save_manager.save_game(Globals.game.player, 0)
+# Debug controls; currently unused
+#func _input(event: InputEvent) -> void:
+	#if event is InputEventKey:
+		#if event.pressed:
+			#match event.keycode:
+				#KEY_P:
+					#save_manager.save_game(Globals.game.player, 0)
 
 
 func _notification(what: int) -> void:
