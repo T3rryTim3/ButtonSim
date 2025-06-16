@@ -11,7 +11,8 @@ class_name Upgrade
 enum DisplayTypes {
 	PRESTIGE,
 	TOKEN,
-	CRATE
+	CRATE,
+	MASTERY
 }
 
 #region Properties
@@ -62,7 +63,7 @@ func _load_data() -> void:
 	$VBoxContainer2/HBoxContainer/Purchased.text = count_display
 	
 	if not _exceeds_max():
-		$VBoxContainer2/Desc.text = upgrade_data["get_desc"].call(upgrade_count)
+		$VBoxContainer2/Desc.text = upgrade_data["get_desc"].call(upgrade_count+1)
 	else:
 		$VBoxContainer2/Desc.text = "Max purchases reached."
 	
@@ -122,4 +123,8 @@ func _ready() -> void:
 			self_modulate = Color("ffbd24")
 			$VBoxContainer2/HBoxContainer/Title.add_theme_color_override("font_color", Color("2c1d02"))
 			$VBoxContainer2/HBoxContainer/Purchased.add_theme_color_override("font_color", Color("2c1d02"))
+		DisplayTypes.MASTERY:
+			self_modulate = Color("81a7e3")
+			$VBoxContainer2/HBoxContainer/Title.add_theme_color_override("font_color", Color("b8bcff"))
+			$VBoxContainer2/HBoxContainer/Purchased.add_theme_color_override("font_color", Color("966ffe"))
 #endregion

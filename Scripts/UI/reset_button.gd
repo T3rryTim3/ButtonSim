@@ -14,8 +14,9 @@ var token_time_remaining:float
 var update_cooldown:float = 2
 var current_update_cooldown:float = 0
 
-var init_cost:float
-var init_gain:float
+var base_cost:B
+var base_gain:B
+
 var button_cost:B ## Cost of the button after multiplying by index
 var button_gain:B ## Gain of the button after muiltiplying by index
 
@@ -31,7 +32,7 @@ func can_buy() -> bool:
 	update_stats()
 	return Globals.game.get_stat(currency).exceeds(cost)
 
-func _get_button_cost(button_index:int):
+func _get_button_cost(init_cost, button_index:int):
 
 	var c = B.new(init_cost)
 	c = c.multiply(B.new(Config.RESET_LAYERS[key]["cost"]["scale"]).power(button_index))
@@ -41,7 +42,7 @@ func _get_button_cost(button_index:int):
 
 	return c
 
-func _get_button_gain(button_index:int):
+func _get_button_gain(init_gain, button_index:int):
 
 	var g = B.new(init_gain)
 	g.multiplyEquals(B.new(Config.RESET_LAYERS[key]["scale_val"]).power(button_index))
@@ -62,6 +63,7 @@ func buy(bulk:int=1, auto:bool=false):
 
 	if not auto:
 		Globals.game.currency_popup("+" + str(gain) + " " + key.capitalize(), Config.RESET_LAYERS[key]["color"])
+		
 		if token_ready:
 			
 			var gain_amt = randi_range(Config.TOKEN_GAIN_INTERVAL[0],Config.TOKEN_GAIN_INTERVAL[1])
@@ -76,6 +78,8 @@ func buy(bulk:int=1, auto:bool=false):
 			
 		else: # Avoid both sounds playing at once (It sounds weird)
 			SoundManager.play_audio("res://Assets/Sound/UI SFX/StatBuy2.wav", "SFX", randf_range(0.4,1.1))
+		
+		Globals.game.add_mastery_progress(key, bulk)
 
 	for i in range(bulk):
 		if not can_buy():
@@ -86,27 +90,20 @@ func buy(bulk:int=1, auto:bool=false):
 			for reset in Config.RESET_LAYERS[key]["reset"]:
 				Globals.game.zero_stat(reset)
 
-		Globals.game.increase_stat(key, gain)
+		Globals.game.increase_stat(key, base_gain)
 		bought += 1
 
 func update_stats() -> void: # Updates internal cost and gain values
-	button_cost = _get_button_cost(button_idx)
-	button_gain = _get_button_gain(button_idx)
-	cost = button_cost
-	gain = button_gain
-
-## Update a button's data
-func update():
-
+	cost = base_cost
+	gain = Globals.game.get_stat_increase(key, base_gain)
 	text = "Buy " + str(gain) + " " + key + " - " + str(cost) + " " + currency
-
-	disabled = not Globals.game.get_stat(currency).exceeds(cost)
 
 func _process(delta: float) -> void:
 	#current_update_cooldown += delta
 	#if current_update_cooldown > update_cooldown:
 		#current_update_cooldown = 0
-	gain = Globals.game.get_stat_increase(key, button_gain)
+
+	disabled = not can_buy()
 
 	## Hold-to-buy
 	if buying:
@@ -132,12 +129,13 @@ func _process(delta: float) -> void:
 		token_ready = false
 		_reset_token_time()
 
-	update()
-
 func _ready():
 	currency = Config.RESET_LAYERS[key]["cost"]["currency"]
-	init_cost = Config.RESET_LAYERS[key]["cost"]["init"]
-	init_gain = Config.RESET_LAYERS[key]["init_val"]
+	var init_cost = Config.RESET_LAYERS[key]["cost"]["init"]
+	var init_gain = Config.RESET_LAYERS[key]["init_val"]
+	
+	base_cost = _get_button_cost(init_cost, button_idx)
+	base_gain = _get_button_gain(init_gain, button_idx)
 
 	button_down.connect(func(): buy_time = 0; buying = true; bought = 0)
 

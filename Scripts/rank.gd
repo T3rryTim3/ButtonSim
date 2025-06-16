@@ -16,20 +16,31 @@ func _update_rank_data() -> void:
 
 	var next_rank = get_rank() + 1
 	var next_rank_data = get_rank_data(next_rank)
-	var progress = next_rank_data.requirement.get_progress.call()
+	
+	if next_rank_data:
+		var progress = next_rank_data.requirement.get_progress.call()
 
-	%RankUnlockDisplay.text = "Next rank will unlock: " + next_rank_data.unlock
-	%RankReqDisplay.text = "Req. " + next_rank_data.requirement.text + " (" + str(int(progress*100)) + "%)"
+		%RankUnlockDisplay.text = "Next rank will unlock: " + next_rank_data.unlock
+		%RankReqDisplay.text = "Req. " + next_rank_data.requirement.text + " (" + str(int(progress*100)) + "%)"
 
 
-	if progress >= 1:
+		if progress >= 1:
+			%RankReqDisplay.add_theme_color_override("font_color", Color(0,1,0))
+			%RankUpButton.self_modulate = Color(.2,1,.2)
+			$Gradient.self_modulate = Color(.2,1,.2) 
+		else:
+			%RankReqDisplay.add_theme_color_override("font_color", Color(1,0,0))
+			%RankUpButton.self_modulate = Color(1,0,0)
+			$Gradient.self_modulate = Color(1,0,0)
+	
+	else: # Final rank reached
+		%RankUnlockDisplay.text = "Maximum rank reached."
+		%RankReqDisplay.text = "Maximum rank reached."
+		
 		%RankReqDisplay.add_theme_color_override("font_color", Color(0,1,0))
 		%RankUpButton.self_modulate = Color(.2,1,.2)
 		$Gradient.self_modulate = Color(.2,1,.2) 
-	else:
-		%RankReqDisplay.add_theme_color_override("font_color", Color(1,0,0))
-		%RankUpButton.self_modulate = Color(1,0,0)
-		$Gradient.self_modulate = Color(1,0,0)
+
 #endregion
 
 #region Ranking
@@ -38,6 +49,10 @@ func _rank_up():
 
 	var next_rank = get_rank() + 1
 	var next_rank_data = get_rank_data(next_rank)
+	
+	if not next_rank_data:
+		return
+	
 	var progress = next_rank_data.requirement.get_progress.call()
 	
 	if progress < 1:
@@ -49,9 +64,15 @@ func _rank_up():
 	Globals.game.zero_stat("prestige_points")
 	Globals.game.zero_stat("tokens")
 	
+	Globals.game.set_rank(next_rank)
+	
+	match next_rank:
+		1:
+			Globals.game.increase_crate_count("rank1", 1)
+	
 	_update_rank_data()
 	
-	print("Done.")
+	SoundManager.play_audio("res://Assets/Sound/UI SFX/RankUp.wav")
 
 #endregion
 

@@ -454,16 +454,6 @@ func plusEquals(n) -> B:
 	exponent = new_value.exponent
 	return self
 
-## Adds the float/int n to the current bignum.
-func quickPlusEquals(n:Variant) -> B:
-	if (n is not float) and float(n is not int):
-		printerr("quickPlus only takes integers or floats.")
-		return self
-	mantissa += n
-	B.normalize(self)
-	return self
-
-
 ## Equivalent of [code]B - n[/code]
 func minus(n) -> B:
 	return B.subtract(self, n)

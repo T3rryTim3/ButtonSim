@@ -5,6 +5,7 @@ class_name ResetLayer
 @onready var title_label:Label = $ScrollContainer/VBoxContainer/Label
 @onready var desc_vbox:VBoxContainer = $ScrollContainer/VBoxContainer/Desc/VBoxContainer/VBoxContainer
 @onready var autobuy_button:Button = $ScrollContainer/VBoxContainer/Autobuy
+@onready var mastery_progress_bar = $ScrollContainer/VBoxContainer/HBoxContainer/ProgressBar
 
 var reset_button = preload("res://Scenes/UI/reset_button.tscn")
 
@@ -20,8 +21,10 @@ var currency:String
 
 var last_button_count:int = 0
 
+
 func _get_button_count():
 	return 10 + Globals.game.get_upgrade_count("PP Buttons")*5
+
 
 ## Buy the most expensive button
 func buy_highest_cost(bulk:int) -> void:
@@ -42,13 +45,25 @@ func buy_highest_cost(bulk:int) -> void:
 	if highest:
 		highest.buy(bulk, true)
 
-## Reload the text displayed
+
+## Reload the text displayed / Other information
 func _reload() -> void:
+	
 	# Update total bonuses
 	for child in desc_vbox.get_children():
 		if child.has_meta("mult"):
 			var mult = child.get_meta("mult")
 			child.text = mult.capitalize() + ": x" + str((Globals.game.get_stat(key).multiply(Config.RESET_LAYERS[key]["multiplies"][mult])))
+
+	# Update mastery progress
+	var mastery = Globals.game.get_mastery(key)
+	mastery_progress_bar.visible = Config.has_unlock(Config.Unlocks.MASTERY)
+	
+	if mastery and mastery_progress_bar.visible:
+		var prog = min(1, B.division(mastery.progress, Config.mastery[key].max).toFloat())
+		mastery_progress_bar.value = prog
+		title_label.text = key.capitalize() + " - lvl. " + str(mastery.current)
+		title_label.text = title_label.text.trim_suffix(".0")
 
 func _update_autobuy():
 	var autobuy_tier = Globals.game.get_upgrade_count("PP Auto Buy")
@@ -61,11 +76,14 @@ func _update_autobuy():
 
 	autobuying = $ScrollContainer/VBoxContainer/Autobuy.button_pressed
 
+
 func _process(delta: float) -> void:
+
 	_reload()
 
 	_update_autobuy()
 
+	# Done this way to allow multiple autobuys per frame
 	if autobuying:
 		buy_time += delta
 		var to_buy = buy_time / Globals.game.get_stat("autobuy_speed")
@@ -73,6 +91,7 @@ func _process(delta: float) -> void:
 	else:
 		buy_time = 0
 		bought = 0
+
 
 func update_button_count(count:int=10) -> void:
 
@@ -92,6 +111,7 @@ func update_button_count(count:int=10) -> void:
 			button.reset_layer = self
 			button_container.add_child(button)
 
+
 func _autobuy_pressed(toggled) -> void:
 	SoundManager.play_audio("res://Assets/Sound/UI SFX/Click1.wav", "SFX")
 	if toggled:
@@ -99,16 +119,16 @@ func _autobuy_pressed(toggled) -> void:
 	else:
 		autobuy_button.text = "Autobuy - Disabled"
 
+
 func _ready() -> void:
 	if not Globals.game.is_node_ready():
 		await Globals.game.ready
-	# Set base stuff up
+	
 	title_label.text = key.capitalize()
 	modulate = Config.RESET_LAYERS[key]["color"]
 
 	currency = Config.RESET_LAYERS[key]["cost"]["currency"]
 
-	# Create buttons
 	update_button_count(_get_button_count())
 
 	# Create the total bonuses display

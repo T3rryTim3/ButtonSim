@@ -1,0 +1,40 @@
+[gd_scene load_steps=3 format=3 uid="uid://bbpvajysju1tf"]
+
+[ext_resource type="Script" uid="uid://dvkxx5ac7102o" path="res://Scenes/UI/mastery_template.gd" id="1_2axh6"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_22asu"]
+content_margin_left = 12.0
+content_margin_top = 12.0
+content_margin_right = 12.0
+content_margin_bottom = 12.0
+bg_color = Color(0.24, 0.24, 0.24, 0.792157)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
+[node name="MasteryTemplate" type="PanelContainer"]
+theme_override_styles/panel = SubResource("StyleBoxFlat_22asu")
+script = ExtResource("1_2axh6")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="name" type="Label" parent="VBoxContainer"]
+layout_mode = 2
+text = "Multiplier"
+horizontal_alignment = 1
+
+[node name="ProgressBar" type="ProgressBar" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+max_value = 1.0
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_constants/separation = 60
+
+[node name="current" type="Label" parent="VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+text = "Current Multiplier:"

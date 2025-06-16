@@ -130,7 +130,7 @@ theme_override_colors/font_shadow_color = Color(0.0468, 0.20696, 0.39, 1)
 theme_override_constants/shadow_offset_x = 1
 theme_override_constants/shadow_offset_y = 1
 theme_override_font_sizes/font_size = 20
-text = "v0.0.0-alpha"
+text = "v0.2.0-prealpha"
 
 [node name="SlotSelect" type="Control" parent="Select/MarginContainer/VBoxContainer"]
 layout_mode = 2

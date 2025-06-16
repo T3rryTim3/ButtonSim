@@ -15,6 +15,7 @@ extends Node
 ##
 ## Do not add any functionality here for the game itself for organization. Only add data.
 
+#region Constants
 const UPDATE_RATE:float = 0.5
 
 var MIN_PRESTIGE_SCORE:float = 10
@@ -29,7 +30,21 @@ var PP_BONUS_DIV_SCALE:float = 10
 var TOKEN_DELAY_INTERVAL:Array[float] = [60,90]
 var TOKEN_EXPIRE_INTERVAL:Array[float] = [5,15]
 var TOKEN_GAIN_INTERVAL:Array[int] = [1,3]
+#endregion
 
+#region Enums
+
+# NOTE: Do no add enum data into savedata for the sake of allowing changes
+
+## All of the game's unlocks.
+## Add a comment describing what each unlocks, as well as a fitting name.
+enum Unlocks {
+	MASTERY # Unlocks the mastery tab
+}
+
+#endregion
+
+# If updating, add a respective mastery entry
 const RESET_LAYERS = {
 	"multiplier": {
 		"color": Color(1,.4,.4),
@@ -314,8 +329,23 @@ var upgrades = {
 		"get_desc": func(_next:int): return "Buy 1 token crate.",
 		"get_cost": func(_next:int): return B.new(20),
 		"on_buy": func(_next:int): Globals.game.increase_crate_count("token", 1)
-	}
+	},
 	#endregion
+	
+	#region Mastery
+	"Mastery Gain": {
+		"name": "Mastery Increase",
+		"tags": ["mastery"],
+		"currency": "prestige_points",
+		"currency_name": "Prestige Points",
+		"allow_refund": false,
+		"get_max": func(): return 8,
+		"get_desc": func(next:int): return "Mastery gain multiplied by " + str(B.new(3).power(next)),
+		"get_cost": func(next:int): return B.new(1000).multiply(B.new(10).power(next)),
+		"get_multi": func(val:int) -> Dictionary[String, B]: return {"mastery":B.new(3).power(val)},
+	},
+	#endregion
+	
 }
 
 var crates = {
@@ -418,8 +448,42 @@ var ranks = {
 	}
 }
 
+var mastery = {
+	"multiplier": {
+		"max": 30, # Max progress; supports int and bignum
+		"get_multi": func(current:B): return current.divideEquals(4).plusEquals(1)
+	},
+	"rebirths": {
+		"max": 100,
+		"get_multi": func(current:B): return current.divideEquals(4).plusEquals(1)
+	},
+	"super": {
+		"max": 1000,
+		"get_multi": func(current:B): return current.divideEquals(4).plusEquals(1)
+	},
+	"ultra": {
+		"max": 10000,
+		"get_multi": func(current:B): return current.divideEquals(4).plusEquals(1)
+	},
+	"mega": {
+		"max": 10000,
+		"get_multi": func(current:B): return current.divideEquals(4).plusEquals(1)
+	},
+	"hyper": {
+		"max": 100000,
+		"get_multi": func(current:B): return current.divideEquals(4).plusEquals(1)
+	},
+}
+
 ## Reorganized reset data for the multipliers. Done to save performance.
 var reset_stat_multis = {}
+
+func has_unlock(unlock:Unlocks) -> bool:
+	match unlock:
+		Unlocks.MASTERY:
+			return Globals.game.get_rank() >= 1
+		_:
+			return false
 
 func _ready() -> void:
 

@@ -98,7 +98,11 @@ func get_player_data():
 		"upgrades": {},
 
 		"crates": {},
-		"crate_rewards": {}
+		"crate_rewards": {},
+
+		"mastery": {},
+		
+		"cheats": {} # Only used in the dev panel. stat-multiplier pairs of data.
 
 	}
 
@@ -263,6 +267,23 @@ func _cache_multis():
 					"Crate Reward - " + reward["name"]
 				)
 	
+	# Mastery
+	for mastery in player.mastery:
+		var multi = player.mastery[mastery]
+		_multiply_cache_multi(
+			mastery, 
+			multi["multi"],
+			"Mastery - " + mastery
+		)
+	
+	# Cheats; Dev menu multipliers
+	for cheat in player.cheats:
+		_multiply_cache_multi(
+			cheat, 
+			player.cheats[cheat],
+			"Cheat - " + cheat
+		)
+	
 	#print("----------")
 	#return
 #endregion
@@ -320,6 +341,7 @@ func increase_upgrade_count(upgrade:String, amt:int=1) -> void:
 func reset_upgrade_count(upgrade:String, _amt:int=1) -> void:
 	player["upgrades"][upgrade]["purchased"] = 0
 
+
 ## Clears all crates and their rewards according to the tag provided.
 ## Tags can be found in each crate under Config.gd
 ##
@@ -340,11 +362,59 @@ func wipe_upgrades_by_tag(tag:String) -> void:
 #endregion
 
 #region Rank
+## Sets the player's rank.
+func set_rank(val:int) -> void:
+	player.rank = val
+
+
+## Gets the player's rank
 func get_rank() -> int:
 	return int(player.rank)
 
+
+## Returns the dictionary of rank data based upon the key. Returns {} if no rank is found.
 func get_rank_data(key) -> Dictionary:
+	
+	if not key in Config.ranks:
+		return {}
+	
 	return Config.ranks[key]
+#endregion
+
+#region Mastery
+## Returns the mastery dictionary for a given key.
+func get_mastery(key:String) -> Dictionary:
+	if key in player.mastery:
+		return player.mastery[key]
+	else:
+		return {}
+
+
+## Updates the progress of a mastery
+func add_mastery_progress(key:String, amt:Variant) -> void:
+	
+	if not key in Config.mastery:
+		return
+	
+	if not key in player.mastery:
+		
+		player.mastery[key] = {
+			"multi": B.new(1), # The multiplier of the mastery; calculated
+			"current": B.new(0), # The amount of mastery levels
+			"progress": B.new(0) # The progress toward the next level.
+		}
+		
+		return
+	
+	amt = get_stat_increase("mastery", B.new(amt))
+	
+	player.mastery[key].progress.plusEquals(amt)
+	
+	if player.mastery[key].progress.exceeds(Config.mastery[key].max):
+		player.mastery[key].current.plusEquals(B.roundDown(player.mastery[key].progress.divide(Config.mastery[key].max))) 
+		player.mastery[key].multi = Config.mastery[key].get_multi.call(B.new(player.mastery[key].current))
+		player.mastery[key].progress = B.new(0)
+
 #endregion
 
 #region UI Effects
