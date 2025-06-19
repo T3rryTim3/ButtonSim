@@ -1,4 +1,4 @@
-[gd_scene load_steps=3 format=3 uid="uid://bbpvajysju1tf"]
+[gd_scene load_steps=5 format=3 uid="uid://bbpvajysju1tf"]
 
 [ext_resource type="Script" uid="uid://dvkxx5ac7102o" path="res://Scenes/UI/mastery_template.gd" id="1_2axh6"]
 
@@ -12,6 +12,38 @@ corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2axh6"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.39, 0.39, 0.39, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8q6uo"]
+content_margin_left = 8.0
+content_margin_top = 8.0
+content_margin_right = 8.0
+content_margin_bottom = 8.0
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.63, 0.63, 0.63, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
 
 [node name="MasteryTemplate" type="PanelContainer"]
 theme_override_styles/panel = SubResource("StyleBoxFlat_22asu")
@@ -38,3 +70,9 @@ theme_override_constants/separation = 60
 [node name="current" type="Label" parent="VBoxContainer/HBoxContainer2"]
 layout_mode = 2
 text = "Current Multiplier:"
+
+[node name="PrestigeButton" type="Button" parent="VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+theme_override_styles/disabled = SubResource("StyleBoxFlat_2axh6")
+theme_override_styles/normal = SubResource("StyleBoxFlat_8q6uo")
+text = "Prestige!"

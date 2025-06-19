@@ -60,7 +60,7 @@ func _reload() -> void:
 	mastery_progress_bar.visible = Config.has_unlock(Config.Unlocks.MASTERY)
 	
 	if mastery and mastery_progress_bar.visible:
-		var prog = min(1, B.division(mastery.progress, Config.mastery[key].max).toFloat())
+		var prog = Globals.game.get_mastery_percent(key)
 		mastery_progress_bar.value = prog
 		title_label.text = key.capitalize() + " - lvl. " + str(mastery.current)
 		title_label.text = title_label.text.trim_suffix(".0")

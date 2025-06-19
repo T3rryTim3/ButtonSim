@@ -610,11 +610,17 @@ script = ExtResource("12_7t8sx")
 layout_mode = 2
 split_offset = 600
 
-[node name="VBoxContainer" type="VBoxContainer" parent="GameTabs/Mastery/MasteryMenu/HSplitContainer"]
+[node name="ScrollContainer" type="ScrollContainer" parent="GameTabs/Mastery/MasteryMenu/HSplitContainer"]
 layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GameTabs/Mastery/MasteryMenu/HSplitContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 theme_override_constants/separation = 10
 
-[node name="MasteryTemplate" parent="GameTabs/Mastery/MasteryMenu/HSplitContainer/VBoxContainer" instance=ExtResource("13_mg4q0")]
+[node name="MasteryTemplate" parent="GameTabs/Mastery/MasteryMenu/HSplitContainer/ScrollContainer/VBoxContainer" instance=ExtResource("13_mg4q0")]
 layout_mode = 2
 
 [node name="PanelContainer" type="PanelContainer" parent="GameTabs/Mastery/MasteryMenu/HSplitContainer"]
@@ -628,7 +634,18 @@ layout_mode = 2
 layout_mode = 2
 text = "-- Mastery --
 Manually buy buttons to earn mastery for that stat!
-Mastery increases the multiplier of whatever stat you buy."
+Mastery increases the multiplier of whatever stat you buy.
+
+When you reach enough mastery, prestige it to
+reset your mastery for a bonus to its multiplier and level
+requirement, and gain 1 mastery point.
+"
+horizontal_alignment = 1
+
+[node name="MasteryPointsDisplay" type="Label" parent="GameTabs/Mastery/MasteryMenu/HSplitContainer/PanelContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "You have 0 Mastery Points"
 horizontal_alignment = 1
 
 [node name="UpgradeContainer" parent="GameTabs/Mastery/MasteryMenu/HSplitContainer/PanelContainer/VBoxContainer" instance=ExtResource("7_7t8sx")]

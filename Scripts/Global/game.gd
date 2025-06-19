@@ -22,6 +22,10 @@ class_name Game
 ## Doing so allows for readability and for it to be seen in the stat index. Follow the examples within
 ## the function to add your implementation.
 ##
+## Another thing to note is that if you have a main multiplier and sub-multipliers (For example
+## mastery progress), use a dot '.' to denote the sub multiplier. This does not have an effect,
+## but should be done to ensure consitency.
+##
 ## -- Core functions --
 ## set_stat(): Used to set player stats that are directly present in the dictionary.
 ## get_stat(): Self-explanitory.
@@ -84,7 +88,9 @@ func get_player_data():
 		"ultra":B.new(0),
 		"mega":B.new(0),
 		"hyper":B.new(0),
+
 		"prestige_points": B.new(0),
+		"mastery_points": B.new(0),
 
 		"resets": {
 			"prestige": {
@@ -173,7 +179,7 @@ func wipe_crates_by_tag(tag:String) -> void:
 func get_stat_increase(key:String, val:B):
 
 	if key not in player:
-		print_debug("Warning: Key not found for increase.")
+		print_debug("Warning: Key '" + key + "' not found for increase.")
 	
 	if key in _all_multipliers:
 		return val.multiply(_all_multipliers[key].val)
@@ -198,6 +204,8 @@ func increase_stat(key:String, val:Variant):
 
 ## Gets a stat from the player
 func get_stat(stat:String) -> Variant:
+	if stat not in player:
+		player[stat] = get_player_data()[stat]
 	return player[stat]
 
 
@@ -390,29 +398,86 @@ func get_mastery(key:String) -> Dictionary:
 		return {}
 
 
+## Gets the progress (0-1) of a given mastery.
+func get_mastery_percent(key:String) -> float:
+	
+	var mastery = get_mastery(key)
+	
+	if mastery:
+		return min(1, B.division(mastery.progress, Config.mastery.get_level_req.call(mastery.prestige)).toFloat())
+	
+	return 0.0
+
+
+## Returns true only if the player has met the prestige requirements for the
+## passed mastery.
+func can_prestige_mastery(key:String) -> bool:
+	
+	var mastery = get_mastery(key)
+	
+	if not mastery:
+		return false
+	
+	var target_level = Config.mastery.get_prestige_level.call(mastery.prestige)
+	
+	return mastery.current.exceeds(target_level)
+
+
+## Prestiges mastery by a given key. Checks done within the function. 
+## Returns true if successful.
+func prestige_mastery(key:String) -> bool:
+	
+	if not key in player.mastery:
+		return false
+	
+	if not can_prestige_mastery(key):
+		return false
+	
+	player.mastery[key].prestige.plusEquals(1)
+	player.mastery[key].progress = B.new(0)
+	player.mastery[key].current = B.new(0)
+	player.mastery[key].multi = B.new(1)
+	
+	increase_stat("mastery_points", 1)
+	
+	return true
+	
+
 ## Updates the progress of a mastery
 func add_mastery_progress(key:String, amt:Variant) -> void:
 	
-	if not key in Config.mastery:
-		return
+	#if not key in Config.mastery:
+		#return
 	
 	if not key in player.mastery:
 		
 		player.mastery[key] = {
-			"multi": B.new(1), # The multiplier of the mastery; calculated
+			"multi": B.new(1), # The multiplier of the mastery; calculated on increase
 			"current": B.new(0), # The amount of mastery levels
-			"progress": B.new(0) # The progress toward the next level.
+			"progress": B.new(0), # The progress toward the next level.
+			"prestige": B.new(0), # The current prestige level. Increases level req and multi.
 		}
-		
-		return
 	
 	amt = get_stat_increase("mastery", B.new(amt))
 	
+	# Accout for mastery.key multipliers
+	if "mastery." + key in _all_multipliers:
+		amt = amt.multiplyEquals(_all_multipliers["mastery." + key]["val"])
+	
+	print(key)
+	
 	player.mastery[key].progress.plusEquals(amt)
 	
-	if player.mastery[key].progress.exceeds(Config.mastery[key].max):
-		player.mastery[key].current.plusEquals(B.roundDown(player.mastery[key].progress.divide(Config.mastery[key].max))) 
-		player.mastery[key].multi = Config.mastery[key].get_multi.call(B.new(player.mastery[key].current))
+	var level_req = Config.mastery.get_level_req.call(player.mastery[key].prestige)
+	
+	if player.mastery[key].progress.exceeds(level_req):
+		
+		player.mastery[key].current.plusEquals(B.roundDown(player.mastery[key].progress.divide(level_req))) 
+		
+		# Cap level at max for the prestige
+		player.mastery[key].current = B.minValue(player.mastery[key].current,  Config.mastery.get_prestige_level.call(player.mastery[key].prestige))
+		
+		player.mastery[key].multi = Config.mastery.get_multi.call(player.mastery[key].prestige, player.mastery[key].current)
 		player.mastery[key].progress = B.new(0)
 
 #endregion

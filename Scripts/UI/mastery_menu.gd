@@ -1,7 +1,8 @@
 extends PanelContainer
 
-@onready var mastery_vbox = $HSplitContainer/VBoxContainer
+@onready var mastery_vbox = $HSplitContainer/ScrollContainer/VBoxContainer
 @onready var mastery_template = preload("res://Scenes/UI/mastery_template.tscn")
+
 
 func load_mastery_items() -> void:
 	
@@ -17,6 +18,20 @@ func load_mastery_items() -> void:
 		mastery.set_meta("key", layer)
 		
 		mastery_vbox.add_child(mastery)
+		mastery.PrestigeClicked.connect(prestige_mastery.bind(layer))
+
+
+func prestige_mastery(key:String) -> void:
+	
+	var mastery = Globals.game.get_mastery(key)
+	
+	if not mastery:
+		return
+	
+	Globals.game.prestige_mastery(key)
+	
+	%MasteryPointsDisplay.text = "You have " + str(Globals.game.get_stat("mastery_points")).trim_suffix(".0") + " Mastery points."
+
 
 func _process(delta: float) -> void:
 	
@@ -29,23 +44,10 @@ func _process(delta: float) -> void:
 			continue
 		
 		var key = child.get_meta("key")
-		var mastery = Globals.game.get_mastery(key)
 		
-		var prog:float
-		var multi:B
-		var current:B
-		
-		if mastery:
-			prog = min(1, B.division(mastery.progress, Config.mastery[key].max).toFloat())
-			multi = mastery.multi
-			current = mastery.current
-		
-		else:
-			prog = 0
-			multi = B.new(2)
-			current = B.new(0)
-		
-		child.update(prog, multi, current, key)
+		child.update(key)
+
 
 func _ready() -> void:
 	load_mastery_items()
+	%MasteryPointsDisplay.text = "You have " + str(Globals.game.get_stat("mastery_points")).trim_suffix(".0") + " Mastery points."

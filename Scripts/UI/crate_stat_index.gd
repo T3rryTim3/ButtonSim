@@ -45,7 +45,7 @@ func load_tree() -> void:
 			# Set defaults
 			var text = ""
 			for multi in reward.multi:
-				text += ", " + multi.capitalize() + " x" + str(reward.multi[multi])
+				text += ", " + multi.capitalize() + " x" + str(reward.multi[multi]+1)
 			text = text.lstrip(", ")
 			reward_item.set_text(2, text)
 	
@@ -69,7 +69,7 @@ func update_tree() -> void:
 				
 				if reward_count > 0:
 					for multi in reward.multi:
-						text += ", " + multi.capitalize() + " x" + str(reward.multi[multi] * reward_count)
+						text += ", " + multi.capitalize() + " x" + str(reward.multi[multi] * reward_count + 1)
 					text = text.lstrip(", ")
 				else:
 					text = "N/A"

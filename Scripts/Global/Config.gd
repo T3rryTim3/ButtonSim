@@ -344,6 +344,32 @@ var upgrades = {
 		"get_cost": func(next:int): return B.new(1000).multiply(B.new(10).power(next)),
 		"get_multi": func(val:int) -> Dictionary[String, B]: return {"mastery":B.new(3).power(val)},
 	},
+	"Mastery Multiplier Impact": {
+		"name": "Multiplier Impact",
+		"tags": ["mastery"],
+		"currency": "mastery_points",
+		"currency_name": "Mastery Points",
+		"allow_refund": true,
+		"get_max": func(): return 5,
+		"get_desc": func(next:int): return ["Each stat now increases its multiplier gained.", "Multiplier effect increased"][min(1,next-1)],
+		"get_cost": func(next:int): return B.new(1),
+		"get_multi": 
+			func(val:int) -> Dictionary[String, B]: 
+				
+				var dict : Dictionary[String, B] = {}
+				
+				for layer in RESET_LAYERS:
+					
+					var stat = B.new(Globals.game.get_stat(layer))
+					var multi = 1
+					
+					if stat.exceeds(1):
+						multi = B.new(Globals.game.get_stat(layer)).absLog10() * val
+					
+					dict["mastery." + layer] = B.maxValue(multi, B.new(1))
+				
+				return dict,
+	},
 	#endregion
 	
 }
@@ -448,31 +474,10 @@ var ranks = {
 	}
 }
 
-var mastery = {
-	"multiplier": {
-		"max": 30, # Max progress; supports int and bignum
-		"get_multi": func(current:B): return current.divideEquals(4).plusEquals(1)
-	},
-	"rebirths": {
-		"max": 100,
-		"get_multi": func(current:B): return current.divideEquals(4).plusEquals(1)
-	},
-	"super": {
-		"max": 1000,
-		"get_multi": func(current:B): return current.divideEquals(4).plusEquals(1)
-	},
-	"ultra": {
-		"max": 10000,
-		"get_multi": func(current:B): return current.divideEquals(4).plusEquals(1)
-	},
-	"mega": {
-		"max": 10000,
-		"get_multi": func(current:B): return current.divideEquals(4).plusEquals(1)
-	},
-	"hyper": {
-		"max": 100000,
-		"get_multi": func(current:B): return current.divideEquals(4).plusEquals(1)
-	},
+var mastery = { # General mastery config data
+	"get_level_req": func(prestige:B): return B.new(5).multiply(B.new(2).power(prestige)),
+	"get_prestige_level": func(prestige:B): return B.new(50).multiply(prestige.plus(1)),
+	"get_multi": func(prestige:B, level:B): return B.new(1).multiply(B.new(2).power(prestige).multiply(level)),
 }
 
 ## Reorganized reset data for the multipliers. Done to save performance.

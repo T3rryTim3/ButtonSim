@@ -37,6 +37,8 @@ func _to_json(d:Variant) -> Variant:
 		new = d.to_json()
 	
 	else:
+		if d == NAN: # Occurs with some number-based bugs
+			return 0
 		return float(d)
 	
 	return new
