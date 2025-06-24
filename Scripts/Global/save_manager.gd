@@ -36,7 +36,10 @@ func _to_json(d:Variant) -> Variant:
 	elif d is B:
 		new = d.to_json()
 	
-	else:
+	elif d is String:
+		return d
+	
+	elif d is float or d is int:
 		if d == NAN: # Occurs with some number-based bugs
 			return 0
 		return float(d)

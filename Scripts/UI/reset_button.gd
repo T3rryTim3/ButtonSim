@@ -79,7 +79,12 @@ func buy(bulk:int=1, auto:bool=false):
 		else: # Avoid both sounds playing at once (It sounds weird)
 			SoundManager.play_audio("res://Assets/Sound/UI SFX/StatBuy2.wav", "SFX", randf_range(0.4,1.1))
 		
-		Globals.game.add_mastery_progress(key, bulk)
+		if Config.has_unlock(Config.Unlocks.MASTERY):
+			Globals.game.add_mastery_progress(key, bulk, false)
+	
+	elif auto:
+		if Config.has_unlock(Config.Unlocks.MASTERY):
+			Globals.game.add_mastery_progress(key, bulk, true)
 
 	for i in range(bulk):
 		if not can_buy():

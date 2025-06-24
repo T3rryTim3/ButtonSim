@@ -108,8 +108,10 @@ func get_player_data():
 
 		"mastery": {},
 		
-		"cheats": {} # Only used in the dev panel. stat-multiplier pairs of data.
-
+		"cheats": {}, # Only used in the dev panel. stat-multiplier pairs of data.
+		
+		"used_codes": [],
+		"code_multis": {},
 	}
 
 	for upgrade in Config.upgrades:
@@ -292,6 +294,15 @@ func _cache_multis():
 			"Cheat - " + cheat
 		)
 	
+	# Codes
+	for code in player.code_multis:
+		for multi in player.code_multis[code]:
+			_multiply_cache_multi(
+				multi,
+				player.code_multis[code][multi],
+				"Code - " + code
+			)
+	
 	#print("----------")
 	#return
 #endregion
@@ -444,10 +455,16 @@ func prestige_mastery(key:String) -> bool:
 	
 
 ## Updates the progress of a mastery
-func add_mastery_progress(key:String, amt:Variant) -> void:
+## 'Auto' uses different multipliers (if any) from not auto, and by default
+## does not increase mastery. It is intended to be used with autobuyers.
+func add_mastery_progress(key:String, amt:Variant, auto=false) -> void:
 	
 	#if not key in Config.mastery:
 		#return
+	
+	var auto_multi := B.new(1)
+	if auto:
+		auto_multi = B.new(get_upgrade_effect("Mastery Autobuy"))
 	
 	if not key in player.mastery:
 		
@@ -459,6 +476,10 @@ func add_mastery_progress(key:String, amt:Variant) -> void:
 		}
 	
 	amt = get_stat_increase("mastery", B.new(amt))
+	amt.multiplyEquals(auto_multi)
+	
+	if amt.isLessThanOrEqualTo(0): # occurs if autobought without any upgrades
+		return
 	
 	# Accout for mastery.key multipliers
 	if "mastery." + key in _all_multipliers:
@@ -480,6 +501,29 @@ func add_mastery_progress(key:String, amt:Variant) -> void:
 		player.mastery[key].multi = Config.mastery.get_multi.call(player.mastery[key].prestige, player.mastery[key].current)
 		player.mastery[key].progress = B.new(0)
 
+#endregion
+
+#region Codes
+
+## Returns true if the player has used the passed code before.
+func has_used_code(code:String):
+	return code in player.used_codes
+
+## Returns an array of all codes used by the player
+func get_used_codes() -> Array:
+	return player.used_codes
+
+## Use the passed code. Returns true if successful.
+func use_code(code:String) -> bool:
+	player.used_codes.append(code)
+	
+	if "reward" in Config.codes[code]:
+		Config.codes[code].reward.call()
+	
+	return true
+
+func set_code_multi(code:String, multis:Dictionary):
+	player.code_multis[code] = multis
 #endregion
 
 #region UI Effects

@@ -1,7 +1,10 @@
 extends Control
 
 @onready var tree:Tree = $PanelContainer/VBoxContainer/AllCratesTree
+
 var root:TreeItem
+
+const round_amt:int = 3
 
 ## Loads the "All tree" tree with all of the crate and reward data.
 func load_tree() -> void:
@@ -30,7 +33,6 @@ func load_tree() -> void:
 			var reward_item = tree.create_item(crate_item)
 	
 			# Calculate chance
-			var round_amt:int = 2
 			var chance:float = (reward.weight / reward_total_weight) * 100
 			
 			# Round to n digits

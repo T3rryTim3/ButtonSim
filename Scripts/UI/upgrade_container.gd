@@ -50,6 +50,9 @@ func _load_upgrades() -> void:
 			button.upgrade_id = k
 			button.upgrade_data = upgrades[k]
 			upgrade_container.add_child(button)
+			if "unlocked" in upgrades[k]:
+				if not upgrades[k].unlocked.call():
+					button.hide()
 #endregion
 
 func _ready() -> void:

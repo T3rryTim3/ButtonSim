@@ -48,7 +48,6 @@ func _can_buy() -> bool:
 
 ## Load the upgrade data into the display for the upgrade.
 func _load_data() -> void:
-
 	_update_upgrade_count()
 	_update_cost()
 
@@ -57,13 +56,15 @@ func _load_data() -> void:
 	if max_purchase == -1:
 		max_text = 'inf'
 	
-	var count_display = str(Globals.game.get_upgrade_count(upgrade_id)) + "/" + max_text
+	upgrade_count = Globals.game.get_upgrade_count(upgrade_id)
+	
+	var count_display = str(upgrade_count) + "/" + max_text
 
 	$VBoxContainer2/HBoxContainer/Title.text = upgrade_data.name
 	$VBoxContainer2/HBoxContainer/Purchased.text = count_display
 	
 	if not _exceeds_max():
-		$VBoxContainer2/Desc.text = upgrade_data["get_desc"].call(upgrade_count+1)
+		$VBoxContainer2/Desc.text = upgrade_data["get_desc"].call(upgrade_count)
 	else:
 		$VBoxContainer2/Desc.text = "Max purchases reached."
 	

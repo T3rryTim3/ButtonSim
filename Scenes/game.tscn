@@ -1,4 +1,4 @@
-[gd_scene load_steps=54 format=3 uid="uid://cfq44mrggfq0h"]
+[gd_scene load_steps=58 format=3 uid="uid://cfq44mrggfq0h"]
 
 [ext_resource type="Theme" uid="uid://5e4ibfuhq8tg" path="res://Resources/UI/game.tres" id="1_ewbju"]
 [ext_resource type="Script" uid="uid://dqxwaycwn71wq" path="res://Scripts/Global/game.gd" id="2_nnt18"]
@@ -24,6 +24,7 @@
 [ext_resource type="Script" uid="uid://dccia6loo3u86" path="res://Scripts/rank.gd" id="18_7nbq1"]
 [ext_resource type="Script" uid="uid://ddvns4fmlix6y" path="res://Scripts/Dev/stat_giver.gd" id="18_85qyi"]
 [ext_resource type="Script" uid="uid://bw2s7mj2dnx2f" path="res://Scripts/Dev/dev_panel.gd" id="18_iivbl"]
+[ext_resource type="Script" uid="uid://cl25g0lds666s" path="res://Scripts/UI/codes.gd" id="23_fkdbe"]
 [ext_resource type="Script" uid="uid://y3tq6d4jfc3m" path="res://Scripts/Dev/stat_multiplier.gd" id="25_22asu"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ynf5e"]
@@ -166,7 +167,7 @@ content_margin_bottom = 8.0
 bg_color = Color(0, 0, 0, 1)
 
 [sub_resource type="Gradient" id="Gradient_7nbq1"]
-colors = PackedColorArray(0.960784, 0, 0.0509804, 0.266667, 1, 0, 0, 0)
+colors = PackedColorArray(0.53, 0.53, 0.53, 0.27451, 0.41, 0.41, 0.41, 0)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_exi56"]
 gradient = SubResource("Gradient_7nbq1")
@@ -185,6 +186,21 @@ width = 128
 height = 128
 fill_from = Vector2(1, 1)
 fill_to = Vector2(0, 0)
+
+[sub_resource type="Gradient" id="Gradient_22asu"]
+colors = PackedColorArray(0, 0, 0, 1, 0.024, 0, 0.24, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_fkdbe"]
+gradient = SubResource("Gradient_22asu")
+fill_from = Vector2(0.490826, 0)
+fill_to = Vector2(0.495413, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_22asu"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
 
 [sub_resource type="Gradient" id="Gradient_ewbju"]
 colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 0.0588235)
@@ -238,7 +254,7 @@ theme_override_styles/panel = ExtResource("3_85qyi")
 theme_override_styles/tab_selected = SubResource("StyleBoxFlat_hptm8")
 theme_override_styles/tab_hovered = SubResource("StyleBoxFlat_hptm8")
 theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_hptm8")
-current_tab = 1
+current_tab = 5
 script = ExtResource("4_mg4q0")
 
 [node name="Buttons" type="Control" parent="GameTabs"]
@@ -573,6 +589,7 @@ upgrade_tags = Array[String](["crate"])
 display_types = Array[int]([2])
 
 [node name="Mastery" type="Control" parent="GameTabs"]
+visible = false
 layout_mode = 2
 script = ExtResource("13_vm72l")
 unlock_required = true
@@ -1046,6 +1063,90 @@ grow_vertical = 0
 size_flags_horizontal = 4
 theme_override_colors/font_color = Color(1, 0, 0, 1)
 text = "Req. ______"
+horizontal_alignment = 1
+
+[node name="Codes" type="Control" parent="GameTabs"]
+layout_mode = 2
+script = ExtResource("23_fkdbe")
+metadata/_tab_index = 5
+
+[node name="TextureRect" type="TextureRect" parent="GameTabs/Codes"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture2D_fkdbe")
+
+[node name="MarginContainer" type="MarginContainer" parent="GameTabs/Codes"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 80
+theme_override_constants/margin_top = 80
+theme_override_constants/margin_right = 80
+theme_override_constants/margin_bottom = 80
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GameTabs/Codes/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Title" type="Label" parent="GameTabs/Codes/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 60
+text = "Codes"
+horizontal_alignment = 1
+
+[node name="Description" type="Label" parent="GameTabs/Codes/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 20
+text = "Find various codes in the discord or throughout the game to earn permanent rewards!
+Some codes may only work if you have reached a certain stage of progression.
+"
+horizontal_alignment = 1
+
+[node name="LineEdit" type="LineEdit" parent="GameTabs/Codes/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_font_sizes/font_size = 30
+placeholder_text = "Enter code here..."
+alignment = 1
+expand_to_text_length = true
+flat = true
+select_all_on_focus = true
+
+[node name="Button" type="Button" parent="GameTabs/Codes/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+theme_override_font_sizes/font_size = 30
+text = "Submit!"
+flat = true
+
+[node name="UsedCodes" type="PanelContainer" parent="GameTabs/Codes/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_22asu")
+
+[node name="ScrollContainer" type="ScrollContainer" parent="GameTabs/Codes/MarginContainer/VBoxContainer/UsedCodes"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GameTabs/Codes/MarginContainer/VBoxContainer/UsedCodes/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Title" type="Label" parent="GameTabs/Codes/MarginContainer/VBoxContainer/UsedCodes/ScrollContainer/VBoxContainer"]
+layout_mode = 2
+text = "Used codes:"
 horizontal_alignment = 1
 
 [node name="ColorRect" type="ColorRect" parent="."]

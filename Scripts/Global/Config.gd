@@ -39,7 +39,8 @@ var TOKEN_GAIN_INTERVAL:Array[int] = [1,3]
 ## All of the game's unlocks.
 ## Add a comment describing what each unlocks, as well as a fitting name.
 enum Unlocks {
-	MASTERY # Unlocks the mastery tab
+	MASTERY, # Unlocks the mastery tab
+	BIG_CRATE
 }
 
 #endregion
@@ -314,7 +315,7 @@ var upgrades = {
 		"currency_name": "PP",
 		"allow_refund": false,
 		"get_max": func(): return -1, # Unlimited
-		"get_desc": func(_next:int): return "Buy 1 stat crate. Cost caps at 1000.",
+		"get_desc": func(_next:int): return "Buy 1 stat crate. Cost caps at 1M.",
 		"get_cost": func(next:int): return B.new(min(100*(next+1), 1000000)),
 		"on_buy": func(_next:int): Globals.game.increase_crate_count("basic", 1)
 	},
@@ -330,6 +331,19 @@ var upgrades = {
 		"get_cost": func(_next:int): return B.new(20),
 		"on_buy": func(_next:int): Globals.game.increase_crate_count("token", 1)
 	},
+	
+	"Crate Buy Big Crate": {
+		"name": "Big Crate",
+		"tags": ["crate"],
+		"currency": "prestige_points",
+		"currency_name": "PP",
+		"allow_refund": false,
+		"unlocked": func() -> bool: return has_unlock(Unlocks.MASTERY),
+		"get_max": func(): return -1, # Unlimited
+		"get_desc": func(_next:int): return "Buy 1 BIG crate. Cost caps at 1B",
+		"get_cost": func(next:int): return B.minValue(B.new(2.5).multiply(B.new(10,6)).multiply(next+1), B.new(1,9)),
+		"on_buy": func(_next:int): Globals.game.increase_crate_count("big_crate", 1)
+	},
 	#endregion
 	
 	#region Mastery
@@ -340,7 +354,7 @@ var upgrades = {
 		"currency_name": "Prestige Points",
 		"allow_refund": false,
 		"get_max": func(): return 8,
-		"get_desc": func(next:int): return "Mastery gain multiplied by " + str(B.new(3).power(next)),
+		"get_desc": func(next:int): return "Mastery gain multiplied by " + str(B.new(3).power(next+1)),
 		"get_cost": func(next:int): return B.new(1000).multiply(B.new(10).power(next)),
 		"get_multi": func(val:int) -> Dictionary[String, B]: return {"mastery":B.new(3).power(val)},
 	},
@@ -351,7 +365,7 @@ var upgrades = {
 		"currency_name": "Mastery Points",
 		"allow_refund": true,
 		"get_max": func(): return 5,
-		"get_desc": func(next:int): return ["Each stat now increases its multiplier gained.", "Multiplier effect increased"][min(1,next-1)],
+		"get_desc": func(next:int): return ["Each stat now increases its mastery gained.", "Multiplier effect increased"][min(1,next)],
 		"get_cost": func(next:int): return B.new(1),
 		"get_multi": 
 			func(val:int) -> Dictionary[String, B]: 
@@ -369,6 +383,17 @@ var upgrades = {
 					dict["mastery." + layer] = B.maxValue(multi, B.new(1))
 				
 				return dict,
+	},
+	"Mastery Autobuy": {
+		"name": "Auto Mastery",
+		"tags": ["mastery"],
+		"currency": "mastery_points",
+		"currency_name": "Mastery Points",
+		"allow_refund": true,
+		"get_max": func(): return 10,
+		"get_desc": func(next:int): return "Autobuyers now earn " + str(1*(next+1)) + "% of your mastery gain on each buy",
+		"get_cost": func(next:int): return B.new(2),
+		"get_effect": func(val:int): return 0.01*val
 	},
 	#endregion
 	
@@ -447,6 +472,23 @@ var crates = {
 			},
 		]
 	},
+	"big_crate": {
+		"id": "big_crate", # Must be the same as the key
+		"health": 40,
+		"name": "BIG crate",
+		"desc": "A BIG crate. Takes a while to open, but has large rewards.",
+		"reset_tags": ["rank"],
+		"rewards": [
+			{"name": "Big Money", "color":Color("688b58"), "weight": 10.0,"multi": {"cash": 4}},
+			{"name": "Big Multiplier", "color":Color("ce6a6a"), "weight": 5.0,"multi": {"multiplier": 4}},
+			{"name": "Big Rebirths", "color":Color("5daeda"), "weight": 2.0,"multi": {"rebirths": 4}},
+			{"name": "Big super", "color":Color("94e29a"), "weight": 0.6,"multi": {"super": 4}},
+			{"name": "Big Big", "color":Color("54428e"), "weight": 0.25,"multi": {"cash": 2, "multiplier": 2, "rebirths": 2}},
+			{"name": "Bigger Big", "color":Color("e67e7e"), "weight": 0.1,"multi": {"cash": 3, "multiplier": 3, "rebirths": 3, "mastery": 0.5}},
+			{"name": "Biggest Big", "color":Color("7ee6c5"), "weight": 0.01,"multi": {"cash": 99, "multiplier": 49, "rebirths": 9, "mastery": 1}},
+			{"name": "Bigception", "color":Color("002ccc"), "weight": 0.002,"multi": {"rebirths": 99, "cash": 99, "prestige_points": 2, "mastery": 2}},
+		]
+	},
 
 	# Keep these together, preferably at the end.
 	#region Rank crates
@@ -480,12 +522,25 @@ var mastery = { # General mastery config data
 	"get_multi": func(prestige:B, level:B): return B.new(1).multiply(B.new(2).power(prestige).multiply(level)),
 }
 
+var codes = {
+	"MasteryUpdate": {
+		"reward_text": "2x Cash",
+		"reward": func(): Globals.game.set_code_multi("MasteryUpdate", {"cash": B.new(2)})
+	},
+	"Seeeecret": {
+		"reward_text": "+1 BIG crate",
+		"reward": func(): Globals.game.increase_crate_count("big_crate", 1)
+	}
+}
+
 ## Reorganized reset data for the multipliers. Done to save performance.
 var reset_stat_multis = {}
 
 func has_unlock(unlock:Unlocks) -> bool:
 	match unlock:
 		Unlocks.MASTERY:
+			return Globals.game.get_rank() >= 1
+		Unlocks.BIG_CRATE:
 			return Globals.game.get_rank() >= 1
 		_:
 			return false
