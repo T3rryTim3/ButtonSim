@@ -1,4 +1,4 @@
-[gd_scene load_steps=58 format=3 uid="uid://cfq44mrggfq0h"]
+[gd_scene load_steps=66 format=3 uid="uid://cfq44mrggfq0h"]
 
 [ext_resource type="Theme" uid="uid://5e4ibfuhq8tg" path="res://Resources/UI/game.tres" id="1_ewbju"]
 [ext_resource type="Script" uid="uid://dqxwaycwn71wq" path="res://Scripts/Global/game.gd" id="2_nnt18"]
@@ -25,6 +25,7 @@
 [ext_resource type="Script" uid="uid://ddvns4fmlix6y" path="res://Scripts/Dev/stat_giver.gd" id="18_85qyi"]
 [ext_resource type="Script" uid="uid://bw2s7mj2dnx2f" path="res://Scripts/Dev/dev_panel.gd" id="18_iivbl"]
 [ext_resource type="Script" uid="uid://cl25g0lds666s" path="res://Scripts/UI/codes.gd" id="23_fkdbe"]
+[ext_resource type="Texture2D" uid="uid://bkk2u8patl375" path="res://Assets/Textures/forest.png" id="24_81klo"]
 [ext_resource type="Script" uid="uid://y3tq6d4jfc3m" path="res://Scripts/Dev/stat_multiplier.gd" id="25_22asu"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ynf5e"]
@@ -202,6 +203,33 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 
+[sub_resource type="Gradient" id="Gradient_fkdbe"]
+offsets = PackedFloat32Array(0, 0.992537)
+colors = PackedColorArray(0, 0, 0, 1, 0.0742988, 0.108729, 0.134463, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_81klo"]
+gradient = SubResource("Gradient_fkdbe")
+width = 124
+fill_to = Vector2(1, 1)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_81klo"]
+
+[sub_resource type="Gradient" id="Gradient_tgy6u"]
+colors = PackedColorArray(0.0342929, 0.437163, 0.662095, 1, 0.108666, 0.339961, 0.427455, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_cwurv"]
+gradient = SubResource("Gradient_tgy6u")
+fill_from = Vector2(0.487179, 1)
+fill_to = Vector2(0.487179, 0)
+
+[sub_resource type="Gradient" id="Gradient_mucmn"]
+colors = PackedColorArray(0.18359, 0.18359, 0.18359, 1, 0.176419, 0.176419, 0.176419, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_8m3t6"]
+gradient = SubResource("Gradient_mucmn")
+fill_from = Vector2(0.448718, 0)
+fill_to = Vector2(0.418803, 1)
+
 [sub_resource type="Gradient" id="Gradient_ewbju"]
 colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 0.0588235)
 
@@ -254,7 +282,7 @@ theme_override_styles/panel = ExtResource("3_85qyi")
 theme_override_styles/tab_selected = SubResource("StyleBoxFlat_hptm8")
 theme_override_styles/tab_hovered = SubResource("StyleBoxFlat_hptm8")
 theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_hptm8")
-current_tab = 5
+current_tab = 7
 script = ExtResource("4_mg4q0")
 
 [node name="Buttons" type="Control" parent="GameTabs"]
@@ -482,6 +510,7 @@ text = "Your current PP:"
 horizontal_alignment = 1
 
 [node name="ScrollContainer" parent="GameTabs/Buttons/PrestigeMenu/Prestige2/VBoxContainer" instance=ExtResource("7_7t8sx")]
+custom_minimum_size = Vector2(600, 300)
 layout_mode = 2
 upgrade_tags = Array[String](["prestige"])
 display_types = Array[int]([0])
@@ -1066,6 +1095,7 @@ text = "Req. ______"
 horizontal_alignment = 1
 
 [node name="Codes" type="Control" parent="GameTabs"]
+visible = false
 layout_mode = 2
 script = ExtResource("23_fkdbe")
 metadata/_tab_index = 5
@@ -1148,6 +1178,91 @@ size_flags_vertical = 3
 layout_mode = 2
 text = "Used codes:"
 horizontal_alignment = 1
+
+[node name="Gather - Old" type="Control" parent="GameTabs"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 6
+
+[node name="TextureRect" type="TextureRect" parent="GameTabs/Gather - Old"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture2D_81klo")
+
+[node name="TabContainer" type="TabContainer" parent="GameTabs/Gather - Old"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/tabbar_background = SubResource("StyleBoxEmpty_81klo")
+current_tab = 0
+tabs_position = 1
+
+[node name="Tree" type="Control" parent="GameTabs/Gather - Old/TabContainer"]
+layout_mode = 2
+metadata/_tab_index = 0
+
+[node name="TextureRect" type="TextureRect" parent="GameTabs/Gather - Old/TabContainer/Tree"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture2D_cwurv")
+
+[node name="MarginContainer" type="MarginContainer" parent="GameTabs/Gather - Old/TabContainer/Tree"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 50
+theme_override_constants/margin_bottom = 50
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GameTabs/Gather - Old/TabContainer/Tree/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="GameTabs/Gather - Old/TabContainer/Tree/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 40
+text = "Tree"
+horizontal_alignment = 1
+
+[node name="TextureRect" type="TextureRect" parent="GameTabs/Gather - Old/TabContainer/Tree/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+texture = ExtResource("24_81klo")
+expand_mode = 3
+stretch_mode = 5
+
+[node name="Label2" type="Label" parent="GameTabs/Gather - Old/TabContainer/Tree/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Click to gain wood"
+
+[node name="Control" type="Control" parent="GameTabs"]
+layout_mode = 2
+metadata/_tab_index = 7
+
+[node name="TextureRect" type="TextureRect" parent="GameTabs/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = SubResource("GradientTexture2D_8m3t6")
 
 [node name="ColorRect" type="ColorRect" parent="."]
 layout_mode = 1
