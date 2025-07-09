@@ -88,6 +88,8 @@ func get_player_data():
 		"ultra":B.new(0),
 		"mega":B.new(0),
 		"hyper":B.new(0),
+		
+		"gather_limit": 1,
 
 		"prestige_points": B.new(0),
 		"mastery_points": B.new(0),
@@ -112,6 +114,11 @@ func get_player_data():
 		
 		"used_codes": [],
 		"code_multis": {},
+		
+		"gather_progress": {},
+		"current_gather_locations" : [],
+		
+		"materials": {}
 	}
 
 	for upgrade in Config.upgrades:
@@ -123,6 +130,13 @@ func get_player_data():
 		s["crates"][crate] = 0
 		for reward in Config.crates[crate]["rewards"]:
 			s["crate_rewards"][reward["name"]] = 0
+	
+	for location in Config.gather_locations:
+		# Used a dict incase further functionality is needed.
+		# Remove this comment if more is added.
+		s.gather_progress[location] = {
+			"progress": 0, # Bignum to stay consistent with the multi system
+		}
 
 	return s
 
@@ -558,6 +572,8 @@ func _process(delta: float) -> void:
 	
 	player.time += delta
 
+	_update_gather_progress(delta)
+
 	_cache_multis()
 
 func _ready() -> void:
@@ -566,6 +582,10 @@ func _ready() -> void:
 		player = get_player_data()
 	
 	player = Globals.main.fill_dict(player, get_player_data())
+	#var template_data = get_player_data()
+	#for key in template_data:
+		#if not key in player: player[key] = template_data[key]
+	#print(player)
 
 	_cache_multis()
 	
@@ -581,6 +601,119 @@ func _ready() -> void:
 	#          - Tabbar position
 #endregion
 
+#region Gathering
+
+## Distributes each material in amt across a weighted dictionary defined in
+## Config.material_tiers
+func _randomize_tiers(amt:int) -> Dictionary:
+	
+	var weighted_rarities = {}
+	
+	for rarity in Config.material_tiers:
+		weighted_rarities[rarity] = Config.material_tiers[rarity].weight
+	
+	return Utility.bulk_weighted_choice(weighted_rarities, amt)
+
+
+## Update the progress for each gather location.
+
+func _update_gather_progress(delta:float) -> void: # Called on _process()
+	
+	for key in player.gather_progress:
+		
+		if not key in player.current_gather_locations: continue
+		var amt = delta
+		
+		if "gather" in _all_multipliers:
+			amt = _all_multipliers["gather"]["val"].toFloat() * amt
+		if "gather." + key in _all_multipliers:
+			amt = _all_multipliers["gather." + key]["val"].toFloat() * amt
+		
+		player.gather_progress[key]["progress"] += amt
+		if player.gather_progress[key]["progress"] > Config.gather_locations[key].time:
+			_gather_at_location(key)
+			player.gather_progress[key]["progress"] = 0
+
+
+## Gain materials according to the passed key's Config.gather_locations data
+func _gather_at_location(key:String) -> void:
+	var data = Config.gather_locations[key]
+	var bulk = data.get_gather_amt.call()
+	var weights = data.gather_weights
+	
+	var gained_resources = Utility.bulk_weighted_choice(weights, bulk)
+	
+	for material in gained_resources:
+		var rarities = _randomize_tiers(gained_resources[material])
+		for rarity in rarities:
+			add_material(material, rarity, rarities[rarity])
+		SignalBus.MaterialGained.emit(material)
+	
+	print(player.materials)
+
+
+## Gets the amount of time spent gathering at a gather location
+func get_gather_time(key:String) -> float:
+	
+	if key not in player.gather_progress: print_debug("Attempt to get gather time of null material") ; return 0
+	
+	if key not in player.current_gather_locations:
+		return 0
+	else:
+		return player.gather_progress[key].progress
+
+
+## Starts gathering a material. If this exceeds the max gather amount, the oldest gather location
+## gets cancelled.
+func start_gathering(key:String) -> void:
+	
+	if key not in player.gather_progress: print_debug("Attempt to gather null material") ; return
+	if key in player.current_gather_locations: return
+	
+	player.current_gather_locations.append(key)
+	
+	while len(player.current_gather_locations) > player.gather_limit:
+		player.current_gather_locations.remove_at(0)
+
+
+## Cancels the gather process of a material.
+func stop_gathering(key:String) -> void:
+	
+	if key not in player.gather_progress: return
+	if key not in player.current_gather_locations: return
+	
+	player.current_gather_locations.remove(player.current_gather_locations.find(key))
+
+
+## Adds a material to the player's materials
+func add_material(material:String, rarity:String, amount:int) -> void:
+	
+	if material not in player.materials:
+		player.materials[material] = {rarity: amount} ; return
+	
+	if rarity not in player.materials[material]:
+		player.materials[material][rarity] = amount
+	
+	player.materials[material][rarity] += amount
+
+
+## Returns a dictionary of all the tiers of a given material.
+## Returns an empty dictionary if the item is not found.
+func get_material_tiers(material:String) -> Dictionary:
+	if not material in player.materials:
+		return {}
+	
+	# This is done to ensure the data is sorted correctly.
+	# Saving with JSON auto-alphabetizes it, so this is needed
+	# for the display to make sense.
+	var new_dict = {}
+	for rarity in Config.material_tiers:
+		if rarity not in player.materials[material] : continue
+		new_dict[rarity] = player.materials[material][rarity]
+		
+	return new_dict
+
+#endregion
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey:

@@ -6,6 +6,9 @@ extends Control
 
 func _ready() -> void:
 	
+	if not Globals.game.is_node_ready():
+		await Globals.game.ready
+	
 	submit_button.pressed.connect(_enter_code)
 	input_field.text_submitted.connect(func(_x): _enter_code())
 	_reload_used_codes()

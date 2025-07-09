@@ -1,4 +1,4 @@
-[gd_scene load_steps=66 format=3 uid="uid://cfq44mrggfq0h"]
+[gd_scene load_steps=75 format=3 uid="uid://cfq44mrggfq0h"]
 
 [ext_resource type="Theme" uid="uid://5e4ibfuhq8tg" path="res://Resources/UI/game.tres" id="1_ewbju"]
 [ext_resource type="Script" uid="uid://dqxwaycwn71wq" path="res://Scripts/Global/game.gd" id="2_nnt18"]
@@ -26,7 +26,10 @@
 [ext_resource type="Script" uid="uid://bw2s7mj2dnx2f" path="res://Scripts/Dev/dev_panel.gd" id="18_iivbl"]
 [ext_resource type="Script" uid="uid://cl25g0lds666s" path="res://Scripts/UI/codes.gd" id="23_fkdbe"]
 [ext_resource type="Texture2D" uid="uid://bkk2u8patl375" path="res://Assets/Textures/forest.png" id="24_81klo"]
+[ext_resource type="Script" uid="uid://uoee7b87m7uo" path="res://Scripts/UI/gather.gd" id="24_cwurv"]
 [ext_resource type="Script" uid="uid://y3tq6d4jfc3m" path="res://Scripts/Dev/stat_multiplier.gd" id="25_22asu"]
+[ext_resource type="Texture2D" uid="uid://bwwvgthqmbloq" path="res://Assets/Textures/Materials/wood.png" id="25_tgy6u"]
+[ext_resource type="PackedScene" uid="uid://ch0f00csvscuw" path="res://Scenes/UI/gather_location.tscn" id="27_mucmn"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ynf5e"]
 bg_color = Color(0, 0, 0, 1)
@@ -203,32 +206,73 @@ border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
 
-[sub_resource type="Gradient" id="Gradient_fkdbe"]
-offsets = PackedFloat32Array(0, 0.992537)
-colors = PackedColorArray(0, 0, 0, 1, 0.0742988, 0.108729, 0.134463, 1)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_81klo"]
-gradient = SubResource("Gradient_fkdbe")
-width = 124
-fill_to = Vector2(1, 1)
-
-[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_81klo"]
-
-[sub_resource type="Gradient" id="Gradient_tgy6u"]
-colors = PackedColorArray(0.0342929, 0.437163, 0.662095, 1, 0.108666, 0.339961, 0.427455, 1)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_cwurv"]
-gradient = SubResource("Gradient_tgy6u")
-fill_from = Vector2(0.487179, 1)
-fill_to = Vector2(0.487179, 0)
-
 [sub_resource type="Gradient" id="Gradient_mucmn"]
-colors = PackedColorArray(0.18359, 0.18359, 0.18359, 1, 0.176419, 0.176419, 0.176419, 1)
+offsets = PackedFloat32Array(0)
+colors = PackedColorArray(0.550618, 0.333746, 0.159178, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_8m3t6"]
 gradient = SubResource("Gradient_mucmn")
 fill_from = Vector2(0.448718, 0)
 fill_to = Vector2(0.418803, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ese38"]
+content_margin_left = 15.0
+content_margin_top = 15.0
+content_margin_right = 15.0
+content_margin_bottom = 15.0
+bg_color = Color(0.42, 0.23289, 0.0798, 1)
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+border_color = Color(0.25, 0.148667, 0.06, 1)
+border_blend = true
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_tgy6u"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_cwurv"]
+
+[sub_resource type="Theme" id="Theme_d3cha"]
+VScrollBar/styles/grabber = SubResource("StyleBoxEmpty_tgy6u")
+VScrollBar/styles/scroll = SubResource("StyleBoxEmpty_cwurv")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xe308"]
+content_margin_left = 6.0
+content_margin_top = 6.0
+content_margin_right = 6.0
+content_margin_bottom = 6.0
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8m3t6"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ese38"]
+
+[sub_resource type="Theme" id="Theme_oeip8"]
+VScrollBar/styles/grabber = SubResource("StyleBoxEmpty_8m3t6")
+VScrollBar/styles/scroll = SubResource("StyleBoxEmpty_ese38")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_81klo"]
+content_margin_left = 15.0
+content_margin_top = 15.0
+content_margin_right = 15.0
+content_margin_bottom = 15.0
+bg_color = Color(0.42, 0.23289, 0.0798, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_tgy6u"]
+bg_color = Color(0.2, 0.2, 0.2, 0.760784)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cwurv"]
+bg_color = Color(1, 1, 1, 1)
+border_width_top = 3
+border_color = Color(1, 1, 1, 1)
 
 [sub_resource type="Gradient" id="Gradient_ewbju"]
 colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 0.0588235)
@@ -282,7 +326,7 @@ theme_override_styles/panel = ExtResource("3_85qyi")
 theme_override_styles/tab_selected = SubResource("StyleBoxFlat_hptm8")
 theme_override_styles/tab_hovered = SubResource("StyleBoxFlat_hptm8")
 theme_override_styles/tab_unselected = SubResource("StyleBoxFlat_hptm8")
-current_tab = 7
+current_tab = 6
 script = ExtResource("4_mg4q0")
 
 [node name="Buttons" type="Control" parent="GameTabs"]
@@ -1179,83 +1223,12 @@ layout_mode = 2
 text = "Used codes:"
 horizontal_alignment = 1
 
-[node name="Gather - Old" type="Control" parent="GameTabs"]
-visible = false
+[node name="Gather" type="Control" parent="GameTabs"]
 layout_mode = 2
+script = ExtResource("24_cwurv")
 metadata/_tab_index = 6
 
-[node name="TextureRect" type="TextureRect" parent="GameTabs/Gather - Old"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = SubResource("GradientTexture2D_81klo")
-
-[node name="TabContainer" type="TabContainer" parent="GameTabs/Gather - Old"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_styles/tabbar_background = SubResource("StyleBoxEmpty_81klo")
-current_tab = 0
-tabs_position = 1
-
-[node name="Tree" type="Control" parent="GameTabs/Gather - Old/TabContainer"]
-layout_mode = 2
-metadata/_tab_index = 0
-
-[node name="TextureRect" type="TextureRect" parent="GameTabs/Gather - Old/TabContainer/Tree"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-texture = SubResource("GradientTexture2D_cwurv")
-
-[node name="MarginContainer" type="MarginContainer" parent="GameTabs/Gather - Old/TabContainer/Tree"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/margin_left = 50
-theme_override_constants/margin_top = 50
-theme_override_constants/margin_right = 50
-theme_override_constants/margin_bottom = 50
-
-[node name="VBoxContainer" type="VBoxContainer" parent="GameTabs/Gather - Old/TabContainer/Tree/MarginContainer"]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="Label" type="Label" parent="GameTabs/Gather - Old/TabContainer/Tree/MarginContainer/VBoxContainer"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 40
-text = "Tree"
-horizontal_alignment = 1
-
-[node name="TextureRect" type="TextureRect" parent="GameTabs/Gather - Old/TabContainer/Tree/MarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_vertical = 3
-texture = ExtResource("24_81klo")
-expand_mode = 3
-stretch_mode = 5
-
-[node name="Label2" type="Label" parent="GameTabs/Gather - Old/TabContainer/Tree/MarginContainer/VBoxContainer"]
-layout_mode = 2
-size_flags_horizontal = 4
-text = "Click to gain wood"
-
-[node name="Control" type="Control" parent="GameTabs"]
-layout_mode = 2
-metadata/_tab_index = 7
-
-[node name="TextureRect" type="TextureRect" parent="GameTabs/Control"]
+[node name="TextureRect" type="TextureRect" parent="GameTabs/Gather"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -1263,6 +1236,148 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = SubResource("GradientTexture2D_8m3t6")
+
+[node name="MarginContainer" type="MarginContainer" parent="GameTabs/Gather"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 40
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 40
+
+[node name="HSplitContainer" type="HSplitContainer" parent="GameTabs/Gather/MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+split_offset = 400
+
+[node name="PanelContainer" type="PanelContainer" parent="GameTabs/Gather/MarginContainer/HSplitContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_ese38")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GameTabs/Gather/MarginContainer/HSplitContainer/PanelContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Title" type="Label" parent="GameTabs/Gather/MarginContainer/HSplitContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.765115, 0.479648, 0.255194, 1)
+theme_override_font_sizes/font_size = 40
+text = "Materials"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="GameTabs/Gather/MarginContainer/HSplitContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme = SubResource("Theme_d3cha")
+theme_override_styles/panel = SubResource("StyleBoxFlat_xe308")
+horizontal_scroll_mode = 0
+
+[node name="MaterialDisplayVBox" type="VBoxContainer" parent="GameTabs/Gather/MarginContainer/HSplitContainer/PanelContainer/VBoxContainer/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ScrollContainer" type="ScrollContainer" parent="GameTabs/Gather/MarginContainer/HSplitContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme = SubResource("Theme_oeip8")
+
+[node name="GatherLocations" type="VBoxContainer" parent="GameTabs/Gather/MarginContainer/HSplitContainer/ScrollContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+
+[node name="PanelContainer" type="PanelContainer" parent="GameTabs/Gather/MarginContainer/HSplitContainer/ScrollContainer/GatherLocations"]
+visible = false
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_81klo")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GameTabs/Gather/MarginContainer/HSplitContainer/ScrollContainer/GatherLocations/PanelContainer"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="GameTabs/Gather/MarginContainer/HSplitContainer/ScrollContainer/GatherLocations/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="GameTabs/Gather/MarginContainer/HSplitContainer/ScrollContainer/GatherLocations/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+texture = ExtResource("24_81klo")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GameTabs/Gather/MarginContainer/HSplitContainer/ScrollContainer/GatherLocations/PanelContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="GameTabs/Gather/MarginContainer/HSplitContainer/ScrollContainer/GatherLocations/PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Label" type="Label" parent="GameTabs/Gather/MarginContainer/HSplitContainer/ScrollContainer/GatherLocations/PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "Wood"
+horizontal_alignment = 1
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="GameTabs/Gather/MarginContainer/HSplitContainer/ScrollContainer/GatherLocations/PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="GameTabs/Gather/MarginContainer/HSplitContainer/ScrollContainer/GatherLocations/PanelContainer/VBoxContainer/HBoxContainer/VBoxContainer/HBoxContainer2"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Gather Wood"
+icon = ExtResource("25_tgy6u")
+flat = true
+
+[node name="ProgressBar" type="ProgressBar" parent="GameTabs/Gather/MarginContainer/HSplitContainer/ScrollContainer/GatherLocations/PanelContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 6
+theme_override_styles/background = SubResource("StyleBoxFlat_tgy6u")
+theme_override_styles/fill = SubResource("StyleBoxFlat_cwurv")
+value = 50.0
+show_percentage = false
+
+[node name="PanelContainer2" parent="GameTabs/Gather/MarginContainer/HSplitContainer/ScrollContainer/GatherLocations" instance=ExtResource("27_mucmn")]
+layout_mode = 2
+
+[node name="Credits" type="Control" parent="GameTabs"]
+visible = false
+layout_mode = 2
+metadata/_tab_index = 7
+
+[node name="ColorRect" type="ColorRect" parent="GameTabs/Credits"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.151276, 0.151276, 0.151276, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="GameTabs/Credits"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GameTabs/Credits/MarginContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="GameTabs/Credits/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Various Icons: https://mw-ito.itch.io/rpg-dream"
+horizontal_alignment = 1
 
 [node name="ColorRect" type="ColorRect" parent="."]
 layout_mode = 1

@@ -512,7 +512,14 @@ var ranks = {
 			"text": "30M PP",
 			"get_progress": func() -> float: return min(Globals.game.get_stat("prestige_points").divide(B.new(3, 7)).mantissa, 1)
 		},
-		"unlock": "Mastery menu, rank 1 crate"
+		"unlock": "Mastery menu, BIG crate unlocked, gain one rank 1 crate"
+	},
+	2: {
+		"requirement": {
+			"text": "1B PP",
+			"get_progress": func() -> float: return min(Globals.game.get_stat("prestige_points").divide(B.new(3, 7)).mantissa, 1)
+		},
+		"unlock": "Gathering menu unlocked, gain one rank 2 crate"
 	}
 }
 
@@ -531,6 +538,62 @@ var codes = {
 		"reward_text": "+1 BIG crate",
 		"reward": func(): Globals.game.increase_crate_count("big_crate", 1)
 	}
+}
+
+var gather_locations = {
+	"wood": {
+		"text": "Harvest Wood",
+		"icon": "res://Assets/Textures/Materials/wood.png",
+		"time": 8,
+		"unlocked": func() -> bool: return true,
+		"get_gather_amt": func() -> int: return randi_range(1,3),
+		"gather_weights": {
+			"wood": 1,
+		}
+	},
+	"stone": {
+		"text": "Mine Stone",
+		"icon": "res://Assets/Textures/Materials/wood.png",
+		"time": 10,
+		"unlocked": func() -> bool: return true,
+		"get_gather_amt": func() -> int: return randi_range(1,3),
+		"gather_weights": {
+			"stone": 1,
+		}
+	}
+}
+
+## All of the material rarity data according to their key as the name, and weight and bonus
+## respectively as the value.
+var material_tiers = {
+	"F": {
+		"weight": 100,
+		"bonus": 1,
+	},
+	"D": {
+		"weight": 20,
+		"bonus": 1.5,
+	},
+	"C": {
+		"weight": 4,
+		"bonus": 2.25,
+	},
+	"B": {
+		"weight": 0.5,
+		"bonus": 3.5,
+	},
+	"A": {
+		"weight": 0.1,
+		"bonus": 5,
+	},
+	"S": {
+		"weight": 0.01,
+		"bonus": 11,
+	},
+	"SS": {
+		"weight": 0.001,
+		"bonus": 25,
+	},
 }
 
 ## Reorganized reset data for the multipliers. Done to save performance.

@@ -23,3 +23,7 @@ signal CrateGained
 @warning_ignore("unused_signal")
 ## Called when a crate is gained through any means.
 signal TabSelected(new:Control)
+
+@warning_ignore("unused_signal")
+## Called when a material is given to the player.
+signal MaterialGained(type:String)

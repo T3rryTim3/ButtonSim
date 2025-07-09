@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=3 uid="uid://brjg5o8xgtqlt"]
+
+[ext_resource type="Script" uid="uid://ckvff83oqkd1b" path="res://Scripts/UI/material_display.gd" id="1_367ax"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_mucmn"]
+
+[node name="MaterialDisplay" type="PanelContainer"]
+theme_override_styles/panel = SubResource("StyleBoxEmpty_mucmn")
+script = ExtResource("1_367ax")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Title" type="Button" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 20
+toggle_mode = true
+text = "Wood"
+flat = true
+
+[node name="GridContainer" type="GridContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 3
+theme_override_constants/h_separation = 20
+theme_override_constants/v_separation = 10
+columns = 2
